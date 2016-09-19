@@ -17,6 +17,44 @@ const float pi = 3.14159f;
 MAT4 Rotate(const int i, const float theta)
 {
     MAT4 R;
+
+	float angle = theta * pi / 180.f;
+
+	/*
+	
+		int b = i + 1 % 3;
+		int c = b + 1 % 3;
+
+		R[b][b] = cosf(angle);
+		R[c][c] = R[b][b];
+		R[c][b] = sinf(angle);
+		R[b][c] = -1 * R[c][b];
+	*/
+
+	if (i == 2)
+	{
+		R[0][0] = cosf(angle);
+		R[1][1] = R[0][0];
+		R[1][0] = sinf(angle);
+		R[0][1] = -1 * R[1][0];
+	}
+
+	else if (i == 0)
+	{
+		R[1][1] = cosf(angle);
+		R[2][2] = R[1][1];
+		R[2][1] = sinf(angle);
+		R[1][2] = -1 * R[2][1];
+	}
+
+	else if (i == 1)
+	{
+		R[0][0] = cosf(angle);
+		R[2][0] = sinf(angle);
+		R[2][2] = R[0][0];
+		R[0][2] = -1 * R[2][0];
+	}
+
     return R;
 }
 
@@ -24,6 +62,9 @@ MAT4 Rotate(const int i, const float theta)
 MAT4 Scale(const float x, const float y, const float z)
 {
     MAT4 S;
+	S[0][0] = x;
+	S[1][1] = y;
+	S[2][2] = z;
     return S;
 }
 
@@ -31,6 +72,9 @@ MAT4 Scale(const float x, const float y, const float z)
 MAT4 Translate(const float x, const float y, const float z)
 {
     MAT4 T;
+	T[0][3] = x;
+	T[1][3] = y;
+	T[2][3] = z;
     return T;
 }
 
@@ -38,14 +82,38 @@ MAT4 Translate(const float x, const float y, const float z)
 MAT4 Perspective(const float rx, const float ry,
              const float front, const float back)
 {
-    MAT4 P;
-    return P;
+    MAT4 R;
+
+	R[0][0] = 1 / rx;
+	R[1][1] = 1 / ry;
+	R[2][2] = (back + front) / (front - back);
+	R[2][3] = (2 * back*front) / (front - back);
+	R[3][2] = -1.f;
+	R[3][3] = 0.f;
+
+    return R;
 }
 
 // Multiplies two 4x4 matrices
 MAT4 operator* (const MAT4 A, const MAT4 B)
 {  
     MAT4 M;
+	M[0][0] = 0;
+	M[1][1] = 0;
+	M[2][2] = 0;
+	M[3][3] = 0;
+
+	for(int i=0;i<4;i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			for (int k = 0; k < 4; k++)
+			{
+				M[i][j] += A[i][k] * B[k][j];
+			}
+		}
+	}
+
     return M;
 }
 
