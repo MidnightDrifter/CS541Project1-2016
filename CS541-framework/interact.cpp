@@ -34,6 +34,7 @@ void ReshapeWindow(int w, int h)
     scene.width = w;
     scene.height = h;
 
+	scene.rx = scene.ry * (w / h);
     // Force a redraw
     glutPostRedisplay();
 }
@@ -48,6 +49,20 @@ void KeyboardDown(unsigned char key, int x, int y)
     switch(key) {
     case 27: case 'q':       // Escape and 'q' keys quit the application
         exit(0);
+	case 't':
+		scene.isToggled = !scene.isToggled;
+
+		if (scene.isToggled)
+		{
+	case 'w':
+		scene.eyePos += scene.speed * vec3(sinf(scene.spin), cosf(scene.spin), 0.f);
+	case 's':
+		scene.eyePos -= scene.speed * vec3(sinf(scene.spin), cosf(scene.spin), 0.f);
+	case 'a':
+		scene.eyePos -= scene.speed * vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
+	case 'd':
+		scene.eyePos += scene.speed*vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
+		}
     }
 }
 
@@ -82,7 +97,10 @@ void MouseButton(int button, int state, int x, int y)
 
     else if (button == GLUT_LEFT_BUTTON) {
         leftDown = (state == GLUT_DOWN);
-        printf("Left button down\n"); }
+        printf("Left button down\n");
+	
+	
+	}
 
     else if (button == GLUT_MIDDLE_BUTTON) {
         middleDown = (state == GLUT_DOWN);
@@ -93,10 +111,16 @@ void MouseButton(int button, int state, int x, int y)
         printf("Right button down\n");  }
 
     else if (button == 3) {
-        printf("scroll up\n"); }
+        printf("scroll up\n");
+		scene.zoom -= 5.f;
+	
+	}
 
     else if (button == 4) {
-        printf("scroll down\n"); }
+        printf("scroll down\n"); 
+		scene.zoom += 5.f;
+	}
+
 
     // Force a redraw
     glutPostRedisplay();
@@ -116,7 +140,10 @@ void MouseMotion(int x, int y)
         scene.lightTilt -= dy/3.0; }
 
     else if (leftDown) {
-    }
+		scene.spin += dx / 10.f;  //Arbitrarily chosen value for rotating, can tweak 
+		scene.tilt += dy / 10.f;
+	
+	}
 
     if (middleDown && shifted) {
         scene.lightDist = pow(scene.lightDist, 1.0f-dy/200.0f);  }
@@ -124,6 +151,9 @@ void MouseMotion(int x, int y)
     else if (middleDown) { }
 
     if (rightDown) {
+
+		scene.tx += dx / 100.f;
+		scene.ty += dy / 100.f;
     }
 
     // Record this position

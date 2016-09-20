@@ -221,7 +221,22 @@ void Scene::DrawScene()
     // the following hardcoded values for WorldProj and WorldView with
     // transformation matrices calculated from variables such as spin,
     // tilt, tr, basePoint, ry, front, and back.
-    WorldProj[0][0]=  2.368;
+	if (isToggled)
+	{
+		eyePos.z = ground->HeightAt(eyePos.x, eyePos.y) + 2;
+		WorldView = Rotate(0, tilt - 90.f) * Rotate(2, spin) * Translate(-1 * eyePos.x, -1*eyePos.y, -1*eyePos.z);
+	}
+	else
+	{
+		WorldView = Translate(tx, ty, -1 * zoom) * Rotate(0, tilt - 90.f) * Rotate(2, spin);
+		
+
+	}
+
+	WorldProj = Perspective(rx, ry, front, back);
+
+	/*
+	WorldProj[0][0]=  2.368;
     WorldProj[0][1]= -0.800;
     WorldProj[0][2]=  0.000;
     WorldProj[0][3]=  0.000;
@@ -241,9 +256,9 @@ void Scene::DrawScene()
     WorldView[0][3]= -basePoint[0];
     WorldView[1][3]= -basePoint[1];
     WorldView[2][3]= -basePoint[2];
-    
+    */
     invert(&WorldView, &WorldInverse);
-
+	
     // Use the lighting shader
     lightingProgram->Use();
     int programId = lightingProgram->programId;
