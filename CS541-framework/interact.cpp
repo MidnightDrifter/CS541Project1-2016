@@ -136,13 +136,13 @@ void MouseButton(int button, int state, int x, int y)
 
     else if (button == 3) {
         printf("scroll up\n");
-		scene.zoom -= 5.f;
+		scene.zoom *= 1.025f;
 	
 	}
 
     else if (button == 4) {
         printf("scroll down\n"); 
-		scene.zoom += 5.f;
+		scene.zoom /= 1.025f;
 	}
 
 
