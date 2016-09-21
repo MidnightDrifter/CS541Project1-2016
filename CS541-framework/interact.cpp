@@ -46,29 +46,53 @@ void KeyboardDown(unsigned char key, int x, int y)
     printf("key down %c(%d)\n", key, key);
     fflush(stdout);
   
-    switch(key) {
-    case 27: case 'q':       // Escape and 'q' keys quit the application
-        exit(0);
+	switch (key) {
+	case 27: case 'q':       // Escape and 'q' keys quit the application
+		exit(0);
 	case 't':
 		scene.isToggled = !scene.isToggled;
-
-		if (scene.isToggled)
+	}
+	if (scene.isToggled)
 		{
-	case 'w':
-		scene.eyePos += scene.speed * vec3(sinf(scene.spin), cosf(scene.spin), 0.f);
-	case 's':
-		scene.eyePos -= scene.speed * vec3(sinf(scene.spin), cosf(scene.spin), 0.f);
-	case 'a':
-		scene.eyePos -= scene.speed * vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
-	case 'd':
-		scene.eyePos += scene.speed*vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
+		if (key == 'w')
+		{
+			scene.wPressed = true;
 		}
+		//scene.eyePos += scene.speed * vec3(sinf(scene.spin), cosf(scene.spin), 0.f);
+		if (key == 's')
+			//scene.eyePos -= scene.speed * vec3(sinf(scene.spin), cosf(scene.spin), 0.f);
+		{
+			scene.sPressed = true;
+		}
+		if (key == 'a')
+		{
+			scene.aPressed = true;
+		}
+			//scene.eyePos -= scene.speed * vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
+		if (key == 'd')
+		{
+			scene.dPressed = true;
+		}
+		//scene.eyePos += scene.speed*vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
+		
+
+
+
     }
 }
 
 void KeyboardUp(unsigned char key, int x, int y)
 {
-    fflush(stdout);
+	if (key == 'a')
+		scene.aPressed = false;
+	else if (key == 's')
+		scene.sPressed = false;
+	else if (key == 'd')
+		scene.dPressed = false;
+	else if (key == 'w')
+		scene.wPressed = false;
+	
+	fflush(stdout);
 }
 
 ////////////////////////////////////////////////////////////////////////

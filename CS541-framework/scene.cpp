@@ -223,6 +223,25 @@ void Scene::DrawScene()
     // tilt, tr, basePoint, ry, front, and back.
 	if (isToggled)
 	{
+		float tspin = PI * spin / 180.f;  //Needed to translate it to rads, derp
+		if (wPressed)
+		{
+			eyePos += speed * vec3(sinf(tspin), cosf(tspin), 0.f);
+		}
+		if (sPressed)
+		{
+			eyePos -= speed * vec3(sinf(tspin), cosf(tspin), 0.f);
+		}
+		if (aPressed)
+		{
+			eyePos -= speed * vec3(cosf(tspin), -1 * sinf(tspin), 0.f);
+		}
+		if (dPressed)
+		{
+			eyePos += speed*vec3(cosf(tspin), -1 * sinf(tspin), 0.f);
+		}
+
+
 		eyePos.z = ground->HeightAt(eyePos.x, eyePos.y) + 2;
 		WorldView = Rotate(0, tilt - 90.f) * Rotate(2, spin) * Translate(-1 * eyePos.x, -1*eyePos.y, -1*eyePos.z);
 	}

@@ -55,6 +55,11 @@ public:
 	
 	vec3 eyePos = vec3(0.f, 0.f, 0.f);
 
+	bool wPressed = false;
+	bool aPressed = false;
+	bool sPressed = false;
+	bool dPressed = false;
+
 	float spin = 0.f;  //Left-right mouse movements
 	float tilt = -90.f;  //Up-down mouse movements
 
