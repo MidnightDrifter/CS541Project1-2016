@@ -176,8 +176,8 @@ void MouseMotion(int x, int y)
 
     if (rightDown) {
 
-		scene.tx += dx / 100.f;
-		scene.ty += dy / 100.f;
+		scene.tx += dx / 50.f;
+		scene.ty += dy / 50.f;
     }
 
     // Record this position
