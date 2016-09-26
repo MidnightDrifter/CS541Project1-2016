@@ -228,7 +228,7 @@ void Scene::DrawScene()
     // tilt, tr, basePoint, ry, front, and back.
 	if (isToggled)
 	{
-		float framerate = curTime - prevTime / 100.f;
+		float framerate = (curTime - prevTime) /100.f;
 		float tspin = PI * spin / 180.f;  //Needed to translate it to rads, derp
 		if (wPressed)
 		{
@@ -312,7 +312,7 @@ void Scene::DrawScene()
     lightingProgram->Unuse();
 
 	prevTime = curTime;
-	curTime += glutGet((GLenum)GLUT_ELAPSED_TIME) - curTime;
+	curTime = glutGet((GLenum)GLUT_ELAPSED_TIME);
 
     CHECKERROR;
 
