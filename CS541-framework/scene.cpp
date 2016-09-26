@@ -110,6 +110,11 @@ void animate(int value)
 // other parameters.
 void Scene::InitializeScene()
 {
+	
+	prevTime = glutGet((GLenum)GLUT_ELAPSED_TIME);
+	curTime = prevTime;
+
+
     glEnable(GL_DEPTH_TEST);
     CHECKERROR;
 
@@ -223,22 +228,23 @@ void Scene::DrawScene()
     // tilt, tr, basePoint, ry, front, and back.
 	if (isToggled)
 	{
+		float framerate = curTime - prevTime / 100.f;
 		float tspin = PI * spin / 180.f;  //Needed to translate it to rads, derp
 		if (wPressed)
 		{
-			eyePos += speed * vec3(sinf(tspin), cosf(tspin), 0.f);
+			eyePos += speed * framerate * vec3(sinf(tspin), cosf(tspin), 0.f);
 		}
 		if (sPressed)
 		{
-			eyePos -= speed * vec3(sinf(tspin), cosf(tspin), 0.f);
+			eyePos -= speed * framerate * vec3(sinf(tspin), cosf(tspin), 0.f);
 		}
 		if (aPressed)
 		{
-			eyePos -= speed * vec3(cosf(tspin), -1 * sinf(tspin), 0.f);
+			eyePos -= speed * framerate* vec3(cosf(tspin), -1 * sinf(tspin), 0.f);
 		}
 		if (dPressed)
 		{
-			eyePos += speed*vec3(cosf(tspin), -1 * sinf(tspin), 0.f);
+			eyePos += speed * framerate *vec3(cosf(tspin), -1 * sinf(tspin), 0.f);
 		}
 
 
@@ -304,6 +310,10 @@ void Scene::DrawScene()
     objectRoot->Draw(lightingProgram, Identity);
 
     lightingProgram->Unuse();
+
+	prevTime = curTime;
+	curTime += glutGet((GLenum)GLUT_ELAPSED_TIME) - curTime;
+
     CHECKERROR;
 
 }

@@ -50,7 +50,7 @@ public:
     
     // Viewport
     int width, height;
-	float speed = 0.9f;
+	float speed = 10.0f;
 	bool isToggled = false;
 	
 	vec3 eyePos = vec3(0.f, 0.f, 0.f);
@@ -59,6 +59,9 @@ public:
 	bool aPressed = false;
 	bool sPressed = false;
 	bool dPressed = false;
+
+	float prevTime, curTime;
+
 
 	float spin = 0.f;  //Left-right mouse movements
 	float tilt = -90.f;  //Up-down mouse movements
