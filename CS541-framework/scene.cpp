@@ -150,7 +150,8 @@ void Scene::InitializeScene()
     lightingProgram->LinkProgram();
 
     // Create all the Polygon shapes
-    Shape* TeapotPolygons =  new Teapot(12);
+   // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
+	Shape* EarthPolygons = new Sphere(32);
     Shape* BoxPolygons = new Ply("box.ply");
     Shape* SpherePolygons = new Sphere(32);
     Shape* GroundPolygons = ground;
@@ -161,9 +162,10 @@ void Scene::InitializeScene()
     // transformation, and the curface lighting parameters Kd, Ks, and
     // alpha.
     Object* anim = new Object(NULL, nullId);
-    Object* teapot = new Object(TeapotPolygons, teapotId,
-                                vec3(0.5, 0.5, 0.1), vec3(0.5, 0.5, 0.5), 120);
-    Object* podium = new Object(BoxPolygons, boxId,
+    //Replace teapot with sphere for Earth
+	//Object* teapot = new Object(TeapotPolygons, teapotId, vec3(0.5, 0.5, 0.1), vec3(0.5, 0.5, 0.5), 120);
+	Object* earth = new Object(EarthPolygons, teapotId, vec3(0.5, 0.5, 0.1), vec3(0.5, 0.5, 0.5), 120);
+	Object* podium = new Object(BoxPolygons, boxId,
                                 vec3(0.25, 0.25, 0.1), vec3(0.3, 0.3, 0.3), 10);
     
     Object* spheres = SphereOfSpheres(SpherePolygons);
@@ -192,8 +194,8 @@ void Scene::InitializeScene()
 
     objectRoot->add(podium, Translate(0,0,0));
     objectRoot->add(anim, Translate(0,0,0));
-    objectRoot->add(teapot, Translate(0.0,0,1.5)*TeapotPolygons->modelTr);
-    
+   // objectRoot->add(teapot, Translate(0.0,0,1.5)*TeapotPolygons->modelTr);
+	objectRoot->add(earth, Translate(0.0, 0, 1.5)*SpherePolygons->modelTr);
     anim->add(spheres, Translate(0.0,0,0.0)*Scale(20,20,20));
     
     // Schedule first timed animation call
@@ -300,6 +302,28 @@ void Scene::DrawScene()
     glUniform3fv(loc, 1, &(lPos[0]));  
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
+	
+	//SH added values
+	loc = glGetUniformLocation(programId, "eyePos");
+	glUniform3fv(loc,1, &(eyePos[0]));
+
+	//Object properties - will probablly need to tweak these / add in another variable to tell what object is what so I can apply the texture to the sphere properly
+	loc = glGetUniformLocation(programId, "diffuseColor");
+	glUniform3fv(loc, 1, &(objectRoot->diffuseColor[0]));
+	loc = glGetUniformLocation(programId, "specularColor");
+	glUniform3fv(loc, 1, &(objectRoot->specularColor[0]));
+	loc = glGetUniformLocation(programId, "shininess");
+	glUniform1f(loc, (objectRoot)->shininess);
+
+
+	//Light values
+	vec3 lightColor(1, 1, 1), ambientColor(0.2, 0.2, 0.2);
+	loc = glGetUniformLocation(programId, "Light");
+	glUniform3fv(loc, 1, &(lightColor[0]));
+	loc = glGetUniformLocation(programId, "Ambient");
+	glUniform3fv(loc, 1, &(ambientColor[0]));
+
+
     CHECKERROR;
 
     // Compute any continuously animating objects

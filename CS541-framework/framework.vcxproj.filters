@@ -13,6 +13,9 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{20021140-9a35-4bf4-9e03-b4365027cae7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\BRDF &amp; Texture Shaders - Proj2">
+      <UniqueIdentifier>{15be3c80-03ae-448d-9d92-5786fcc71b72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="framework.cpp">
@@ -84,6 +87,12 @@
     </None>
     <None Include="lighting.vert">
       <Filter>Shader Files\Original Shaders</Filter>
+    </None>
+    <None Include="lighting-BRDF&amp;Texture Proj2.frag">
+      <Filter>Shader Files\BRDF &amp; Texture Shaders - Proj2</Filter>
+    </None>
+    <None Include="lighting-BRDF&amp;Texture Proj2.vert">
+      <Filter>Shader Files\BRDF &amp; Texture Shaders - Proj2</Filter>
     </None>
   </ItemGroup>
 </Project>

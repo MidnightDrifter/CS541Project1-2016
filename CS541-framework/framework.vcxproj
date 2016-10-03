@@ -35,6 +35,8 @@
     <ClInclude Include="transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lighting-BRDF&amp;Texture Proj2.frag" />
+    <None Include="lighting-BRDF&amp;Texture Proj2.vert" />
     <None Include="lighting.frag" />
     <None Include="lighting.vert" />
   </ItemGroup>
