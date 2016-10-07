@@ -26,6 +26,29 @@ uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
 
+vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
+{
+
+	vec3 N = normalize(nVec);
+	vec3 L = normalize(lVec);
+	vec3 V = normalize(eVec);
+	vec3 H = normalize(L+V);
+	
+	float alpha = powf(8192, shiny);
+	
+	float gValue = 1 / (powf(dot(L,H),2)*4);   //Raised to power of 2, no need to care about negative vals -- maybe div. by 0 though
+	float dValue = (2*alpha)/PI)*(powf(max(0.f, dot(N,H)),alpha);
+	vec3 fValue = spec * (1-spec)*(powf((1-max(0.f, dot(L,H))),5);
+
+	return (dif/PI)+(gValue*dValue*fValue);
+	
+
+}
+
+vec3 BRDF()
+{
+	return BRDF(normalVec, lightVec, eyeVec, shininess, specular, diffuse);
+}
 
 void main()
 {
@@ -46,7 +69,7 @@ void main()
 float LN = max(dot(L,N),0.0);
 float HN = max(dot(H,N),0.0);
 
-gl_FragColor.xyz = BRDF_FUNCTION_HERE;
+gl_FragColor.xyz = BRDF() * max(0.f, dot(N,L)*Light + Ambient;
 
    // gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 }
