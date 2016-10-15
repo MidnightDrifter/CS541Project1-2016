@@ -331,7 +331,7 @@ void Scene::DrawScene()
 	//CHECKERROR;
 
 	//Light values
-	vec3 lightColor(PI*10, PI * 10, PI * 10);
+	vec3 lightColor(PI*2, PI * 2, PI * 2);
 	vec3 ambientColor(0.2f, 0.2f, 0.2f);
 	loc = glGetUniformLocation(programId, "Light");
 	glUniform3fv(loc, 1, &(lightColor[0]));
