@@ -306,21 +306,27 @@ void Scene::DrawScene()
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
 	
+	MAT4  NormalInverse;
+	//MAT4 NormalTransform(objectRoot->shape->modelTr);
+//	invert(&NormalInverse, &objectRoot->shape->modelTr);
+
 	loc = glGetUniformLocation(programId, "NormalTr");
-	glUniformMatrix4fv(loc, 1, GL_TRUE, (Identity.Pntr()));
+	glUniformMatrix4fv(loc, 1, GL_TRUE, (objectRoot->shape->modelTr).Pntr());
 
 
 	//SH added values
 	//loc = glGetUniformLocation(programId, "eyePos");
 	//glUniform3fv(loc,1, &(WorldInverse*vec4(0,0,0,1)));
 
+
+
 	//Object properties - will probablly need to tweak these / add in another variable to tell what object is what so I can apply the texture to the sphere properly
 	loc = glGetUniformLocation(programId, "diffuseColor"); 
 	glUniform3fv(loc, 1, &((objectRoot->diffuseColor[0])));
 	loc = glGetUniformLocation(programId, "specularColor");
-	glUniform3fv(loc, 1, &(objectRoot->specularColor[0]));
+	glUniform3fv(loc, 1, &(objectRoot->shape->specularColor[0]));
 	loc = glGetUniformLocation(programId, "shininess");
-	glUniform1f(loc, (objectRoot)->shininess);
+	glUniform1f(loc, (objectRoot->shape)->shininess);
 	CHECKERROR;
 
 	//Light values

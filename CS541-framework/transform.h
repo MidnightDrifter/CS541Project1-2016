@@ -23,6 +23,7 @@ public:
 
     // Used to communicate to OpenGL
     float* Pntr();
+
 };
 
 MAT4 Rotate(const int i, const float theta);
