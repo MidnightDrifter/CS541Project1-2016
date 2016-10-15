@@ -370,10 +370,13 @@ vec3 TeapotPoints[] = {
 // patches is represented by an n by n grid of quads.
 Teapot::Teapot(const int n)
 {
-    diffuseColor = vec3(0.5, 0.5, 0.1);
-    specularColor = vec3(1.0, 1.0, 1.0);
-    shininess = 120.0;
-    animate = true;
+    diffuseColor = vec3(0.8, 0.8, 0.1);
+   //specularColor = vec3(1.0, 1.0, 1.0);
+   specularColor = vec3(0.3, 0.3, 0.3);
+   //shininess = 120.0;
+	shininess = 0.8;
+	
+	animate = true;
 
     int npatches = sizeof(TeapotIndex)/sizeof(TeapotIndex[0]); // Should be 32 patches for the teapot
     const int nv = npatches*(n+1)*(n+1);
@@ -474,7 +477,8 @@ Box::Box()
     diffuseColor = vec3(0.5, 0.5, 1.0);
   //  specularColor = vec3(1.0, 1.0, 1.0);
 	specularColor = vec3(0.02f, 0.02f, 0.02f);
-    shininess = 120.0;
+	//  shininess = 120.0;
+	shininess = 0.3;
 
     mat4 I(1.0f);
 
@@ -517,7 +521,9 @@ Sphere::Sphere(const int n)
     diffuseColor = vec3(0.5, 0.5, 1.0);
     //specularColor = vec3(1.0, 1.0, 1.0);
 	specularColor = vec3(0.02f, 0.02f, 0.02f);
-    shininess = 120.0;
+	//  shininess = 120.0;
+	shininess = 0.3;
+
 
     float d = 2.0f*PI/float(n*2);
     for (int i=0;  i<=n*2;  i++) {
@@ -548,8 +554,8 @@ Disk::Disk(const int n)
     diffuseColor = vec3(0.5, 0.5, 1.0);
     //specularColor = vec3(1.0, 1.0, 1.0);
 	specularColor = vec3(0.02f, 0.02f, 0.02f);
-    shininess = 120.0;
-    
+  //  shininess = 120.0;
+	shininess = 0.3;
     // Push center point
     Pnt.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
     Nrm.push_back(vec3(0.0f, 0.0f, 1.0f));
@@ -579,7 +585,8 @@ Cylinder::Cylinder(const int n)
     diffuseColor = vec3(0.5, 0.5, 1.0);
    // specularColor = vec3(1.0, 1.0, 1.0);
 	specularColor = vec3(0.02f, 0.02f, 0.02f);
-    shininess = 120.0;
+   // shininess = 120.0;
+	shininess = 0.3;
 
     float d = 2.0f*PI/float(n);
     for (int i=0;  i<=n;  i++) {
@@ -611,7 +618,9 @@ Ply::Ply(const char* name, const bool reverse)
     diffuseColor = vec3(0.8, 0.8, 0.5);
     //specularColor = vec3(1.0, 1.0, 1.0);
 	specularColor = vec3(0.02f, 0.02f, 0.02f);
-    shininess = 120.0;
+	//  shininess = 120.0;
+	shininess = 0.3;
+
 
     // Open PLY file and read header;  Exit on any failure.
     p_ply ply = ply_open(name, NULL, 0, NULL);
@@ -720,7 +729,9 @@ Plane::Plane(const float r, const int n)
     diffuseColor = vec3(0.3, 0.2, 0.1);
    // specularColor = vec3(1.0, 1.0, 1.0);
 	specularColor = vec3(0.02f, 0.02f, 0.02f);
-    shininess = 120.0;
+	//  shininess = 120.0;
+	shininess = 0.3;
+
 
     for (int i=0;  i<=n;  i++) {
         float s = i/float(n);
@@ -758,9 +769,12 @@ ProceduralGround::ProceduralGround(const float _range, const int n,
     std::vector<ivec4> Quad;
 
     diffuseColor = vec3(0.3, 0.2, 0.1);
-    specularColor = vec3(1.0, 1.0, 1.0);
-    shininess = 10.0;
-    specularColor = vec3(0.0, 0.0, 0.0);
+    //specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02, 0.02, 0.02);
+	//  shininess = 120.0;
+	shininess = 0.3;
+
+    //specularColor = vec3(0.0, 0.0, 0.0);
     xoff = range*( time(NULL)%1000 );
 
     highPoint = vec3(0,0,0.1);
@@ -823,8 +837,11 @@ Quad::Quad(const int n)
     std::vector<ivec4> Quad;
 
     diffuseColor = vec3(0.3, 0.2, 0.1);
-    specularColor = vec3(1.0, 1.0, 1.0);
-    shininess = 120.0;
+    //specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02, 0.02, 0.02);
+	//  shininess = 120.0;
+	shininess = 0.3;
+
 
     float r = 1.0;
     for (int i=0;  i<=n;  i++) {

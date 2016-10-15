@@ -306,31 +306,32 @@ void Scene::DrawScene()
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
 	
-	MAT4  NormalInverse;
+	//MAT4  NormalInverse;
 	//MAT4 NormalTransform(objectRoot->shape->modelTr);
 //	invert(&NormalInverse, &objectRoot->shape->modelTr);
 
-	loc = glGetUniformLocation(programId, "NormalTr");
-	glUniformMatrix4fv(loc, 1, GL_TRUE, (objectRoot->shape->modelTr).Pntr());
+	//loc = glGetUniformLocation(programId, "NormalTr");
+	//glUniformMatrix4fv(loc, 1, GL_TRUE, (objectRoot->shape->modelTr).Pntr());
 
 
 	//SH added values
 	//loc = glGetUniformLocation(programId, "eyePos");
-	//glUniform3fv(loc,1, &(WorldInverse*vec4(0,0,0,1)));
+//	vec3 eye = (WorldInverse*glm::vec4(0, 0, 0, 1)).xyz;
+	//glUniform3fv(loc,1, &eye[0]);
 
 
 
 	//Object properties - will probablly need to tweak these / add in another variable to tell what object is what so I can apply the texture to the sphere properly
-	loc = glGetUniformLocation(programId, "diffuseColor"); 
-	glUniform3fv(loc, 1, &((objectRoot->diffuseColor[0])));
-	loc = glGetUniformLocation(programId, "specularColor");
-	glUniform3fv(loc, 1, &(objectRoot->shape->specularColor[0]));
-	loc = glGetUniformLocation(programId, "shininess");
-	glUniform1f(loc, (objectRoot->shape)->shininess);
-	CHECKERROR;
+	//loc = glGetUniformLocation(programId, "diffuseColor"); 
+	//glUniform3fv(loc, 1, &(diffuseColor[0])));
+	//loc = glGetUniformLocation(programId, "specularColor");
+	//glUniform3fv(loc, 1, &(objectRoot->shape->specularColor[0]));
+	//loc = glGetUniformLocation(programId, "shininess");
+	//glUniform1f(loc, (objectRoot->shape)->shininess);
+	//CHECKERROR;
 
 	//Light values
-	vec3 lightColor(PI, PI, PI);
+	vec3 lightColor(PI*10, PI * 10, PI * 10);
 	vec3 ambientColor(0.2f, 0.2f, 0.2f);
 	loc = glGetUniformLocation(programId, "Light");
 	glUniform3fv(loc, 1, &(lightColor[0]));

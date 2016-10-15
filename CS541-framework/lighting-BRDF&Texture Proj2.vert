@@ -24,7 +24,7 @@ void main()
     
     vec3 worldPos = (ModelTr*vertex).xyz;
 
-    normalVec = vertexNormal*mat3(NormalTr); 
+    normalVec = (vertexNormal*mat3(NormalTr)); 
     lightVec = lightPos - worldPos;
 	eyeVec = (WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
     texCoord = vertexTexture; 

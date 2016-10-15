@@ -19,7 +19,7 @@ const float PI = 3.1415926535897932384626433832795;
 
 
 
-in vec3 normalVec, lightVec, eyeVec;
+in vec3 normalVec, lightVec, eyeVec, worldPos;
 in vec2 texCoord;
 
 uniform int objectId;
@@ -38,12 +38,13 @@ vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 	vec3 H = normalize(L+V);
 	
 	float alpha = pow(8192, shiny);
+	//float LN = max(0.f, dot(L,N));
 	float LH = max(0.f, dot(L,H));
 	float NH = max(0.f,dot(N,H));
 
 	float gValue = 1 / (pow(LH,2)*4);   //Raised to power of 2, no need to care about negative vals -- maybe div. by 0 though
-	float dValue = ((2*alpha)/PI)*(pow(NH,alpha));
-	vec3 fValue = spec * (1-spec)*(pow((1-LH),5));
+	float dValue = ((2+alpha)/(PI*2))*(pow(NH,alpha));
+	vec3 fValue = spec + ((1-spec)*(pow((1-LH),5)));
 
 	return (dif/PI)+(gValue*dValue*fValue);
 	
@@ -59,20 +60,20 @@ void main()
 {
     vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
-	vec3 V = normalize(eyeVec);
+	//vec3 V = normalize(eyeVec);
 
 
-    vec3 Kd = diffuse;   
-    
+ //   vec3 Kd = diffuse;   
+    /*
     if (objectId==groundId || objectId==seaId) {
         ivec2 uv = ivec2(floor(200.0*texCoord));
         if ((uv[0]+uv[1])%2==0)
             Kd *= 0.9; }
-    
+    */
 
-	vec3 H = normalize(L+V);
+//	vec3 H = normalize(L+V);
 float LN = max(dot(L,N),0.0);
-float HN = max(dot(H,N),0.0);
+//float HN = max(dot(H,N),0.0);
 
 gl_FragColor.xyz = BRDF() * LN*Light + Ambient;
 
