@@ -140,8 +140,10 @@ void Scene::InitializeScene()
 
     // Create the lighting shader program from source code files.
     lightingProgram = new ShaderProgram();
-    lightingProgram->AddShader("lighting.vert", GL_VERTEX_SHADER);
-    lightingProgram->AddShader("lighting.frag", GL_FRAGMENT_SHADER);
+	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.vert", GL_VERTEX_SHADER);
+	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.frag", GL_FRAGMENT_SHADER);
+	/*lightingProgram->AddShader("lighting.vert", GL_VERTEX_SHADER);
+	lightingProgram->AddShader("lighting.frag", GL_FRAGMENT_SHADER);*/
 
     glBindAttribLocation(lightingProgram->programId, 0, "vertex");
     glBindAttribLocation(lightingProgram->programId, 1, "vertexNormal");
@@ -151,7 +153,7 @@ void Scene::InitializeScene()
 
     // Create all the Polygon shapes
    // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
-	Shape* EarthPolygons = new Sphere(32);
+	Shape* TeapotPolygons = new Teapot(12);
     Shape* BoxPolygons = new Ply("box.ply");
     Shape* SpherePolygons = new Sphere(32);
     Shape* GroundPolygons = ground;
@@ -164,7 +166,7 @@ void Scene::InitializeScene()
     Object* anim = new Object(NULL, nullId);
     //Replace teapot with sphere for Earth
 	//Object* teapot = new Object(TeapotPolygons, teapotId, vec3(0.5, 0.5, 0.1), vec3(0.5, 0.5, 0.5), 120);
-	Object* earth = new Object(EarthPolygons, teapotId, vec3(0.5, 0.5, 0.1), vec3(0.5, 0.5, 0.5), 120);
+	Object* teapot = new Object(TeapotPolygons, teapotId, vec3(0.5, 0.5, 0.1), vec3(0.5, 0.5, 0.5), 120);
 	Object* podium = new Object(BoxPolygons, boxId,
                                 vec3(0.25, 0.25, 0.1), vec3(0.3, 0.3, 0.3), 10);
     
@@ -194,8 +196,8 @@ void Scene::InitializeScene()
 
     objectRoot->add(podium, Translate(0,0,0));
     objectRoot->add(anim, Translate(0,0,0));
-   // objectRoot->add(teapot, Translate(0.0,0,1.5)*TeapotPolygons->modelTr);
-	objectRoot->add(earth, Translate(0.0, 0, 1.5)*SpherePolygons->modelTr);
+    objectRoot->add(teapot, Translate(0.0,0,1.5)*TeapotPolygons->modelTr);
+	//objectRoot->add(earth, Translate(0.0, 0, 1.5)*SpherePolygons->modelTr);
     anim->add(spheres, Translate(0.0,0,0.0)*Scale(20,20,20));
     
     // Schedule first timed animation call
@@ -256,6 +258,7 @@ void Scene::DrawScene()
 	else
 	{
 		WorldView = Translate(tx, ty, -1 * zoom) * Rotate(0, tilt - 90.f) * Rotate(2, spin);
+		//eyePos = WorldInverse * vec4(0, 0, 0, 1);
 		
 
 	}
@@ -303,21 +306,26 @@ void Scene::DrawScene()
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
 	
+	loc = glGetUniformLocation(programId, "NormalTr");
+	glUniformMatrix4fv(loc, 1, GL_TRUE, (Identity.Pntr()));
+
+
 	//SH added values
-	loc = glGetUniformLocation(programId, "eyePos");
-	glUniform3fv(loc,1, &(eyePos[0]));
+	//loc = glGetUniformLocation(programId, "eyePos");
+	//glUniform3fv(loc,1, &(WorldInverse*vec4(0,0,0,1)));
 
 	//Object properties - will probablly need to tweak these / add in another variable to tell what object is what so I can apply the texture to the sphere properly
-	loc = glGetUniformLocation(programId, "diffuseColor");
-	glUniform3fv(loc, 1, &(objectRoot->diffuseColor[0]));
+	loc = glGetUniformLocation(programId, "diffuseColor"); 
+	glUniform3fv(loc, 1, &((objectRoot->diffuseColor[0])));
 	loc = glGetUniformLocation(programId, "specularColor");
 	glUniform3fv(loc, 1, &(objectRoot->specularColor[0]));
 	loc = glGetUniformLocation(programId, "shininess");
 	glUniform1f(loc, (objectRoot)->shininess);
-
+	CHECKERROR;
 
 	//Light values
-	vec3 lightColor(1, 1, 1), ambientColor(0.2, 0.2, 0.2);
+	vec3 lightColor(PI, PI, PI);
+	vec3 ambientColor(0.2f, 0.2f, 0.2f);
 	loc = glGetUniformLocation(programId, "Light");
 	glUniform3fv(loc, 1, &(lightColor[0]));
 	loc = glGetUniformLocation(programId, "Ambient");

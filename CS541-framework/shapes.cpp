@@ -472,7 +472,8 @@ Teapot::Teapot(const int n)
 Box::Box()
 {
     diffuseColor = vec3(0.5, 0.5, 1.0);
-    specularColor = vec3(1.0, 1.0, 1.0);
+  //  specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02f, 0.02f, 0.02f);
     shininess = 120.0;
 
     mat4 I(1.0f);
@@ -514,7 +515,8 @@ void Box::face(const mat4 tr)
 Sphere::Sphere(const int n)
 {
     diffuseColor = vec3(0.5, 0.5, 1.0);
-    specularColor = vec3(1.0, 1.0, 1.0);
+    //specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02f, 0.02f, 0.02f);
     shininess = 120.0;
 
     float d = 2.0f*PI/float(n*2);
@@ -544,7 +546,8 @@ Sphere::Sphere(const int n)
 Disk::Disk(const int n)
 {
     diffuseColor = vec3(0.5, 0.5, 1.0);
-    specularColor = vec3(1.0, 1.0, 1.0);
+    //specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02f, 0.02f, 0.02f);
     shininess = 120.0;
     
     // Push center point
@@ -574,7 +577,8 @@ Disk::Disk(const int n)
 Cylinder::Cylinder(const int n)
 {
     diffuseColor = vec3(0.5, 0.5, 1.0);
-    specularColor = vec3(1.0, 1.0, 1.0);
+   // specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02f, 0.02f, 0.02f);
     shininess = 120.0;
 
     float d = 2.0f*PI/float(n);
@@ -605,7 +609,8 @@ Cylinder::Cylinder(const int n)
 Ply::Ply(const char* name, const bool reverse)
 {
     diffuseColor = vec3(0.8, 0.8, 0.5);
-    specularColor = vec3(1.0, 1.0, 1.0);
+    //specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02f, 0.02f, 0.02f);
     shininess = 120.0;
 
     // Open PLY file and read header;  Exit on any failure.
@@ -713,7 +718,8 @@ Plane::Plane(const float r, const int n)
     std::vector<ivec4> Quad;
 
     diffuseColor = vec3(0.3, 0.2, 0.1);
-    specularColor = vec3(1.0, 1.0, 1.0);
+   // specularColor = vec3(1.0, 1.0, 1.0);
+	specularColor = vec3(0.02f, 0.02f, 0.02f);
     shininess = 120.0;
 
     for (int i=0;  i<=n;  i++) {
