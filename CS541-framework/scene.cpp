@@ -124,7 +124,7 @@ void Scene::InitializeScene()
 
     objectRoot = new Object(NULL, nullId);
     
-    // Set the initial light position parammeters
+    // Set the initial f position parammeters
     lightSpin = 98.0;
     lightTilt = -80.0;
     lightDist = 1000000.0;
@@ -331,12 +331,7 @@ void Scene::DrawScene()
 	//CHECKERROR;
 
 	//Light values
-	vec3 lightColor(PI*2, PI * 2, PI * 2);
-	vec3 ambientColor(0.2f, 0.2f, 0.2f);
-	loc = glGetUniformLocation(programId, "Light");
-	glUniform3fv(loc, 1, &(lightColor[0]));
-	loc = glGetUniformLocation(programId, "Ambient");
-	glUniform3fv(loc, 1, &(ambientColor[0]));
+
 
 
     CHECKERROR;

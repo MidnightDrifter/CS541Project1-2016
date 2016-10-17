@@ -34,7 +34,7 @@ void ReshapeWindow(int w, int h)
     scene.width = w;
     scene.height = h;
 
-	scene.rx = scene.ry * (w / h);
+	scene.rx = scene.ry * (w * 1.f / h);
     // Force a redraw
     glutPostRedisplay();
 }

@@ -21,7 +21,7 @@ using namespace glm;
 #include "shapes.h"
 #include "scene.h"
 #include "transform.h"
-
+const float PI = 3.14159f;
 Object::Object(Shape* _shape, const int _objectId,
                const vec3 _diffuseColor, const vec3 _specularColor, const float _shininess)
     : shape(_shape), objectId(_objectId), textureId(0), normalId(0),
@@ -37,6 +37,10 @@ void Object::SetTexture(Texture* _texture, const MAT4 _textr, Texture* _normal)
 
 void Object::Draw(ShaderProgram* program, MAT4& objectTr)
 {
+	vec3 lightColor(PI , PI , PI );
+	vec3 ambientColor(0.2f, 0.2f, 0.2f);
+
+
     int loc = glGetUniformLocation(program->programId, "diffuse");
     glUniform3fv(loc, 1, &diffuseColor[0]);
 
@@ -48,6 +52,11 @@ void Object::Draw(ShaderProgram* program, MAT4& objectTr)
 
     loc = glGetUniformLocation(program->programId, "objectId");
     glUniform1i(loc, objectId);
+
+	loc = glGetUniformLocation(program->programId, "Light");
+	glUniform3fv(loc, 1, &(lightColor[0]));
+	loc = glGetUniformLocation(program->programId, "Ambient");
+	glUniform3fv(loc, 1, &(ambientColor[0]));
 
     MAT4 inv;
     invert(&objectTr, &inv);

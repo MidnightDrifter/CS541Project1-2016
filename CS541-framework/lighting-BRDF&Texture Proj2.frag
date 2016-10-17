@@ -37,7 +37,7 @@ vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 	vec3 V = normalize(eVec);
 	vec3 H = normalize(L+V);
 	
-	float alpha = pow(8192, shiny);
+	float alpha = shiny;   //pow(8192, shiny);
 	//float LN = max(0.f, dot(L,N));
 	float LH = max(0.f, dot(L,H));
 	float NH = max(0.f,dot(N,H));
