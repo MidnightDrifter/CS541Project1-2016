@@ -63,19 +63,19 @@ void main()
 	//vec3 V = normalize(eyeVec);
 
 
- //   vec3 Kd = diffuse;   
-    /*
+    vec3 Kd = diffuse;   
+    
     if (objectId==groundId || objectId==seaId) {
         ivec2 uv = ivec2(floor(200.0*texCoord));
         if ((uv[0]+uv[1])%2==0)
             Kd *= 0.9; }
-    */
+    
 
 //	vec3 H = normalize(L+V);
 float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
 
-gl_FragColor.xyz = BRDF() * LN*Light + Ambient;
+gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*Light + Ambient;
 
    // gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 }
