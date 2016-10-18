@@ -82,7 +82,7 @@ public:
     std::vector<Object*> animated;
 
     // Shader programs
-    ShaderProgram* lightingProgram;
+    ShaderProgram* lightingProgram, *shadowProgram;
 
     //void append(Object* m) { objects.push_back(m); }
 

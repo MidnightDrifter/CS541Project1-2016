@@ -151,6 +151,17 @@ void Scene::InitializeScene()
     glBindAttribLocation(lightingProgram->programId, 3, "vertexTangent");
     lightingProgram->LinkProgram();
 
+
+	shadowProgram = new ShaderProgram();
+	shadowProgram->AddShader("shadowProj3.vert", GL_VERTEX_SHADER);
+	shadowProgram->AddShader("shadowProj3.frag", GL_FRAGMENT_SHADER);
+
+	glBindAttribLocation(shadowProgram->programId, 0, "vertex");
+	glBindAttribLocation(shadowProgram->programId, 1, "vertexNormal");
+	glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
+	glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
+	shadowProgram->LinkProgram();
+
     // Create all the Polygon shapes
    // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
 	Shape* TeapotPolygons = new Teapot(12);
@@ -224,7 +235,7 @@ void Scene::DrawScene()
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 
     // Compute Viewing and Perspective transformations.
-    MAT4 WorldProj, WorldView, WorldInverse;
+    MAT4 WorldProj, WorldView, WorldInverse, LightProj, LightView,LightInverse, ShadowMatrix;
 
     // FIXME: When you are ready to try interactive viewing, replace
     // the following hardcoded values for WorldProj and WorldView with
@@ -289,6 +300,10 @@ void Scene::DrawScene()
     */
     invert(&WorldView, &WorldInverse);
 	
+		LightView = glm::lookAt(lPos[0], lPos[1], lPos[2], 0, 0, 0, 0, 0, 1);
+		
+
+
     // Use the lighting shader
     lightingProgram->Use();
     int programId = lightingProgram->programId;
