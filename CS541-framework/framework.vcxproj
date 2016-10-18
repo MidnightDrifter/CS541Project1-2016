@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fbo.cpp" />
     <ClCompile Include="framework.cpp" />
     <ClCompile Include="interact.cpp" />
     <ClCompile Include="object.cpp" />
@@ -23,6 +24,7 @@
     <ClCompile Include="transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fbo.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interact.h" />
     <ClInclude Include="object.h" />

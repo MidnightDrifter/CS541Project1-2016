@@ -48,6 +48,9 @@
     <ClCompile Include="rply.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fbo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fbo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

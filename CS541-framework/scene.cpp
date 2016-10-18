@@ -306,6 +306,8 @@ void Scene::DrawScene()
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
 	
+	//gluLookAt
+
 	//MAT4  NormalInverse;
 	//MAT4 NormalTransform(objectRoot->shape->modelTr);
 //	invert(&NormalInverse, &objectRoot->shape->modelTr);
