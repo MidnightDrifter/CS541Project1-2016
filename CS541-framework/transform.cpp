@@ -118,6 +118,63 @@ MAT4 operator* (const MAT4 A, const MAT4 B)
 }
 
 
+MAT4 LookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
+{
+	MAT4 out;
+
+	float aX, aY, aZ, bX, bY, bZ, vX, vY, vZ, aLength, vLength;
+
+
+
+	vX = centerX - eyeX;
+	vY = centerY - eyeY;
+	vZ = centerZ - eyeZ;
+
+	vLength = sqrtf(vX*vX + vY*vY + vZ*vZ);
+
+	vX /= vLength;
+	vY /= vLength;
+	vZ /= vLength;
+
+	aX = (vY*upZ) - (vZ*upY);
+	aY = (vZ*upX) - (vX*upZ);
+	aZ = (vX*upY) - (vY*upX);
+
+	aLength = sqrtf(aX*aX + aY*aY + aZ*aZ);
+
+	aX /= aLength;
+	aY /= aLength;
+	aZ /= aLength;
+
+	bX = (aY*vZ) - (aZ*vY);
+	bY = (aZ*vX) - (aX*vZ);
+	bZ = (aX*vY) - (aY*vX);
+
+	out[0][0] = aX;
+	out[0][1] = aY;
+	out[0][2] = aZ;
+	out[0][3] = (-1 * aX * eyeX) - (aY*eyeY) - (aZ*eyeZ);
+
+	out[1][0] = bX;
+	out[1][1] = bY;
+	out[1][2] = bZ;
+	out[1][3] = (-1 * bX * eyeX) - (bY*eyeY) - (bZ*eyeZ);
+
+	out[2][0] = vX*-1;
+	out[2][1] = vY*-1;
+	out[2][2] = vZ*-1;
+	out[2][3] = ( vX * eyeX) + (vY*eyeY) + (vZ*eyeZ);
+
+	out[3][0] = 0.f;
+	out[3][1] = 0.f;
+	out[3][2] = 0.f;
+	out[3][3] = 1.f;
+
+	return out;
+
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 // Calculates the inverse of a matrix by performing the gaussian
 // matrix reduction with partial pivoting followed by

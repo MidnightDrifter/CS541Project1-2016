@@ -41,6 +41,8 @@
     <None Include="lighting-BRDF&amp;Texture Proj2.vert" />
     <None Include="lighting.frag" />
     <None Include="lighting.vert" />
+    <None Include="shadowProj3.frag" />
+    <None Include="shadowProj3.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1FBA3F3A-3282-A709-2E8A-1DA52B9CF3A0}</ProjectGuid>

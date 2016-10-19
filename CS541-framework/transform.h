@@ -35,4 +35,6 @@ MAT4 operator* (const MAT4 A, const MAT4 B);
 
 int invert(const MAT4* mat, MAT4* inv);
 
+MAT4 LookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ);
+
 #endif

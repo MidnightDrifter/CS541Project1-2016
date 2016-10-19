@@ -5,14 +5,14 @@
 ////////////////////////////////////////////////////////////////////////
 #version 330
 
-uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr;
+uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr, ShadowMatrix;
 
 in vec4 vertex;
 in vec3 vertexNormal;
 in vec2 vertexTexture;
 in vec3 vertexTangent;
 
-out vec3 normalVec, lightVec, eyeVec;
+out vec3 normalVec, lightVec, eyeVec, shadowCoord;
 out vec2 texCoord;
 uniform vec3 lightPos;
 
@@ -28,4 +28,6 @@ void main()
     lightVec = lightPos - worldPos;
 	eyeVec = (WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
     texCoord = vertexTexture; 
+
+	shadowCoord = ShadowMatrix*ModelMatrix*vertex;
 }

@@ -15,6 +15,7 @@
 #include "shapes.h"
 #include "object.h"
 #include "texture.h"
+#include "fbo.h"
 
 enum ObjectIds {
     nullId	= 0,
@@ -83,6 +84,9 @@ public:
 
     // Shader programs
     ShaderProgram* lightingProgram, *shadowProgram;
+
+	//FBOs
+	FBO* shadowTexture;
 
     //void append(Object* m) { objects.push_back(m); }
 

@@ -16,6 +16,9 @@
     <Filter Include="Shader Files\BRDF &amp; Texture Shaders - Proj2">
       <UniqueIdentifier>{15be3c80-03ae-448d-9d92-5786fcc71b72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Shadow Shaders">
+      <UniqueIdentifier>{7040bacb-703d-4aae-bc89-4d5628721442}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="framework.cpp">
@@ -99,6 +102,12 @@
     </None>
     <None Include="lighting-BRDF&amp;Texture Proj2.vert">
       <Filter>Shader Files\BRDF &amp; Texture Shaders - Proj2</Filter>
+    </None>
+    <None Include="shadowProj3.frag">
+      <Filter>Shader Files\Shadow Shaders</Filter>
+    </None>
+    <None Include="shadowProj3.vert">
+      <Filter>Shader Files\Shadow Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>
