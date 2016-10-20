@@ -164,12 +164,14 @@ void Scene::InitializeScene()
 	shadowProgram->AddShader("shadowProj3.frag", GL_FRAGMENT_SHADER);
 
 	glBindAttribLocation(shadowProgram->programId, 0, "vertex");
-	//glBindAttribLocation(shadowProgram->programId, 1, "vertexNormal");
-	//glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
-	//glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
+	glBindAttribLocation(shadowProgram->programId, 1, "vertexNormal");
+	glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
+	glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
 	shadowProgram->LinkProgram();
 	shadowTexture = new FBO();
 	shadowTexture->CreateFBO(1024, 1024);
+
+	//test = new Texture("grass.jpg");
 
     // Create all the Polygon shapes
    // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
@@ -239,9 +241,7 @@ void Scene::DrawScene()
        1.0 };
 
     // Set the viewport, and clear the screen
-    glViewport(0,0,width, height);
-    glClearColor(0.5,0.5, 0.5, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+
 
     // Compute Viewing and Perspective transformations.
     MAT4 WorldProj, WorldView, WorldInverse, LightProj, LightView,LightInverse, ShadowMatrix;
@@ -309,37 +309,61 @@ void Scene::DrawScene()
     */
     invert(&WorldView, &WorldInverse);
 	
-		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0, 0, 0, 0, 0, 1);
-		float dist = sqrtf(powf(lPos[0] - 0, 2) + powf(lPos[0] - 0, 2) + powf(lPos[0] - 0, 2));  //distance from light to center, center at 0,0,0
-		LightProj = Perspective((40.f/dist),(20.f/dist),0.1, 1000.f);//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
-		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
+		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
+		float dist = sqrtf(powf(lPos[0], 2) + powf(lPos[1], 2) + powf(lPos[2], 2));  //distance from light to center, center at 0,0,0
+		LightProj = Perspective((40.f/dist),(20.f/dist),0.001, 1000.f);//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		
-		
-		shadowProgram->Use();
+		//ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
+
 		shadowTexture->Bind();
+		shadowProgram->Use();
+
+
+		glViewport(0, 0, 1024, 1024);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
 		int loc1, programID1;
+
 		programID1 = shadowProgram->programId;
 		loc1 = glGetUniformLocation(programID1, "ShadowProj");
 		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightProj.Pntr());
+		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldProj.Pntr());
+
+
 		loc1 = glGetUniformLocation(programID1, "ShadowView");
 		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
+		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
 
 		CHECKERROR;
 		// Compute any continuously animating objects
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
-
+		
 		// Draw all objects
 		objectRoot->Draw(shadowProgram, Identity);
-		CHECKERROR;
-		shadowTexture->Unbind();
-		CHECKERROR;
+		glDisable(GL_CULL_FACE);
+		
+		
 		shadowProgram->Unuse();
-		CHECKERROR;
-
-
+		shadowTexture->Unbind();
+		
+		
     // Use the lighting shader
+
+		
+
+		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
+	
     lightingProgram->Use();
+
+	glViewport(0, 0, width, height);
+	glClearColor(0.5, 0.5, 0.5, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     int programId = lightingProgram->programId;
 
     // Setup the perspective and viewing matrices for normal viewing.
@@ -355,15 +379,19 @@ void Scene::DrawScene()
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
 	
-	//loc = glGetUniformLocation(programId, "ShadowMatrix");
-	//glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
-	/*
-	loc = glGetUniformLocation(programId, "shadowTexture");
-	glUniform1i(loc, 0);
+	loc = glGetUniformLocation(programId, "ShadowMatrix");
+	glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
+	
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
-	*/
+	
+
+	//test->Bind(2);
+	loc = glGetUniformLocation(programId, "shadowTexture");
+	glUniform1i(loc, 2);
+
+	
 	//gluLookAt
 
 	//MAT4  NormalInverse;
@@ -404,6 +432,10 @@ void Scene::DrawScene()
     objectRoot->Draw(lightingProgram, Identity);
 
     lightingProgram->Unuse();
+
+	
+	
+
 
 	prevTime = curTime;
 	curTime = glutGet((GLenum)GLUT_ELAPSED_TIME);

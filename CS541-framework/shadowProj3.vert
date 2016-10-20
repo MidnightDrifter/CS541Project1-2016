@@ -5,21 +5,21 @@
 ////////////////////////////////////////////////////////////////////////
 #version 330
 
-uniform mat4 ShadowView, WorldInverse, ShadowProj, ModelTr, NormalTr;
+uniform mat4 ShadowView, ShadowProj, ModelTr;
 
 in vec4 vertex;
-//in vec3 vertexNormal;
-//in vec2 vertexTexture;
-//in vec3 vertexTangent;
+in vec3 vertexNormal;
+in vec2 vertexTexture;
+in vec3 vertexTangent;
 
 //out vec3 normalVec, lightVec;
 //out vec2 texCoord;
 //uniform vec3 lightPos;
 out vec4 pos;
 void main()
-{      
-    gl_Position = ShadowProj*ShadowView*ModelTr*vertex;
-    pos = gl_Position;
+{       pos = ShadowProj*ShadowView*ModelTr*vertex;
+    gl_Position = pos;
+   
     //vec3 worldPos = (ModelTr*vertex).xyz;
 
     //normalVec = vertexNormal*mat3(NormalTr); 

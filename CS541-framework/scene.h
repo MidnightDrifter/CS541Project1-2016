@@ -88,6 +88,10 @@ public:
 	//FBOs
 	FBO* shadowTexture;
 
+
+	//Textures - testin'
+	Texture* test;
+
     //void append(Object* m) { objects.push_back(m); }
 
     void InitializeScene();

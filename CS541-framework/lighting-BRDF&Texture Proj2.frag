@@ -16,7 +16,7 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 const float PI = 3.1415926535897932384626433832795;
-
+const float EPSILON = 0.0001;
 
 
 in vec3 normalVec, lightVec, eyeVec, worldPos;
@@ -78,18 +78,27 @@ void main()
 float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
+vec3 outLight = Ambient+ regularLighting*LN*Light;
 
-if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0)
+
+if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
 {
-//light depth = texture(shadowTexture,shadowIndex).w;
-//pixel depth = shadowCoord.w
-//Pixel shadowed--only ambient light--if Pixel depth > light depth
+//Pixel depth = shadowCoord.w
+//Light depth = texture(shadowTexture,shadowIndex)
+	outLight  = Ambient;	
 
 
 }
 
 
-gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*Light + Ambient;
+gl_FragColor.xyz = outLight;
+
+//gl_FragColor.xy = shadowIndex;   //drawing shadowCoord.xy / shadowCoord.w
+//gl_FragColor = shadowCoord.wwww /100.f;  //pixel depth / 100
+//gl_FragColor = texture(shadowTexture,shadowIndex) /100.f; //light depth /100
+
+
+//gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*Light + Ambient;
 
    // gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 }
