@@ -19,7 +19,8 @@ const float PI = 3.1415926535897932384626433832795;
 
 
 
-in vec3 normalVec, lightVec, eyeVec, worldPos, shadowCoord;
+in vec3 normalVec, lightVec, eyeVec, worldPos;
+in vec4 shadowCoord;
 in vec2 texCoord;
 
 uniform int objectId;
@@ -29,7 +30,7 @@ uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
 
-uniform sampler2d shadowTexture; //shadow map thing
+uniform sampler2D shadowTexture; //shadow map thing
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 {
@@ -63,7 +64,7 @@ void main()
     vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
 	//vec3 V = normalize(eyeVec);
-	vec2 shadowIndex = shadowCoord.xy / shadowCoord.w;
+	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
 
     vec3 Kd = diffuse;   
     
@@ -78,7 +79,7 @@ float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
 
-if(shadowCoord.w >0 && shadowIndex.x <=1 && shadowIndex.x >= 0 && shadowIndex.y =<1 && shadowIndex.y >= 0)
+if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0)
 {
 //light depth = texture(shadowTexture,shadowIndex).w;
 //pixel depth = shadowCoord.w

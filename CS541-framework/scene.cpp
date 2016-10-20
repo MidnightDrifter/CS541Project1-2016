@@ -55,7 +55,14 @@ void PrintMat(const MAT4& m)
 // careful programmer will check the error status *often*, perhaps as
 // often as right after every OpenGL call.  At the very least, once
 // per refresh will tell you if something is going wrong.
-#define CHECKERROR {GLenum err = glGetError(); if (err != GL_NO_ERROR) { fprintf(stderr, "OpenGL error (at line %d): %s\n", __LINE__, gluErrorString(err)); exit(-1);} }
+#define CHECKERROR\
+ {GLenum err = glGetError();\
+  if (err != GL_NO_ERROR) {\
+fprintf(stderr, "OpenGL error (at line %d): %s\n", __LINE__, gluErrorString(err)); \
+fprintf(stdout, "OpenGL error (at line %d): %s\n", __LINE__, gluErrorString(err));}}
+
+//exit(-1);}\
+}
 
 vec3 HSV2RGB(const float h, const float s, const float v)
 {
@@ -307,9 +314,9 @@ void Scene::DrawScene()
 		LightProj = Perspective((40.f/dist),(20.f/dist),0.1, 1000.f);//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 		
-		shadowTexture->Bind();
+		
 		shadowProgram->Use();
-
+		shadowTexture->Bind();
 		int loc1, programID1;
 		programID1 = shadowProgram->programId;
 		loc1 = glGetUniformLocation(programID1, "ShadowProj");
@@ -319,14 +326,14 @@ void Scene::DrawScene()
 
 		CHECKERROR;
 		// Compute any continuously animating objects
-		for (std::vector<Object*>::iterator m = animated.begin(); m<animated.end(); m++)
-			(*m)->animTr = Rotate(2, atime);
+		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
+			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
 		objectRoot->Draw(lightingProgram, Identity);
-
-		shadowProgram->Unuse();
 		shadowTexture->Unbind();
+		shadowProgram->Unuse();
+		
 
 
     // Use the lighting shader
@@ -346,14 +353,15 @@ void Scene::DrawScene()
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);  
 	
-	loc = glGetUniformLocation(programId, "ShadowMatrix");
-	glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
-
+	//loc = glGetUniformLocation(programId, "ShadowMatrix");
+	//glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
+	/*
+	loc = glGetUniformLocation(programId, "shadowTexture");
+	glUniform1i(loc, 0);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
-	loc = glGetUniformLocation(programId, "shadowTexture");
-	glUniform1i(loc, 0);
+	*/
 	//gluLookAt
 
 	//MAT4  NormalInverse;

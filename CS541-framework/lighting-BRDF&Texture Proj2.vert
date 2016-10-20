@@ -12,7 +12,8 @@ in vec3 vertexNormal;
 in vec2 vertexTexture;
 in vec3 vertexTangent;
 
-out vec3 normalVec, lightVec, eyeVec, shadowCoord;
+out vec3 normalVec, lightVec, eyeVec;
+out vec4 shadowCoord;
 out vec2 texCoord;
 uniform vec3 lightPos;
 
@@ -29,5 +30,5 @@ void main()
 	eyeVec = (WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
     texCoord = vertexTexture; 
 
-	shadowCoord = ShadowMatrix*ModelMatrix*vertex;
+	shadowCoord = ShadowMatrix*ModelTr*vertex;
 }

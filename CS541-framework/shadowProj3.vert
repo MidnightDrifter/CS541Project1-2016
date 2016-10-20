@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////
 #version 330
 
-uniform mat4 ShadowView, WorldInverse, WorldProj, ModelTr, NormalTr;
+uniform mat4 ShadowView, WorldInverse, ShadowProj, ModelTr, NormalTr;
 
 in vec4 vertex;
 //in vec3 vertexNormal;
