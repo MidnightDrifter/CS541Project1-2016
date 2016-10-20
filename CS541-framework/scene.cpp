@@ -330,10 +330,12 @@ void Scene::DrawScene()
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
-		objectRoot->Draw(lightingProgram, Identity);
+		objectRoot->Draw(shadowProgram, Identity);
+		CHECKERROR;
 		shadowTexture->Unbind();
+		CHECKERROR;
 		shadowProgram->Unuse();
-		
+		CHECKERROR;
 
 
     // Use the lighting shader
