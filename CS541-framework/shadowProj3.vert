@@ -8,9 +8,9 @@
 uniform mat4 ShadowView, ShadowProj, ModelTr;
 
 in vec4 vertex;
-in vec3 vertexNormal;
-in vec2 vertexTexture;
-in vec3 vertexTangent;
+//in vec3 vertexNormal;
+//in vec2 vertexTexture;
+//in vec3 vertexTangent;
 
 //out vec3 normalVec, lightVec;
 //out vec2 texCoord;

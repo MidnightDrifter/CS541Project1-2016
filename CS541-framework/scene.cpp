@@ -164,12 +164,15 @@ void Scene::InitializeScene()
 	shadowProgram->AddShader("shadowProj3.frag", GL_FRAGMENT_SHADER);
 
 	glBindAttribLocation(shadowProgram->programId, 0, "vertex");
-	glBindAttribLocation(shadowProgram->programId, 1, "vertexNormal");
-	glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
-	glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
+	//glBindAttribLocation(shadowProgram->programId, 1, "vertexNormal");
+	//glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
+	//glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
 	shadowProgram->LinkProgram();
+	CHECKERROR;
 	shadowTexture = new FBO();
 	shadowTexture->CreateFBO(1024, 1024);
+
+	
 
 	//test = new Texture("grass.jpg");
 
@@ -310,18 +313,23 @@ void Scene::DrawScene()
     invert(&WorldView, &WorldInverse);
 	
 		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
-		float dist = sqrtf(powf(lPos[0], 2) + powf(lPos[1], 2) + powf(lPos[2], 2));  //distance from light to center, center at 0,0,0
-		LightProj = Perspective((40.f/dist),(20.f/dist),0.001, 1000.f);//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
+		float dist = sqrtf(powf(lPos[0]-1, 2) + powf(lPos[1]-1, 2) + powf(lPos[2]-1, 2));  //distance from light to center, center at 0,0,0
+		LightProj = Perspective((40.f/dist),(20.f/dist),0.01, 1000.f);//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		
 		//ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
-
-		shadowTexture->Bind();
-		shadowProgram->Use();
 
 
 		glViewport(0, 0, 1024, 1024);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		CHECKERROR;
+
+
+		shadowProgram->Use();
+		//shadowTexture->Bind();
+		
+		CHECKERROR;
+
 		
 		int loc1, programID1;
 
@@ -329,7 +337,7 @@ void Scene::DrawScene()
 		loc1 = glGetUniformLocation(programID1, "ShadowProj");
 		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightProj.Pntr());
 		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldProj.Pntr());
-
+		CHECKERROR
 
 		loc1 = glGetUniformLocation(programID1, "ShadowView");
 		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
@@ -347,22 +355,24 @@ void Scene::DrawScene()
 		objectRoot->Draw(shadowProgram, Identity);
 		glDisable(GL_CULL_FACE);
 		
-		
+		//shadowTexture->Unbind();
 		shadowProgram->Unuse();
-		shadowTexture->Unbind();
+		
 		
 		
     // Use the lighting shader
 
 		
-
+		/*
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 	
+		glViewport(0, 0, width, height);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     lightingProgram->Use();
 
-	glViewport(0, 0, width, height);
-	glClearColor(0.5, 0.5, 0.5, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
     int programId = lightingProgram->programId;
 
@@ -391,6 +401,7 @@ void Scene::DrawScene()
 	loc = glGetUniformLocation(programId, "shadowTexture");
 	glUniform1i(loc, 2);
 
+	
 	
 	//gluLookAt
 
@@ -433,7 +444,7 @@ void Scene::DrawScene()
 
     lightingProgram->Unuse();
 
-	
+	*/
 	
 
 

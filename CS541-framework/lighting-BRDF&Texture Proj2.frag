@@ -16,7 +16,7 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 const float PI = 3.1415926535897932384626433832795;
-const float EPSILON = 0.0001;
+const float EPSILON = 0.001;
 
 
 in vec3 normalVec, lightVec, eyeVec, worldPos;
@@ -86,7 +86,7 @@ if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y
 //Pixel depth = shadowCoord.w
 //Light depth = texture(shadowTexture,shadowIndex)
 	outLight  = Ambient;	
-
+	//outLight = texture(shadowTexture,shadowIndex).xyz;
 
 }
 
@@ -96,7 +96,7 @@ gl_FragColor.xyz = outLight;
 //gl_FragColor.xy = shadowIndex;   //drawing shadowCoord.xy / shadowCoord.w
 //gl_FragColor = shadowCoord.wwww /100.f;  //pixel depth / 100
 //gl_FragColor = texture(shadowTexture,shadowIndex) /100.f; //light depth /100
-
+//gl_FragColor = texture2D(shadowTexture,shadowIndex);
 
 //gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*Light + Ambient;
 

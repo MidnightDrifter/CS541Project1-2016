@@ -90,7 +90,7 @@ public:
 
 
 	//Textures - testin'
-	Texture* test;
+	//Texture* test;
 
     //void append(Object* m) { objects.push_back(m); }
 

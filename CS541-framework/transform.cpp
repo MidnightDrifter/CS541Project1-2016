@@ -122,7 +122,7 @@ MAT4 LookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, fl
 {
 	MAT4 out;
 
-	float aX, aY, aZ, bX, bY, bZ, vX, vY, vZ, aLength, vLength;
+	float aX, aY, aZ, bX, bY, bZ, vX, vY, vZ, aLength, vLength,bLength;
 
 
 
@@ -130,7 +130,7 @@ MAT4 LookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, fl
 	vY = centerY - eyeY;
 	vZ = centerZ - eyeZ;
 
-	vLength = sqrtf(vX*vX + vY*vY + vZ*vZ);
+	vLength = sqrtf((vX*vX) + (vY*vY) + (vZ*vZ));
 
 	vX /= vLength;
 	vY /= vLength;
@@ -149,6 +149,11 @@ MAT4 LookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, fl
 	bX = (aY*vZ) - (aZ*vY);
 	bY = (aZ*vX) - (aX*vZ);
 	bZ = (aX*vY) - (aY*vX);
+
+	bLength = sqrtf(bX*bX + bY*bY + bZ*bZ);
+	bX /= bLength;
+	bY /= bLength;
+	bZ /= bLength;
 
 	out[0][0] = aX;
 	out[0][1] = aY;
