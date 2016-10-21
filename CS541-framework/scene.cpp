@@ -326,7 +326,7 @@ void Scene::DrawScene()
 
 
 		shadowProgram->Use();
-		//shadowTexture->Bind();
+		shadowTexture->Bind();
 		
 		CHECKERROR;
 
@@ -355,15 +355,15 @@ void Scene::DrawScene()
 		objectRoot->Draw(shadowProgram, Identity);
 		glDisable(GL_CULL_FACE);
 		
-		//shadowTexture->Unbind();
+		shadowTexture->Unbind();
 		shadowProgram->Unuse();
 		
 		
 		
     // Use the lighting shader
 
+	
 		
-		/*
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 	
 		glViewport(0, 0, width, height);
@@ -444,7 +444,7 @@ void Scene::DrawScene()
 
     lightingProgram->Unuse();
 
-	*/
+	
 	
 
 

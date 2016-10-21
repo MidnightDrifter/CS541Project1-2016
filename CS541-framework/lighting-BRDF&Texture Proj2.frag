@@ -86,7 +86,7 @@ if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y
 //Pixel depth = shadowCoord.w
 //Light depth = texture(shadowTexture,shadowIndex)
 	outLight  = Ambient;	
-	//outLight = texture(shadowTexture,shadowIndex).xyz;
+
 
 }
 
@@ -96,7 +96,6 @@ gl_FragColor.xyz = outLight;
 //gl_FragColor.xy = shadowIndex;   //drawing shadowCoord.xy / shadowCoord.w
 //gl_FragColor = shadowCoord.wwww /100.f;  //pixel depth / 100
 //gl_FragColor = texture(shadowTexture,shadowIndex) /100.f; //light depth /100
-//gl_FragColor = texture2D(shadowTexture,shadowIndex);
 
 //gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*Light + Ambient;
 

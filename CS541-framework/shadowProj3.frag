@@ -38,7 +38,14 @@ void main()
     */
 
 	
+
+
 	gl_FragData[0]=pos;
+	
+	
+	
+	
+	
 	//gl_FragColor = pos;
     //gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 
