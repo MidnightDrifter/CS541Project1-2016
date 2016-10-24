@@ -78,14 +78,14 @@ void main()
 float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
-vec3 outLight = Ambient+ regularLighting*LN*Light;
+vec3 outLight = Ambient+ regularLighting*LN*(Light+Ambient);
 
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
 {
 //Pixel depth = shadowCoord.w
 //Light depth = texture(shadowTexture,shadowIndex)
-	outLight  = Ambient;	
+//	outLight  = Ambient;	
 
 
 }
@@ -97,7 +97,8 @@ gl_FragColor.xyz = outLight;
 //gl_FragColor = shadowCoord.wwww /100.f;  //pixel depth / 100
 //gl_FragColor = texture(shadowTexture,shadowIndex) /100.f; //light depth /100
 
-//gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*Light + Ambient;
+//gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*(Light + Ambient);
+
 
    // gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 }
