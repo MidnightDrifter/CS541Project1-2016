@@ -238,12 +238,20 @@ void Scene::DrawScene()
 
     // Calculate the light's position.
     float lPos[4] = {
-       basePoint.x+lightDist*cos(lightSpin*rad)*sin(lightTilt*rad),
-       basePoint.y+lightDist*sin(lightSpin*rad)*sin(lightTilt*rad),
-       basePoint.z+lightDist*cos(lightTilt*rad),
+       basePoint.x+lightDist*cosf(lightSpin*rad)*sinf(lightTilt*rad),
+       basePoint.y+lightDist*sinf(lightSpin*rad)*sinf(lightTilt*rad),
+       basePoint.z+lightDist*cosf(lightTilt*rad),
        1.0 };
 
     // Set the viewport, and clear the screen
+
+	printf("basePoint (x,y,z):  (%f,   %f   %f) \n",basePoint.x, basePoint.y, basePoint.z);
+	printf("lightDist:  %f \n",lightDist);
+	printf("lightSpin:  %f \n", lightSpin);
+	printf("lightTilt:  %f \n", lightTilt);
+	printf("rad:  %f  \n", rad);
+
+
 
 
     // Compute Viewing and Perspective transformations.
@@ -311,12 +319,31 @@ void Scene::DrawScene()
     WorldView[2][3]= -basePoint[2];
     */
     invert(&WorldView, &WorldInverse);
-	
+	float dist = sqrtf(powf(lPos[0], 2) + powf(lPos[1], 2) + powf(lPos[2], 2));  //distance from light to center, center at 0,0,0
+
+
+
 		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
-		float dist = sqrtf(powf(lPos[0]-1, 2) + powf(lPos[1]-1, 2) + powf(lPos[2]-1, 2));  //distance from light to center, center at 0,0,0
-		LightProj = Perspective((40.f/dist),(20.f/dist),0.01, 1000.f);//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		
+		LightProj = Perspective((20.f/lightDist),(20.f/lightDist),0.01, 1000.f);							//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
+		//Using the predefined lightDist of 1 million
+
+
+
+
+
+
+
+
+
+
+
+
 		//ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
+
+
+
+
 
 
 		glViewport(0, 0, 1024, 1024);
@@ -326,7 +353,7 @@ void Scene::DrawScene()
 
 
 		shadowProgram->Use();
-		shadowTexture->Bind();
+		//shadowTexture->Bind();
 		
 		CHECKERROR;
 
@@ -355,13 +382,13 @@ void Scene::DrawScene()
 		objectRoot->Draw(shadowProgram, Identity);
 		glDisable(GL_CULL_FACE);
 		
-		shadowTexture->Unbind();
+		//shadowTexture->Unbind();
 		shadowProgram->Unuse();
 		
 		
 		
     // Use the lighting shader
-
+		/*
 	
 		
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
@@ -445,7 +472,7 @@ void Scene::DrawScene()
     lightingProgram->Unuse();
 
 	
-	
+	*/
 
 
 	prevTime = curTime;
