@@ -38,7 +38,7 @@ void Object::SetTexture(Texture* _texture, const MAT4 _textr, Texture* _normal)
 void Object::Draw(ShaderProgram* program, MAT4& objectTr)
 {
 	vec3 lightColor(PI , PI , PI );
-	vec3 ambientColor(0.2f, 0.2f, 0.2f);
+	vec3 ambientColor(0.2f*PI, PI*0.2f, PI* 0.2f);
 
 
     int loc = glGetUniformLocation(program->programId, "diffuse");
