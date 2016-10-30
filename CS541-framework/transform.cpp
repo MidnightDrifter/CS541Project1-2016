@@ -84,10 +84,10 @@ MAT4 Perspective(const float rx, const float ry,
 {
     MAT4 R;
 
-	R[0][0] = 1 / rx;
-	R[1][1] = 1 / ry;
+	R[0][0] = 1.f / rx;
+	R[1][1] = 1.f / ry;
 	R[2][2] = (back + front) / (front - back);
-	R[2][3] = (2 * back*front) / (front - back);
+	R[2][3] = (2.f * back*front) / (front - back);
 	R[3][2] = -1.f;
 	R[3][3] = 0.f;
 

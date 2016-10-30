@@ -134,8 +134,8 @@ void Scene::InitializeScene()
     // Set the initial f position parammeters
     lightSpin = 98.0;
     lightTilt = -80.0;
-    lightDist = 1000000.0;
-
+   // lightDist = 1000000.0;
+	lightDist = 200.0f;
     // Enable OpenGL depth-testing
     glEnable(GL_DEPTH_TEST);
 
@@ -244,13 +244,13 @@ void Scene::DrawScene()
        1.0 };
 
     // Set the viewport, and clear the screen
-
+	/*
 	printf("basePoint (x,y,z):  (%f,   %f   %f) \n",basePoint.x, basePoint.y, basePoint.z);
 	printf("lightDist:  %f \n",lightDist);
 	printf("lightSpin:  %f \n", lightSpin);
 	printf("lightTilt:  %f \n", lightTilt);
 	printf("rad:  %f  \n", rad);
-
+	*/
 
 
 
@@ -319,13 +319,13 @@ void Scene::DrawScene()
     WorldView[2][3]= -basePoint[2];
     */
     invert(&WorldView, &WorldInverse);
-	float dist = sqrtf(powf(lPos[0], 2) + powf(lPos[1], 2) + powf(lPos[2], 2));  //distance from light to center, center at 0,0,0
+//	float dist = sqrtf(powf(lPos[0], 2) + powf(lPos[1], 2) + powf(lPos[2], 2));  //distance from light to center, center at 0,0,0
 
 
 
 		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
 		
-		LightProj = Perspective((20.f/lightDist),(20.f/lightDist),0.01, 1000.f);							//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
+		LightProj = Perspective((20.f/lightDist),(20.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		//Using the predefined lightDist of 1 million
 
 
@@ -346,17 +346,19 @@ void Scene::DrawScene()
 
 
 
+
+
+
+		shadowProgram->Use();
+		shadowTexture->Bind();
+		
+		CHECKERROR;
+
+
 		glViewport(0, 0, 1024, 1024);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
-
-
-		shadowProgram->Use();
-		//shadowTexture->Bind();
-		
-		CHECKERROR;
-
 		
 		int loc1, programID1;
 
@@ -382,24 +384,24 @@ void Scene::DrawScene()
 		objectRoot->Draw(shadowProgram, Identity);
 		glDisable(GL_CULL_FACE);
 		
-		//shadowTexture->Unbind();
+		shadowTexture->Unbind();
 		shadowProgram->Unuse();
 		
 		
 		
     // Use the lighting shader
-		/*
-	
+		
+
 		
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
-	
-		glViewport(0, 0, width, height);
-		glClearColor(0.5, 0.5, 0.5, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
     lightingProgram->Use();
 
 
+	glViewport(0, 0, width, height);
+	glClearColor(0.5, 0.5, 0.5, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     int programId = lightingProgram->programId;
 
@@ -472,7 +474,7 @@ void Scene::DrawScene()
     lightingProgram->Unuse();
 
 	
-	*/
+	
 
 
 	prevTime = curTime;
