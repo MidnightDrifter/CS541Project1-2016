@@ -41,6 +41,10 @@
     <None Include="lighting-BRDF&amp;Texture Proj2.vert" />
     <None Include="lighting.frag" />
     <None Include="lighting.vert" />
+    <None Include="reflectionShaderBot.frag" />
+    <None Include="reflectionShaderBot.vert" />
+    <None Include="reflectionShaderTop.frag" />
+    <None Include="reflectionShaderTop.vert" />
     <None Include="shadowProj3.frag" />
     <None Include="shadowProj3.vert" />
   </ItemGroup>

@@ -168,9 +168,44 @@ void Scene::InitializeScene()
 	//glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
 	//glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
 	shadowProgram->LinkProgram();
+
+	reflectionProgramTop = new ShaderProgram();
+
+	reflectionProgramTop->AddShader("reflectionShaderTop.vert", GL_VERTEX_SHADER);
+	reflectionProgramTop->AddShader("reflectionShaderTop.frag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(reflectionProgramTop->programId, 0, "vertex");
+	glBindAttribLocation(reflectionProgramTop->programId, 1, "vertexNormal");
+	glBindAttribLocation(reflectionProgramTop->programId, 2, "vertexTexture");
+	glBindAttribLocation(reflectionProgramTop->programId, 3, "vertexTangent");
+
+	reflectionProgramTop->LinkProgram();
+
+
+	reflectionProgramBot = new ShaderProgram();
+
+	reflectionProgramBot->AddShader("reflectionShaderBot.vert", GL_VERTEX_SHADER);
+	reflectionProgramBot->AddShader("reflectionShaderBot.frag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(reflectionProgramBot->programId, 0, "vertex");
+	glBindAttribLocation(reflectionProgramBot->programId, 1, "vertexNormal");
+	glBindAttribLocation(reflectionProgramBot->programId, 2, "vertexTexture");
+	glBindAttribLocation(reflectionProgramBot->programId, 3, "vertexTangent");
+
+	reflectionProgramBot->LinkProgram();
+
 	CHECKERROR;
 	shadowTexture = new FBO();
 	shadowTexture->CreateFBO(1024, 1024);
+
+	reflectionTextureTop = new FBO();
+	reflectionTextureTop->CreateFBO(1024, 1024);
+
+
+	reflectionTextureBot = new FBO();
+	reflectionTextureBot->CreateFBO(1024, 1024);
 
 	
 
