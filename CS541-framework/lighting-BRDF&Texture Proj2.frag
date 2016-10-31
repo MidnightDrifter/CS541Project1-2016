@@ -79,15 +79,15 @@ float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
 vec3 outLight = regularLighting*LN*(Light+Ambient);
-
+vec3 zero = vec3(0.f, 0.f, 0.f);
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
 {
 //Pixel depth = shadowCoord.w
 //Light depth = texture(shadowTexture,shadowIndex)
 	//outLight  = Ambient;	
-	outLight = regularLighting*LN*(Ambient);
-
+	//outLight = regularLighting*LN*(Ambient);
+	outLight = LN*Ambient*(BRDF(normalVec, lightVec,eyeVec,shininess,zero,zero));
 }
 
 
