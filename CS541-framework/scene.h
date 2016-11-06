@@ -80,6 +80,7 @@ public:
 
     // All objects in the scene are children of this single root object.
     Object* objectRoot;
+	Object* objectRootNoTeapot;
     std::vector<Object*> animated;
 
     // Shader programs

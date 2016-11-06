@@ -130,7 +130,7 @@ void Scene::InitializeScene()
 
 
     objectRoot = new Object(NULL, nullId);
-    
+	objectRootNoTeapot = new Object(NULL, nullId);
     // Set the initial f position parammeters
     lightSpin = 98.0;
     lightTilt = -80.0;
@@ -260,6 +260,20 @@ void Scene::InitializeScene()
 	//objectRoot->add(earth, Translate(0.0, 0, 1.5)*SpherePolygons->modelTr);
     anim->add(spheres, Translate(0.0,0,0.0)*Scale(20,20,20));
     
+
+	//Add every object EXCEPT the teapot to another object, draw that for reflection passes
+	// Scene is composed of sky, ground, sea, and ... models
+	objectRootNoTeapot->add(sky, Scale(2000.0, 2000.0, 2000.0));
+	objectRootNoTeapot->add(ground);
+	objectRootNoTeapot->add(sea);
+
+	// Two models have rudimentary animation (constant rotation on Z)
+	//animated.push_back(anim);
+
+	objectRootNoTeapot->add(podium, Translate(0, 0, 0));
+	objectRootNoTeapot->add(anim, Translate(0, 0, 0));
+
+
     // Schedule first timed animation call
     glutTimerFunc(30, animate, 1);
 
@@ -429,6 +443,79 @@ void Scene::DrawScene()
 
 		
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
+
+
+
+
+		glViewport(0, 0, 1024, 1024);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		CHECKERROR;
+
+		reflectionProgramTop->Use();
+		reflectionTextureTop->Bind();
+		int loc2, programId2;
+		programId2 = reflectionProgramTop->programId;
+
+		loc2 = glGetUniformLocation(programId2, "WorldProj");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldProj.Pntr());
+		loc2 = glGetUniformLocation(programId2, "WorldView");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldView.Pntr());
+		loc2 = glGetUniformLocation(programId2, "WorldInverse");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldInverse.Pntr());
+		loc2 = glGetUniformLocation(programId2, "lightPos");
+		glUniform3fv(loc2, 1, &(lPos[0]));
+		loc2 = glGetUniformLocation(programId2, "mode");
+		glUniform1i(loc2, mode);
+
+
+
+		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
+			(*m1)->animTr = Rotate(2, atime);
+
+		// Draw all objects
+		objectRootNoTeapot->Draw(reflectionProgramTop, Identity);
+
+
+		reflectionProgramTop->Unuse();
+		reflectionTextureTop->Unbind();
+
+		programId2 = reflectionProgramBot->programId;
+
+		loc2 = glGetUniformLocation(programId2, "WorldProj");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldProj.Pntr());
+		loc2 = glGetUniformLocation(programId2, "WorldView");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldView.Pntr());
+		loc2 = glGetUniformLocation(programId2, "WorldInverse");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldInverse.Pntr());
+		loc2 = glGetUniformLocation(programId2, "lightPos");
+		glUniform3fv(loc2, 1, &(lPos[0]));
+		loc2 = glGetUniformLocation(programId2, "mode");
+		glUniform1i(loc2, mode);
+
+
+
+		glViewport(0, 0, 1024, 1024);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		CHECKERROR;
+
+		reflectionProgramBot->Use();
+		reflectionTextureBot->Bind();
+
+
+
+
+
+		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
+			(*m1)->animTr = Rotate(2, atime);
+
+		// Draw all objects
+		objectRootNoTeapot->Draw(reflectionProgramBot, Identity);
+
+		reflectionTextureBot->Unbind();
+		reflectionProgramBot->Unuse();
+
 
 
     lightingProgram->Use();
