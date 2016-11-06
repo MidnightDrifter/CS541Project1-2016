@@ -16,12 +16,12 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 const float PI = 3.1415926535897932384626433832795;
-const float EPSILON = 0.1;
+const float EPSILON = 0.01;
 
 
 in vec3 normalVec, lightVec, eyeVec, worldPos;
 //in vec4 shadowCoord;
-//in vec2 texCoord;
+in vec2 texCoord;
 
 uniform int objectId;
 uniform vec3 diffuse; // Kd

@@ -174,7 +174,7 @@ void Scene::InitializeScene()
 	reflectionProgramTop->AddShader("reflectionShaderTop.vert", GL_VERTEX_SHADER);
 	reflectionProgramTop->AddShader("reflectionShaderTop.frag", GL_FRAGMENT_SHADER);
 
-
+	//CHECKERROR;
 	glBindAttribLocation(reflectionProgramTop->programId, 0, "vertex");
 	glBindAttribLocation(reflectionProgramTop->programId, 1, "vertexNormal");
 	glBindAttribLocation(reflectionProgramTop->programId, 2, "vertexTexture");
@@ -380,7 +380,7 @@ void Scene::DrawScene()
 
 
 
-
+		CHECKERROR;
 
 
 
@@ -391,7 +391,7 @@ void Scene::DrawScene()
 		//ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
 
-
+		/*
 
 
 
@@ -445,18 +445,20 @@ void Scene::DrawScene()
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 
 
+		*/
 
-
-		glViewport(0, 0, 1024, 1024);
+	//	glViewport(0, 0, 1024, 1024);
+		glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
 
 		reflectionProgramTop->Use();
-		reflectionTextureTop->Bind();
+		CHECKERROR;
+		//reflectionTextureTop->Bind();
 		int loc2, programId2;
 		programId2 = reflectionProgramTop->programId;
-
+		CHECKERROR;
 		loc2 = glGetUniformLocation(programId2, "WorldProj");
 		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldProj.Pntr());
 		loc2 = glGetUniformLocation(programId2, "WorldView");
@@ -476,9 +478,26 @@ void Scene::DrawScene()
 		// Draw all objects
 		objectRootNoTeapot->Draw(reflectionProgramTop, Identity);
 
-
+		//reflectionTextureTop->Unbind();
 		reflectionProgramTop->Unuse();
-		reflectionTextureTop->Unbind();
+		
+
+
+
+
+
+
+
+
+		/*
+		glViewport(0, 0, 1024, 1024);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		CHECKERROR;
+
+		reflectionProgramBot->Use();
+		reflectionTextureBot->Bind();
+
 
 		programId2 = reflectionProgramBot->programId;
 
@@ -492,17 +511,6 @@ void Scene::DrawScene()
 		glUniform3fv(loc2, 1, &(lPos[0]));
 		loc2 = glGetUniformLocation(programId2, "mode");
 		glUniform1i(loc2, mode);
-
-
-
-		glViewport(0, 0, 1024, 1024);
-		glClearColor(0.5, 0.5, 0.5, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		CHECKERROR;
-
-		reflectionProgramBot->Use();
-		reflectionTextureBot->Bind();
-
 
 
 
@@ -595,7 +603,7 @@ void Scene::DrawScene()
 
     lightingProgram->Unuse();
 
-	
+	*/
 	
 
 
