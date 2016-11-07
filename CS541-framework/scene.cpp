@@ -444,8 +444,8 @@ void Scene::DrawScene()
 		
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 
-
-		*/
+*/
+		
 
 	//	glViewport(0, 0, 1024, 1024);
 		glViewport(0, 0, width, height);
@@ -484,33 +484,33 @@ void Scene::DrawScene()
 
 
 
+/*
 
 
+int loc3, programId3;
 
-
-
-		/*
+		
 		glViewport(0, 0, 1024, 1024);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
 
 		reflectionProgramBot->Use();
-		reflectionTextureBot->Bind();
+	//	reflectionTextureBot->Bind();
 
 
-		programId2 = reflectionProgramBot->programId;
+		programId3 = reflectionProgramBot->programId;
 
-		loc2 = glGetUniformLocation(programId2, "WorldProj");
-		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldProj.Pntr());
-		loc2 = glGetUniformLocation(programId2, "WorldView");
-		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldView.Pntr());
-		loc2 = glGetUniformLocation(programId2, "WorldInverse");
-		glUniformMatrix4fv(loc2, 1, GL_TRUE, WorldInverse.Pntr());
-		loc2 = glGetUniformLocation(programId2, "lightPos");
-		glUniform3fv(loc2, 1, &(lPos[0]));
-		loc2 = glGetUniformLocation(programId2, "mode");
-		glUniform1i(loc2, mode);
+		loc3 = glGetUniformLocation(programId3, "WorldProj");
+		glUniformMatrix4fv(loc3, 1, GL_TRUE, WorldProj.Pntr());
+		loc3 = glGetUniformLocation(programId3, "WorldView");
+		glUniformMatrix4fv(loc3, 1, GL_TRUE, WorldView.Pntr());
+		loc3 = glGetUniformLocation(programId3, "WorldInverse");
+		glUniformMatrix4fv(loc3, 1, GL_TRUE, WorldInverse.Pntr());
+		loc3 = glGetUniformLocation(programId3, "lightPos");
+		glUniform3fv(loc3, 1, &(lPos[0]));
+		loc3 = glGetUniformLocation(programId3, "mode");
+		glUniform1i(loc3, mode);
 
 
 
@@ -519,11 +519,11 @@ void Scene::DrawScene()
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
-		objectRootNoTeapot->Draw(reflectionProgramBot, Identity);
+		objectRoot->Draw(reflectionProgramBot, Identity);
 
-		reflectionTextureBot->Unbind();
+		//reflectionTextureBot->Unbind();
 		reflectionProgramBot->Unuse();
-
+		
 
 
     lightingProgram->Use();

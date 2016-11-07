@@ -19,7 +19,7 @@ const float PI = 3.1415926535897932384626433832795;
 const float EPSILON = 0.01;
 
 
-in vec3 normalVec, lightVec, eyeVec, worldPos;
+in vec3 normalVec, lightVec, eyeVec, worldPos, reflectVec, transformLightVec,transformEyeVec;
 //in vec4 shadowCoord;
 in vec2 texCoord;
 
