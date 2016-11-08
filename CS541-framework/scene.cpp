@@ -388,10 +388,10 @@ void Scene::DrawScene()
 
 
 
-		//ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
+		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
 
-		/*
+		
 
 
 
@@ -444,7 +444,7 @@ void Scene::DrawScene()
 		
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 
-*/
+
 		
 
 	//	glViewport(0, 0, 1024, 1024);
@@ -469,6 +469,21 @@ void Scene::DrawScene()
 		glUniform3fv(loc2, 1, &(lPos[0]));
 		loc2 = glGetUniformLocation(programId2, "mode");
 		glUniform1i(loc2, mode);
+
+
+
+		loc2 = glGetUniformLocation(programId2, "ShadowMatrix");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, ShadowMatrix.Pntr());
+
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
+
+
+
+		loc2 = glGetUniformLocation(programId2, "shadowTexture");
+		glUniform1i(loc2, 2);
+
 
 
 
@@ -513,13 +528,26 @@ int loc3, programId3;
 		glUniform1i(loc3, mode);
 
 
+		loc3 = glGetUniformLocation(programId3, "ShadowMatrix");
+		glUniformMatrix4fv(loc3, 1, GL_TRUE, ShadowMatrix.Pntr());
+
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
+
+
+
+		loc3 = glGetUniformLocation(programId3, "shadowTexture");
+		glUniform1i(loc3, 2);
+
+
 
 
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
-		objectRoot->Draw(reflectionProgramBot, Identity);
+		objectRootNoTeapot->Draw(reflectionProgramBot, Identity);
 
 		//reflectionTextureBot->Unbind();
 		reflectionProgramBot->Unuse();
@@ -556,7 +584,7 @@ int loc3, programId3;
 	glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
 	
 
-	//test->Bind(2);
+	
 	loc = glGetUniformLocation(programId, "shadowTexture");
 	glUniform1i(loc, 2);
 

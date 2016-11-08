@@ -13,7 +13,7 @@ in vec2 vertexTexture;
 in vec3 vertexTangent;
 
 out vec3 normalVec, lightVec,transformEyeVec, transformLightVec, eyeVec, reflectVec;
-//out vec4 shadowCoord;
+out vec4 shadowCoord;
 out vec2 texCoord;
 uniform vec3 lightPos;
 
@@ -39,5 +39,5 @@ void main()
 	
 	texCoord = vertexTexture; 
 
-	//shadowCoord = ShadowMatrix*ModelTr*vertex;
+	shadowCoord = ShadowMatrix*ModelTr*vertex;
 }
