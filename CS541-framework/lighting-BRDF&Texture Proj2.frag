@@ -30,7 +30,7 @@ uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
 
-uniform sampler2D shadowTexture; //shadow map thing
+uniform sampler2D shadowTexture, reflectionTextureTop, reflectionTextureBot; //shadow map thing
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 {
@@ -77,9 +77,38 @@ void main()
 //	vec3 H = normalize(L+V);
 float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
+vec3 reflection = 2.f*dot(V,N)*N - V;  //Check this, may need to swap them to the unnormalized vals
+vec3 R = normalize(reflection);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
 vec3 outLight = regularLighting*LN*(Light+Ambient);
 vec3 zero = vec3(0.f, 0.f, 0.f);
+vec3 reflectionColor = zero;
+float RN = max(dot(R,N),0.f);
+
+int addReflectionVal =0;
+
+
+if(objectId == teapotId)
+{float depth;
+addReflectionVal =1;
+vec2 reflectTexCoord;
+
+if(worldPos.z <0)
+{
+depth = 1.0-R.z;
+texCoord = vec2(0.5*RNorm.x/depth +0.5 , 0.5*RNorm.y/depth + 0.5);
+reflectionColor = texture(reflectionTextureBot, texCoord).xyz;
+
+}
+
+else
+{
+depth = 1.0+R.z;
+texCoord = vec2(0.5*RNorm.x/depth +0.5 , 0.5*RNorm.y/depth + 0.5);
+reflectionColor = texture(reflectionTextureTop, texCoord).xyz;
+}
+outLight += (reflectionColor * RN * BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
+}
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
 {
@@ -89,6 +118,8 @@ if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y
 	//outLight = regularLighting*LN*(Ambient);
 	outLight = LN*Ambient*(BRDF(normalVec, lightVec,eyeVec,shininess,zero,zero));
 }
+
+
 
 
 gl_FragColor.xyz = outLight;

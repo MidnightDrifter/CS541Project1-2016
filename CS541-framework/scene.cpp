@@ -589,6 +589,30 @@ int loc3, programId3;
 	glUniform1i(loc, 2);
 
 	
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, reflectionTextureTop->texture);
+	
+
+	
+	loc = glGetUniformLocation(programId, "reflectionTextureTop");
+	glUniform1i(loc, 3);
+
+
+
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, reflectionTextureBot->texture);
+
+
+
+	loc = glGetUniformLocation(programId, "reflectionTextureBot");
+	glUniform1i(loc, 4);
+
+
+
+
+
+
 	
 	//gluLookAt
 
