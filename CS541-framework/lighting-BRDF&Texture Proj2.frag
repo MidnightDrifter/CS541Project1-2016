@@ -63,7 +63,7 @@ void main()
 {
     vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
-	//vec3 V = normalize(eyeVec);
+	vec3 V = normalize(eyeVec);
 	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
 
     vec3 Kd = diffuse;   
@@ -96,7 +96,7 @@ vec2 reflectTexCoord;
 if(worldPos.z <0)
 {
 depth = 1.0-R.z;
-texCoord = vec2(0.5*RNorm.x/depth +0.5 , 0.5*RNorm.y/depth + 0.5);
+reflectTexCoord = vec2(0.5*R.x/depth +0.5 , 0.5*R.y/depth + 0.5);
 reflectionColor = texture(reflectionTextureBot, texCoord).xyz;
 
 }
@@ -104,7 +104,7 @@ reflectionColor = texture(reflectionTextureBot, texCoord).xyz;
 else
 {
 depth = 1.0+R.z;
-texCoord = vec2(0.5*RNorm.x/depth +0.5 , 0.5*RNorm.y/depth + 0.5);
+reflectTexCoord = vec2(0.5*R.x/depth +0.5 , 0.5*R.y/depth + 0.5);
 reflectionColor = texture(reflectionTextureTop, texCoord).xyz;
 }
 outLight += (reflectionColor * RN * BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
