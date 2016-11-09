@@ -30,6 +30,7 @@ uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
 
+
 uniform sampler2D shadowTexture; //shadow map thing
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)

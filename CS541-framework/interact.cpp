@@ -51,6 +51,8 @@ void KeyboardDown(unsigned char key, int x, int y)
 		exit(0);
 	case 't':
 		scene.isToggled = !scene.isToggled;
+	case 'r':
+		scene.toggleReflection *= -1.f;
 	}
 	if (scene.isToggled)
 		{
@@ -74,7 +76,8 @@ void KeyboardDown(unsigned char key, int x, int y)
 			scene.dPressed = true;
 		}
 		//scene.eyePos += scene.speed*vec3(cosf(scene.spin), -1 * sinf(scene.spin), 0.f);
-		
+
+
 
 
 
