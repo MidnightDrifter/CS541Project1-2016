@@ -21,7 +21,7 @@ uniform vec3 lightPos;
 
 void main()
 {     
-	vec3 centerOfScene = vec3(1.f, 1.f, 1.f);  //Teapot is in the center of the scene at ~ origin
+	vec3 centerOfScene = vec3(0.f, 1.f, 0.f);  //Teapot is in the center of the scene at ~ origin
 	vec3 worldPos = (ModelTr*vertex).xyz;
 	vec3 RG =  worldPos-centerOfScene;
     reflectVec = normalize(RG);
