@@ -209,7 +209,7 @@ void Scene::InitializeScene()
 
 	
 
-	//test = new Texture("grass.jpg");
+	test = new Texture("grass.jpg");
 
     // Create all the Polygon shapes
    // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
@@ -388,10 +388,10 @@ void Scene::DrawScene()
 
 
 
-		//ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
+		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
 
-		/*
+		
 
 
 
@@ -443,19 +443,21 @@ void Scene::DrawScene()
 
 		
 		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
-
-*/
 		
 
-	//	glViewport(0, 0, 1024, 1024);
-		glViewport(0, 0, width, height);
+		
+
+		glViewport(0, 0, 1024, 1024);
+	//	glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
 
+
+		//reflectionTextureTop->Bind();
 		reflectionProgramTop->Use();
 		CHECKERROR;
-		//reflectionTextureTop->Bind();
+		
 		int loc2, programId2;
 		programId2 = reflectionProgramTop->programId;
 		CHECKERROR;
@@ -472,31 +474,47 @@ void Scene::DrawScene()
 
 
 
+		loc2 = glGetUniformLocation(programId2, "ShadowMatrix");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, ShadowMatrix.Pntr());
+
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
+
+
+
+		loc2 = glGetUniformLocation(programId2, "shadowTexture");
+		glUniform1i(loc2, 2);
+
+
+
+
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
 		objectRootNoTeapot->Draw(reflectionProgramTop, Identity);
 
-		//reflectionTextureTop->Unbind();
+		
 		reflectionProgramTop->Unuse();
+		//reflectionTextureTop->Unbind();
+
+
 		
 
-
-
-/*
 
 
 int loc3, programId3;
 
 		
 		glViewport(0, 0, 1024, 1024);
+		//glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
-
+		reflectionTextureBot->Bind();
 		reflectionProgramBot->Use();
-	//	reflectionTextureBot->Bind();
+		
 
 
 		programId3 = reflectionProgramBot->programId;
@@ -513,19 +531,32 @@ int loc3, programId3;
 		glUniform1i(loc3, mode);
 
 
+		loc3 = glGetUniformLocation(programId3, "ShadowMatrix");
+		glUniformMatrix4fv(loc3, 1, GL_TRUE, ShadowMatrix.Pntr());
+		CHECKERROR;
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
+		CHECKERROR;
+
+
+		loc3 = glGetUniformLocation(programId3, "shadowTexture");
+		glUniform1i(loc3, 2);
+		CHECKERROR;
+
 
 
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
-		objectRoot->Draw(reflectionProgramBot, Identity);
+		objectRootNoTeapot->Draw(reflectionProgramBot, Identity);
 
-		//reflectionTextureBot->Unbind();
+	
 		reflectionProgramBot->Unuse();
+		reflectionTextureBot->Unbind();
+
 		
-
-
     lightingProgram->Use();
 
 
@@ -554,13 +585,33 @@ int loc3, programId3;
 
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
-	
-
-	//test->Bind(2);
 	loc = glGetUniformLocation(programId, "shadowTexture");
 	glUniform1i(loc, 2);
 
 	
+	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, reflectionTextureTop->texture);
+	
+	//test->Bind(8);
+	loc = glGetUniformLocation(programId, "reflectionTextureTop");
+	glUniform1i(loc, 8);
+	CHECKERROR;
+
+
+
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, reflectionTextureBot->texture);
+	loc = glGetUniformLocation(programId, "reflectionTextureBot");
+	glUniform1i(loc, 7);
+	CHECKERROR;
+
+	loc = glGetUniformLocation(programId, "toggleReflection");
+		glUniform1f(loc, toggleReflection);
+
+	
+
+
+
 	
 	//gluLookAt
 
@@ -602,8 +653,8 @@ int loc3, programId3;
     objectRoot->Draw(lightingProgram, Identity);
 
     lightingProgram->Unuse();
-
-	*/
+	
+	
 	
 
 

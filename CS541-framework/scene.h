@@ -76,7 +76,7 @@ public:
 	float rx = 0;  //X-slope for  perspective transform
 	float front = 0.1f;  //Front clipping plane for perspective transform
 	float back = 1000.f; //Back clipping plane for perspective transform
-
+	float toggleReflection = 1.f;  //float to toggle regular lighting vs. reflection-only in shaders
 
     // All objects in the scene are children of this single root object.
     Object* objectRoot;
@@ -90,7 +90,7 @@ public:
 	FBO* shadowTexture,* reflectionTextureTop,* reflectionTextureBot;
 
 	//Textures - testin'
-	//Texture* test;
+	Texture* test;
 
     //void append(Object* m) { objects.push_back(m); }
 
