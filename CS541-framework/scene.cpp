@@ -31,6 +31,9 @@ const float PI = 3.14159f;
 const float rad = PI/180.0f;    // Convert degrees to radians
 
 MAT4 Identity;
+MAT4 Identity1;
+MAT4 Identity2;
+
 
 const float grndSize = 100.0;    // Island radius;  Minimum about 20;  Maximum 1000 or so
 const int   grndTiles = int(grndSize);
@@ -374,7 +377,7 @@ void Scene::DrawScene()
 
 		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
 		
-		LightProj = Perspective((20.f/lightDist),(20.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
+		LightProj = Perspective((15.f/lightDist),(15.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		//Using the predefined lightDist of 1 million
 
 
@@ -430,7 +433,7 @@ void Scene::DrawScene()
 			(*m1)->animTr = Rotate(2, atime);
 		
 		// Draw all objects
-		objectRoot->Draw(shadowProgram, Identity);
+		objectRootNoTeapot->Draw(shadowProgram, Identity1);
 		glDisable(GL_CULL_FACE);
 		
 		shadowTexture->Unbind();
@@ -446,16 +449,19 @@ void Scene::DrawScene()
 		
 
 		
+		
 
-		glViewport(0, 0, 1024, 1024);
-	//	glViewport(0, 0, width, height);
-		glClearColor(0.5, 0.5, 0.5, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		
+		reflectionProgramTop->Use();
+		reflectionTextureTop->Bind();
 		CHECKERROR;
 
-
-		//reflectionTextureTop->Bind();
-		reflectionProgramTop->Use();
+		glViewport(0, 0, 1024, 1024);
+		// glViewport(0, 0, width, height);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
 		
 		int loc2, programId2;
@@ -493,29 +499,32 @@ void Scene::DrawScene()
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
-		objectRootNoTeapot->Draw(reflectionProgramTop, Identity);
-
+		objectRootNoTeapot->Draw(reflectionProgramTop, Identity2);
 		
+		reflectionTextureTop->Unbind();
 		reflectionProgramTop->Unuse();
-		//reflectionTextureTop->Unbind();
-
-
 		
-
-
+		
+		
+	//	return;
+	//	glBindTexture(GL_TEXTURE_2D, 0);
+		
+	
+		
 
 int loc3, programId3;
 
 		
+
+		
+		reflectionProgramBot->Use();
+		reflectionTextureBot->Bind();
+
 		glViewport(0, 0, 1024, 1024);
-		//glViewport(0, 0, width, height);
+		//	glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
-		reflectionTextureBot->Bind();
-		reflectionProgramBot->Use();
-		
-
 
 		programId3 = reflectionProgramBot->programId;
 
@@ -552,17 +561,21 @@ int loc3, programId3;
 		// Draw all objects
 		objectRootNoTeapot->Draw(reflectionProgramBot, Identity);
 
-	
-		reflectionProgramBot->Unuse();
 		reflectionTextureBot->Unbind();
-
+		reflectionProgramBot->Unuse();
 		
-    lightingProgram->Use();
+	//	return;
+	//	glBindTexture(GL_TEXTURE_2D, 0);
 
+
+
+    lightingProgram->Use();
 
 	glViewport(0, 0, width, height);
 	glClearColor(0.5, 0.5, 0.5, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 
     int programId = lightingProgram->programId;
 
@@ -583,29 +596,27 @@ int loc3, programId3;
 	glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
 	
 
-	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
 	loc = glGetUniformLocation(programId, "shadowTexture");
-	glUniform1i(loc, 2);
-
+	glUniform1i(loc, 3);
 	
-	glActiveTexture(GL_TEXTURE8);
+	
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, reflectionTextureTop->texture);
-	
-	//test->Bind(8);
 	loc = glGetUniformLocation(programId, "reflectionTextureTop");
-	glUniform1i(loc, 8);
-	CHECKERROR;
+	glUniform1i(loc, 2);
+	//CHECKERROR;
 
 
 
-	glActiveTexture(GL_TEXTURE7);
+	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, reflectionTextureBot->texture);
 	loc = glGetUniformLocation(programId, "reflectionTextureBot");
-	glUniform1i(loc, 7);
-	CHECKERROR;
+	glUniform1i(loc, 4);
+	//CHECKERROR;
 
-	loc = glGetUniformLocation(programId, "toggleReflection");
+	loc = glGetUniformLocation(programId, "tog");
 		glUniform1f(loc, toggleReflection);
 
 	
@@ -654,9 +665,10 @@ int loc3, programId3;
 
     lightingProgram->Unuse();
 	
-	
-	
+//	glBindTexture(GL_TEXTURE_2D, 0);
 
+	
+	
 
 	prevTime = curTime;
 	curTime = glutGet((GLenum)GLUT_ELAPSED_TIME);

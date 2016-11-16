@@ -99,6 +99,10 @@ gl_FragColor.xyz = outLight;
 
 
 
+
+
+
+
 //gl_FragColor.xyz = BRDF(normalVec,lightVec,eyeVec,shininess,specular, Kd) * LN*(Light + Ambient);
 
 
