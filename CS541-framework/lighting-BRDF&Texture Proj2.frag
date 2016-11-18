@@ -22,6 +22,7 @@ const float EPSILON = 0.01;
 in vec3 normalVec, lightVec, eyeVec, worldPos;
 in vec4 shadowCoord;
 in vec2 texCoord;
+in vec4 tangent;
 
 uniform int objectId;
 uniform vec3 diffuse; // Kd
@@ -29,12 +30,12 @@ uniform vec3 specular; // Ks
 uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
-
+uniform float tog;
 uniform sampler2D shadowTexture;  //shadowmap
 uniform sampler2D reflectionTextureTop; //top reflection
 uniform sampler2D reflectionTextureBot; //bot reflection
 
-uniform float toggleReflection;
+
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 {
@@ -63,6 +64,10 @@ vec3 BRDF()
 	return BRDF(normalVec, lightVec, eyeVec, shininess, specular, diffuse);
 }
 
+float random(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 void main()
 {
     vec3 N = normalize(normalVec);
@@ -77,16 +82,16 @@ void main()
         if ((uv[0]+uv[1])%2==0)
             Kd *= 0.9; }
     
-
+	vec2 rand = worldPos.xy;
 //	vec3 H = normalize(L+V);
 float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
-vec3 reflection = (2.f*dot(V,N))*N - V;  //Check this, may need to swap them to the unnormalized vals
+vec3 reflection = (2.f*max(0.f,dot(V,N)))*N - V;  //Check this, may need to swap them to the unnormalized vals
 vec3 R = normalize(reflection);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
 vec3 outLight = regularLighting*LN*(Light+Ambient);
 vec3 zero = vec3(0.f, 0.f, 0.f);
-vec3 reflectionColor = zero;
+vec3 reflectionColor = vec3(1.f,0.5f,0.f);
 //float RN = max(dot(R,N),0.f);
 float RN = dot(R,N);
 //int addReflectionVal =0;
@@ -102,7 +107,10 @@ if(objectId == teapotId)
 		{
 			depth = 1.0-R.z;
 			reflectTexCoord = vec2((0.5*R.x/depth) +0.5 , (0.5*R.y/depth) + 0.5);
-			reflectionColor = texture(reflectionTextureBot, reflectTexCoord.xy).xyz;
+		//	reflectTexCoord = vec2(0.5,0.5);
+		//	reflectTexCoord.x = random(rand);
+		//	reflectTexCoord.y=random(rand);
+			reflectionColor = texture2D(reflectionTextureBot, reflectTexCoord.xy).xyz;
 
 		}
 
@@ -110,26 +118,26 @@ if(objectId == teapotId)
 		{
 			depth = 1.0+R.z;
 			reflectTexCoord = vec2((0.5*R.x/depth) +0.5 , (0.5*R.y/depth) + 0.5);
-			reflectionColor = texture(reflectionTextureTop, reflectTexCoord.xy).xyz;
+		//	reflectTexCoord = vec2(0.5,0.5);
+		//	reflectTexCoord.x = random(rand);
+		//	reflectTexCoord.y=random(rand);
+			reflectionColor = texture2D(reflectionTextureTop, reflectTexCoord.xy).xyz;
 		}
 
-	if(toggleReflection > 0)
+	if(tog > 0)
 		{
-			//outLight += (reflectionColor * RN * BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
+			outLight += (reflectionColor * RN * BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
 		}
 
 	else 
 		{
-			//outLight = (reflectionColor*RN*BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
+	outLight = (reflectionColor*RN*BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
 		}
 
-	outLight = reflectionColor;
-/*
-if(reflectionColor.x == 0 && reflectionColor.y ==0 && reflectionColor.z ==0)
-{
-	outLight = vec3(0.5, 0.0, 0.5);
-}
-*/
+	//outLight = reflectionColor;
+	
+
+
 }
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
@@ -147,6 +155,31 @@ if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y
 
 
 gl_FragColor.xyz = outLight;
+return;
+int t = textureSize(reflectionTextureTop,0).x;
+int a = textureSize(reflectionTextureTop,0).y;
+int b = textureSize(reflectionTextureBot,0).x;
+int s = textureSize(reflectionTextureBot,0).y;
+
+
+if(textureSize(reflectionTextureTop,0).x <1)
+{
+	gl_FragColor.xyz = vec3(1.0, 0.0, 0.0);
+}
+
+else if(t==(1024) && s == 1024 && a==1024 && b==1024)
+{
+	gl_FragColor.xyz = vec3(1.0,0.0,1.0);
+}
+
+else if(textureSize(reflectionTextureTop,0).x==1)
+{
+gl_FragColor.xyz = vec3(0.0, 1.0, 0.0);
+}
+
+
+
+//gl_FragColor.xyz = texture(reflectionTextureTop,worldPos.xy).xyz;
 
 
 
