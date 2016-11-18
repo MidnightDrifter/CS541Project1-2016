@@ -149,8 +149,8 @@ void Scene::InitializeScene()
     lightingProgram = new ShaderProgram();
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.vert", GL_VERTEX_SHADER);
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.frag", GL_FRAGMENT_SHADER);
-	/*lightingProgram->AddShader("lighting.vert", GL_VERTEX_SHADER);
-	lightingProgram->AddShader("lighting.frag", GL_FRAGMENT_SHADER);*/
+	//lightingProgram->AddShader("lighting.vert", GL_VERTEX_SHADER);
+	//lightingProgram->AddShader("lighting.frag", GL_FRAGMENT_SHADER);
 
     glBindAttribLocation(lightingProgram->programId, 0, "vertex");
     glBindAttribLocation(lightingProgram->programId, 1, "vertexNormal");
