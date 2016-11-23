@@ -19,7 +19,7 @@ const float PI = 3.1415926535897932384626433832795;
 const float EPSILON = 0.01;
 
 
-in vec3 normalVec, lightVec, eyeVec, worldPos, reflectVec, transformEyeVec, transformLightVec;
+in vec3 normalVec, lightVec, eyeVec, worldPos, reflectVec, transformLightVec,transformEyeVec;
 in vec4 shadowCoord;
 in vec2 texCoord;
 
@@ -29,7 +29,6 @@ uniform vec3 specular; // Ks
 uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
-
 
 uniform sampler2D shadowTexture; //shadow map thing
 
@@ -93,10 +92,6 @@ if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y
 
 
 gl_FragColor.xyz = outLight;
-
-
-
-
 
 
 

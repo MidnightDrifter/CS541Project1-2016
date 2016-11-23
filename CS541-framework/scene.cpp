@@ -138,7 +138,7 @@ void Scene::InitializeScene()
     lightSpin = 98.0;
     lightTilt = -80.0;
    // lightDist = 1000000.0;
-	lightDist = 200.0f;
+	lightDist = 225.0f;
     // Enable OpenGL depth-testing
     glEnable(GL_DEPTH_TEST);
 
@@ -273,7 +273,7 @@ void Scene::InitializeScene()
 	// Two models have rudimentary animation (constant rotation on Z)
 	//animated.push_back(anim);
 
-	objectRootNoTeapot->add(podium, Translate(0, 0, 0));
+	//objectRootNoTeapot->add(podium, Translate(0, 0, 0));
 	objectRootNoTeapot->add(anim, Translate(0, 0, 0));
 
 
@@ -377,7 +377,7 @@ void Scene::DrawScene()
 
 		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
 		
-		LightProj = Perspective((15.f/lightDist),(15.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
+		LightProj = Perspective((30.f/lightDist),(30.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		//Using the predefined lightDist of 1 million
 
 
@@ -494,19 +494,20 @@ void Scene::DrawScene()
 
 
 
-
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
-
+		
 		// Draw all objects
 		objectRootNoTeapot->Draw(reflectionProgramTop, Identity2);
-		
+		//glDisable(GL_CULL_FACE);
 		reflectionTextureTop->Unbind();
 		reflectionProgramTop->Unuse();
 		
 		
 		
-	//	return;
+	//return;
 	//	glBindTexture(GL_TEXTURE_2D, 0);
 		
 	
@@ -523,6 +524,7 @@ int loc3, programId3;
 		glViewport(0, 0, 1024, 1024);
 		//	glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClearDepth(1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
 
@@ -554,17 +556,17 @@ int loc3, programId3;
 		CHECKERROR;
 
 
-
+		
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
 
 		// Draw all objects
 		objectRootNoTeapot->Draw(reflectionProgramBot, Identity);
-
+	
 		reflectionTextureBot->Unbind();
 		reflectionProgramBot->Unuse();
 		
-	//	return;
+//	return;
 	//	glBindTexture(GL_TEXTURE_2D, 0);
 
 

@@ -59,9 +59,33 @@ vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 
 }
 
+vec3 BRDFSpec(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
+{
+	vec3 N = normalize(nVec);
+	vec3 L = normalize(lVec);
+	vec3 V = normalize(eVec);
+	vec3 H = normalize(L+V);
+	
+	float alpha = shiny;   //pow(8192, shiny);
+	//float LN = max(0.f, dot(L,N));
+	float LH = max(0.f, dot(L,H));
+	float NH = max(0.f,dot(N,H));
+
+	float gValue = 1 / (pow(LH,2)*4);   //Raised to power of 2, no need to care about negative vals -- maybe div. by 0 though
+	float dValue = ((2+alpha)/(PI*2))*(pow(NH,alpha));
+	vec3 fValue = spec + ((1-spec)*(pow((1-LH),5)));
+
+	return (gValue*dValue*fValue);
+}
+
 vec3 BRDF()
 {
 	return BRDF(normalVec, lightVec, eyeVec, shininess, specular, diffuse);
+}
+
+vec3 BRDFSpec()
+{
+	return BRDFSpec(normalVec, lightVec, eyeVec, shininess, specular, diffuse);
 }
 
 float random(vec2 co){
@@ -86,7 +110,7 @@ void main()
 //	vec3 H = normalize(L+V);
 float LN = max(dot(L,N),0.0);
 //float HN = max(dot(H,N),0.0);
-vec3 reflection = (2.f*max(0.f,dot(V,N)))*N - V;  //Check this, may need to swap them to the unnormalized vals
+vec3 reflection = ((2.f*dot(V,N))*N) - V;  //Check this, may need to swap them to the unnormalized vals
 vec3 R = normalize(reflection);
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
 vec3 outLight = regularLighting*LN*(Light+Ambient);
@@ -103,35 +127,34 @@ if(objectId == teapotId)
 //	addReflectionVal =1;
 	vec2 reflectTexCoord = vec2(0.f,0.f);
 
-	if(worldPos.z <0)
+	if(R.z <0)
 		{
-			depth = 1.0-R.z;
-			reflectTexCoord = vec2((0.5*R.x/depth) +0.5 , (0.5*R.y/depth) + 0.5);
-		//	reflectTexCoord = vec2(0.5,0.5);
-		//	reflectTexCoord.x = random(rand);
-		//	reflectTexCoord.y=random(rand);
+			depth = 1.f-R.z;
+			reflectTexCoord = vec2((R.x/depth) , (R.y/depth))*0.5f;
+			reflectTexCoord += vec2(0.5, 0.5);
+
 			reflectionColor = texture2D(reflectionTextureBot, reflectTexCoord.xy).xyz;
 
 		}
 
 	else
 		{
-			depth = 1.0+R.z;
-			reflectTexCoord = vec2((0.5*R.x/depth) +0.5 , (0.5*R.y/depth) + 0.5);
-		//	reflectTexCoord = vec2(0.5,0.5);
-		//	reflectTexCoord.x = random(rand);
-		//	reflectTexCoord.y=random(rand);
+			depth = 1.f+R.z;
+			reflectTexCoord = vec2((R.x/depth) , (R.y/depth))*0.5f;
+			reflectTexCoord += vec2(0.5, 0.5);
+			
+
 			reflectionColor = texture2D(reflectionTextureTop, reflectTexCoord.xy).xyz;
 		}
 
 	if(tog > 0)
 		{
-			outLight += (reflectionColor * RN * BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
+			outLight += (reflectionColor * RN * BRDFSpec(normalVec,R,eyeVec,shininess,specular,Kd)) * 0.65f;
 		}
 
 	else 
 		{
-	outLight = (reflectionColor*RN*BRDF(normalVec,R,eyeVec,shininess,specular,Kd));
+	outLight = (reflectionColor*RN*BRDFSpec(normalVec,R,eyeVec,shininess,specular,Kd))  * 0.65f;
 		}
 
 	//outLight = reflectionColor;
