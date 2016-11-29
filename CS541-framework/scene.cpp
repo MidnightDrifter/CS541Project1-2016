@@ -215,7 +215,7 @@ void Scene::InitializeScene()
 	test = new Texture("grass.jpg");
 	skydome = new Texture("textures//sky.jpg");
 	bricksNormalTexture = new Texture("textures//Standard_red_pxr128_normal.png");
-	bricksTexture = new Texture("textures//Standard_red_pxr123.png");
+	bricksTexture = new Texture("textures//Standard_red_pxr128.png");
     // Create all the Polygon shapes
    // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
 	Shape* TeapotPolygons = new Teapot(12);
@@ -496,9 +496,16 @@ void Scene::DrawScene()
 
 
 		skydome->Bind(5);
-		loc = glGetUniformLocation(programId2, "skydomeTexture");
-		glUniform1i(loc, 5);
+		loc2 = glGetUniformLocation(programId2, "skydomeTexture");
+		glUniform1i(loc2, 5);
 
+		bricksTexture->Bind(6);
+		loc2 = glGetUniformLocation(programId2, "bricksTexture");
+		glUniform1i(loc2, 6);
+
+		bricksNormalTexture->Bind(7);
+		loc2 = glGetUniformLocation(programId2, "normalMap");
+		glUniform1i(loc2, 7);
 
 		//glEnable(GL_CULL_FACE);
 		//glCullFace(GL_BACK);
@@ -562,10 +569,16 @@ int loc3, programId3;
 		CHECKERROR;
 
 		skydome->Bind(5);
-		loc = glGetUniformLocation(programId3, "skydomeTexture");
-		glUniform1i(loc, 5);
+		loc3 = glGetUniformLocation(programId3, "skydomeTexture");
+		glUniform1i(loc3, 5);
 
-		
+		bricksTexture->Bind(6);
+		loc3 = glGetUniformLocation(programId3, "bricksTexture");
+		glUniform1i(loc3, 6);
+
+		bricksNormalTexture->Bind(7);
+		loc3 = glGetUniformLocation(programId3, "normalMap");
+		glUniform1i(loc3, 7);
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
 

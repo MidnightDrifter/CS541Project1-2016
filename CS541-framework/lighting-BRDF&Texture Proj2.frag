@@ -173,10 +173,10 @@ vec3 textureColor, textureNormal;
 textureColor = texture(bricksTexture, texCoord).xyz;
 
 
-vec3 tan = normalize(tanget.xyz);
+vec3 tan = normalize(tangent.xyz);
 vec3 bitan = normalize(cross(tan,N));
 
-vec3 temp = 2.f * sampler(normalMap,texCoord) - vec3(1,1,1);
+vec3 temp = 2.f * texture(normalMap,texCoord).xyz - vec3(1,1,1);
 
 
 textureNormal = normalize(temp.x * tan + temp.y * bitan + temp.z * N);
@@ -193,7 +193,7 @@ else if(objectId == skyId)
 
 vec3 D = -1*V;
 
-vec2 skyTexCoord = vec2(0.5f = atan(D.y,D.x), acos(D.z)/PI);
+vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x), acos(D.z)/PI);
 
 vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
 

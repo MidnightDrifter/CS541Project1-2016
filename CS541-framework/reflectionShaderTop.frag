@@ -22,7 +22,7 @@ const float EPSILON = 0.01;
 in vec3 normalVec, lightVec, eyeVec, worldPos, reflectVec, transformLightVec,transformEyeVec;
 in vec4 shadowCoord;
 in vec2 texCoord;
-
+in vec4 tangent;
 uniform int objectId;
 uniform vec3 diffuse; // Kd
 uniform vec3 specular; // Ks
@@ -31,7 +31,9 @@ uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
 
 uniform sampler2D shadowTexture; //shadow map thing
-uniform sampler2D skyboxTexture; //skybox tex
+uniform sampler2D skydomeTexture; //skybox tex
+uniform sampler2D normalMap; //normal map
+uniform sampler2D bricksTexture; //brick color tex
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 {
 
@@ -63,7 +65,7 @@ void main()
 {
     vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
-	//vec3 V = normalize(eyeVec);
+	vec3 V = normalize(eyeVec);
 	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
 
     vec3 Kd = diffuse;   
@@ -87,13 +89,39 @@ if(objectId == skyId)
 
 vec3 D = V;
 
-vec2 skyTexCoord = vec2(0.5f = atan(D.y,D.x), acos(D.z)/PI);
+vec2 skyTexCoord = vec2(0.5f - atan(D.y,D.x), acos(D.z)/PI);
 
 vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
 
 outLight = skyColor; //  Check this  ???
 
 }
+
+
+else if(objectId == boxId)
+{
+
+vec3 textureColor, textureNormal;
+
+textureColor = texture(bricksTexture, texCoord).xyz;
+
+
+vec3 tan = normalize(tangent.xyz);
+vec3 bitan = normalize(cross(tan,N));
+
+vec3 temp = 2.f * texture(normalMap,texCoord).xyz - vec3(1,1,1);
+
+
+textureNormal = normalize(temp.x * tan + temp.y * bitan + temp.z * N);
+float texNL = max(0.f, dot(textureNormal,L));
+//outLight = textureColor * texNL * BRDF(textureNormal,L,eyeVec,shininess,specular,Kd);
+outLight = (Light+Ambient)*texNL*BRDF(textureNormal,L,eyeVec,shininess,specular,(textureColor));
+
+
+}
+
+
+
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
 {
