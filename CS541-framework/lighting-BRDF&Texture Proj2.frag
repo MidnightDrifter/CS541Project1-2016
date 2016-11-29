@@ -34,7 +34,9 @@ uniform float tog;
 uniform sampler2D shadowTexture;  //shadowmap
 uniform sampler2D reflectionTextureTop; //top reflection
 uniform sampler2D reflectionTextureBot; //bot reflection
-
+uniform sampler2D skydomeTexture; //skydome tex
+uniform sampler2D normalMap; //normal map
+uniform sampler2D bricksTexture; //brick color tex
 
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
@@ -162,6 +164,44 @@ if(objectId == teapotId)
 
 
 }
+
+else if(objectId == boxId)
+{
+
+vec3 textureColor, textureNormal;
+
+textureColor = texture(bricksTexture, texCoord).xyz;
+
+
+vec3 tan = normalize(tanget.xyz);
+vec3 bitan = normalize(cross(tan,N));
+
+vec3 temp = 2.f * sampler(normalMap,texCoord) - vec3(1,1,1);
+
+
+textureNormal = normalize(temp.x * tan + temp.y * bitan + temp.z * N);
+float texNL = max(0.f, dot(textureNormal,L));
+//outLight = textureColor * texNL * BRDF(textureNormal,L,eyeVec,shininess,specular,Kd);
+outLight = (Light+Ambient)*texNL*BRDF(textureNormal,L,eyeVec,shininess,specular,(textureColor));
+
+
+}
+
+else if(objectId == skyId)
+{
+
+
+vec3 D = -1*V;
+
+vec2 skyTexCoord = vec2(0.5f = atan(D.y,D.x), acos(D.z)/PI);
+
+vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
+
+outLight = skyColor; //  Check this  ???
+
+}
+
+
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
 {

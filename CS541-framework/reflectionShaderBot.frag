@@ -31,7 +31,7 @@ uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
 
 uniform sampler2D shadowTexture; //shadow map thing
-
+uniform sampler2D skyboxTexture; //skybox tex
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 {
 
@@ -79,6 +79,23 @@ float LN = max(dot(L,N),0.0);
 
 vec3 regularLighting = BRDF(normalVec,lightVec,eyeVec,shininess,specular,Kd);
 vec3 outLight = regularLighting*LN*(Light+Ambient);
+
+if(objectId == skyId)
+{
+
+
+vec3 D = V;
+
+vec2 skyTexCoord = vec2(0.5f = atan(D.y,D.x), acos(D.z)/PI);
+
+vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
+
+outLight = skyColor; //  Check this  ???
+
+}
+
+
+
 
 
 if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))

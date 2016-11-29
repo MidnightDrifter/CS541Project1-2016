@@ -91,6 +91,7 @@ public:
 
 	//Textures - testin'
 	Texture* test;
+	Texture *bricksNormalTexture,* bricksTexture, *skydome;
 
     //void append(Object* m) { objects.push_back(m); }
 
