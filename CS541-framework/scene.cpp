@@ -247,12 +247,14 @@ void Scene::InitializeScene()
     Object* sea = new Object(SeaPolygons, seaId,
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
 
+
+
     // FIXME: This is where you could read in all the textures and
     // associate them with the various objects just created above
     // here.
 
     // Scene is composed of sky, ground, sea, and ... models
-    objectRoot->add(sky, Scale(2000.0, 2000.0, 2000.0));
+    objectRoot->add(sky, Scale(500.0, 500.0, 500.0));
     objectRoot->add(ground);
     objectRoot->add(sea);
 
@@ -268,7 +270,7 @@ void Scene::InitializeScene()
 
 	//Add every object EXCEPT the teapot to another object, draw that for reflection passes
 	// Scene is composed of sky, ground, sea, and ... models
-	objectRootNoTeapot->add(sky, Scale(2000.0, 2000.0, 2000.0));
+	objectRootNoTeapot->add(sky, Scale(500.0, 500.0, 500.0));
 	objectRootNoTeapot->add(ground);
 	objectRootNoTeapot->add(sea);
 
