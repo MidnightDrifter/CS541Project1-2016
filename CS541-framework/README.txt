@@ -7,4 +7,4 @@ Proj 2 - The only special feature is that I used the approximation (GVALUE / (LN
 
 Proj 3 - No special features.  Light distance set to 200.  I do recommend moving / shifting the light so that it's a bit higher in the sky--as is, it's very low and at a very shallow angle to the scene.
 
-Proj 4 = Toggle reflection with the 'R' key
+Proj 4 = Toggle reflection with the 'R' key.  Mitigated the ring as best I could, still not 100% gone, though.
