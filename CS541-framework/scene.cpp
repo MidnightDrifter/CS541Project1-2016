@@ -213,7 +213,9 @@ void Scene::InitializeScene()
 	
 
 	test = new Texture("grass.jpg");
-
+	skydome = new Texture("textures//sky.jpg");
+	bricksNormalTexture = new Texture("textures//Standard_red_pxr128_normal.png");
+	bricksTexture = new Texture("textures//Standard_red_pxr128.png");
     // Create all the Polygon shapes
    // Shape* TeapotPolygons =  new Teapot(12);  //Replace teapot with sphere
 	Shape* TeapotPolygons = new Teapot(12);
@@ -245,12 +247,14 @@ void Scene::InitializeScene()
     Object* sea = new Object(SeaPolygons, seaId,
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
 
+
+
     // FIXME: This is where you could read in all the textures and
     // associate them with the various objects just created above
     // here.
 
     // Scene is composed of sky, ground, sea, and ... models
-    objectRoot->add(sky, Scale(2000.0, 2000.0, 2000.0));
+    objectRoot->add(sky, Scale(500.0, 500.0, 500.0));
     objectRoot->add(ground);
     objectRoot->add(sea);
 
@@ -266,7 +270,7 @@ void Scene::InitializeScene()
 
 	//Add every object EXCEPT the teapot to another object, draw that for reflection passes
 	// Scene is composed of sky, ground, sea, and ... models
-	objectRootNoTeapot->add(sky, Scale(2000.0, 2000.0, 2000.0));
+	objectRootNoTeapot->add(sky, Scale(500.0, 500.0, 500.0));
 	objectRootNoTeapot->add(ground);
 	objectRootNoTeapot->add(sea);
 
@@ -493,6 +497,17 @@ void Scene::DrawScene()
 		glUniform1i(loc2, 2);
 
 
+		skydome->Bind(5);
+		loc2 = glGetUniformLocation(programId2, "skydomeTexture");
+		glUniform1i(loc2, 5);
+
+		bricksTexture->Bind(6);
+		loc2 = glGetUniformLocation(programId2, "bricksTexture");
+		glUniform1i(loc2, 6);
+
+		bricksNormalTexture->Bind(7);
+		loc2 = glGetUniformLocation(programId2, "normalMap");
+		glUniform1i(loc2, 7);
 
 		//glEnable(GL_CULL_FACE);
 		//glCullFace(GL_BACK);
@@ -555,8 +570,17 @@ int loc3, programId3;
 		glUniform1i(loc3, 2);
 		CHECKERROR;
 
+		skydome->Bind(5);
+		loc3 = glGetUniformLocation(programId3, "skydomeTexture");
+		glUniform1i(loc3, 5);
 
-		
+		bricksTexture->Bind(6);
+		loc3 = glGetUniformLocation(programId3, "bricksTexture");
+		glUniform1i(loc3, 6);
+
+		bricksNormalTexture->Bind(7);
+		loc3 = glGetUniformLocation(programId3, "normalMap");
+		glUniform1i(loc3, 7);
 		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
 			(*m1)->animTr = Rotate(2, atime);
 
@@ -622,7 +646,17 @@ int loc3, programId3;
 		glUniform1f(loc, toggleReflection);
 
 	
+		skydome->Bind(5);
+		loc = glGetUniformLocation(programId, "skydomeTexture");
+		glUniform1i(loc, 5);
 
+		bricksTexture->Bind(6);
+		loc = glGetUniformLocation(programId, "bricksTexture");
+		glUniform1i(loc, 6);
+
+		bricksNormalTexture->Bind(7);
+		loc = glGetUniformLocation(programId, "normalMap");
+		glUniform1i(loc, 7);
 
 
 	

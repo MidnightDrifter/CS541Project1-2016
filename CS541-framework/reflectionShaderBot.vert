@@ -13,7 +13,7 @@ in vec2 vertexTexture;
 in vec3 vertexTangent;
 
 out vec3 normalVec, lightVec,transformEyeVec, transformLightVec, eyeVec, reflectVec;
-out vec4 shadowCoord;
+out vec4 shadowCoord, tangent;
 out vec2 texCoord;
 uniform vec3 lightPos;
 
@@ -39,7 +39,7 @@ void main()
 	eyeVec =(WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
 	
    transformEyeVec = worldPos - centerOfScene;
-	
+		tangent = ModelTr * vec4(vertexTangent.xyz,0);
 	texCoord = vertexTexture; 
 
 	shadowCoord = ShadowMatrix*ModelTr*vertex;
