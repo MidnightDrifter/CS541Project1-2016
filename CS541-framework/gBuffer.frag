@@ -30,7 +30,7 @@ uniform vec3 specular; // Ks
 uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
-uniform float tog;
+//uniform float tog;
 //uniform sampler2D shadowTexture;  //shadowmap
 //uniform sampler2D reflectionTextureTop; //top reflection
 //uniform sampler2D reflectionTextureBot; //bot reflection
