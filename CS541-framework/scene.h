@@ -84,10 +84,10 @@ public:
     std::vector<Object*> animated;
 
     // Shader programs
-    ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot;
+    ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot, *gBufferShader, *gBufferGlobalLighting, *gBufferAmbientLighting;
 
 	//FBOs
-	FBO* shadowTexture,* reflectionTextureTop,* reflectionTextureBot;
+	FBO* shadowTexture,* reflectionTextureTop,* reflectionTextureBot, *gBuffer;
 
 	//Textures - testin'
 	Texture* test;

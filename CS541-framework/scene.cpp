@@ -199,6 +199,67 @@ void Scene::InitializeScene()
 
 	reflectionProgramBot->LinkProgram();
 
+
+	gBufferShader = new ShaderProgram();
+
+	gBufferShader->AddShader("reflectionShaderBot.vert", GL_VERTEX_SHADER);
+	gBufferShader->AddShader("reflectionShaderBot.frag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(gBufferShader->programId, 0, "vertex");
+	glBindAttribLocation(gBufferShader->programId, 1, "vertexNormal");
+	glBindAttribLocation(gBufferShader->programId, 2, "vertexTexture");
+	glBindAttribLocation(gBufferShader->programId, 3, "vertexTangent");
+
+	gBufferShader->LinkProgram();
+
+
+
+	gBufferShader = new ShaderProgram();
+
+	gBufferShader->AddShader("gBuffer.vert", GL_VERTEX_SHADER);
+	gBufferShader->AddShader("gBuffer.frag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(gBufferShader->programId, 0, "vertex");
+	glBindAttribLocation(gBufferShader->programId, 1, "vertexNormal");
+	glBindAttribLocation(gBufferShader->programId, 2, "vertexTexture");
+	glBindAttribLocation(gBufferShader->programId, 3, "vertexTangent");
+
+	gBufferShader->LinkProgram();
+
+
+	gBufferGlobalLighting = new ShaderProgram();
+
+	gBufferGlobalLighting->AddShader("gBufferGlobalLighting.vert", GL_VERTEX_SHADER);
+	gBufferGlobalLighting->AddShader("gBufferGlobalLightingfrag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(gBufferGlobalLighting->programId, 0, "vertex");
+	glBindAttribLocation(gBufferGlobalLighting->programId, 1, "vertexNormal");
+	glBindAttribLocation(gBufferGlobalLighting->programId, 2, "vertexTexture");
+	glBindAttribLocation(gBufferGlobalLighting->programId, 3, "vertexTangent");
+
+	gBufferGlobalLighting->LinkProgram();
+
+
+
+
+	gBufferAmbientLighting = new ShaderProgram();
+
+	gBufferAmbientLighting->AddShader("gBufferAmbientLighting.vert", GL_VERTEX_SHADER);
+	gBufferAmbientLighting->AddShader("gBufferAmbientLighting.frag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(gBufferAmbientLighting->programId, 0, "vertex");
+	glBindAttribLocation(gBufferAmbientLighting->programId, 1, "vertexNormal");
+	glBindAttribLocation(gBufferAmbientLighting->programId, 2, "vertexTexture");
+	glBindAttribLocation(gBufferAmbientLighting->programId, 3, "vertexTangent");
+
+	gBufferAmbientLighting->LinkProgram();
+
+
+
 	CHECKERROR;
 	shadowTexture = new FBO();
 	shadowTexture->CreateFBO(1024, 1024);
@@ -209,6 +270,9 @@ void Scene::InitializeScene()
 
 	reflectionTextureBot = new FBO();
 	reflectionTextureBot->CreateFBO(1024, 1024);
+
+	gBuffer = new FBO();
+	gBuffer->CreateFBO(width, height);
 
 	
 
@@ -379,7 +443,7 @@ void Scene::DrawScene()
 
 
 
-		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
+		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 		
 		LightProj = Perspective((30.f/lightDist),(30.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		//Using the predefined lightDist of 1 million
@@ -397,8 +461,91 @@ void Scene::DrawScene()
 
 		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
+		gBufferShader->Use();
+		gBuffer->Bind();
+
+
+		glViewport(0, 0, width, height);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+		int programId = gBufferShader->programId;
+
+		// Setup the perspective and viewing matrices for normal viewing.
+		int loc;
+		loc = glGetUniformLocation(programId, "WorldProj");
+		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
+		loc = glGetUniformLocation(programId, "WorldView");
+		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
+		loc = glGetUniformLocation(programId, "WorldInverse");
+		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
+		loc = glGetUniformLocation(programId, "lightPos");
+		glUniform3fv(loc, 1, &(lPos[0]));
+		loc = glGetUniformLocation(programId, "mode");
+		glUniform1i(loc, mode);
+
+		for (std::vector<Object*>::iterator m = animated.begin(); m<animated.end(); m++)
+			(*m)->animTr = Rotate(2, atime);
+
+
+		/*
+		loc = glGetUniformLocation(programId, "ShadowMatrix");
+		glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
+
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
+		loc = glGetUniformLocation(programId, "shadowTexture");
+		glUniform1i(loc, 3);
+
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, reflectionTextureTop->texture);
+		loc = glGetUniformLocation(programId, "reflectionTextureTop");
+		glUniform1i(loc, 2);
+		//CHECKERROR;
+
 
 		
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, reflectionTextureBot->texture);
+		loc = glGetUniformLocation(programId, "reflectionTextureBot");
+		glUniform1i(loc, 4);
+		//CHECKERROR;
+
+		loc = glGetUniformLocation(programId, "tog");
+		glUniform1f(loc, toggleReflection);
+
+
+		skydome->Bind(5);
+		loc = glGetUniformLocation(programId, "skydomeTexture");
+		glUniform1i(loc, 5);
+
+		bricksTexture->Bind(6);
+		loc = glGetUniformLocation(programId, "bricksTexture");
+		glUniform1i(loc, 6);
+
+		bricksNormalTexture->Bind(7);
+		loc = glGetUniformLocation(programId, "normalMap");
+		glUniform1i(loc, 7);
+
+
+
+		*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
