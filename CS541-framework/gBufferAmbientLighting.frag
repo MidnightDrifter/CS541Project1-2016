@@ -16,23 +16,28 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 
-in vec3 normalVec, lightVec;
-in vec2 texCoord;
+//in vec3 normalVec, lightVec;
+//in vec2 texCoord;
 
-uniform int objectId;
-uniform vec3 diffuse;
+//uniform int objectId;
+//uniform vec3 diffuse;
+
+
+uniform vec3 ambient;
 
 void main()
 {
-    vec3 N = normalize(normalVec);
-    vec3 L = normalize(lightVec);
+   // vec3 N = normalize(normalVec);
+  //  vec3 L = normalize(lightVec);
 
-    vec3 Kd = diffuse;   
+  //  vec3 Kd = diffuse;   
     
-    if (objectId==groundId || objectId==seaId) {
-        ivec2 uv = ivec2(floor(200.0*texCoord));
-        if ((uv[0]+uv[1])%2==0)
-            Kd *= 0.9; }
+  //  if (objectId==groundId || objectId==seaId) {
+  //      ivec2 uv = ivec2(floor(200.0*texCoord));
+ //       if ((uv[0]+uv[1])%2==0)
+  //          Kd *= 0.9; }
     
-    gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
+  //  gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
+
+  gl_FragColor.xyz = ambient;
 }

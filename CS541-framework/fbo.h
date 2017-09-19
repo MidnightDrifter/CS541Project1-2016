@@ -13,9 +13,11 @@ public:
     unsigned int fbo;
 
     unsigned int texture;
+	unsigned int renderTargets[4];  //ONLY FOR USE WITH G BUFFER!!!!!
     int width, height;  // Size of the texture.
 
     void CreateFBO(const int w, const int h);
+	void CreateGBuffer(const int w, const int h);
     void Bind();
     void Unbind();
 };

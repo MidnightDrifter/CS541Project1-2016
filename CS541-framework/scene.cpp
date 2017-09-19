@@ -125,7 +125,7 @@ void Scene::InitializeScene()
 	curTime = prevTime;
 
 
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     CHECKERROR;
 
     // FIXME: This is a good place for initializing the transformation
@@ -134,6 +134,13 @@ void Scene::InitializeScene()
 
     objectRoot = new Object(NULL, nullId);
 	objectRootNoTeapot = new Object(NULL, nullId);
+	FSQ = new Object(NULL, nullId);
+
+	FSQ->add(new Object(new Quad(1),-1,ambientLight,ambientLight,1.f), Scale(10.f,10.f,10.f));
+
+
+
+
     // Set the initial f position parammeters
     lightSpin = 98.0;
     lightTilt = -80.0;
@@ -272,8 +279,11 @@ void Scene::InitializeScene()
 	reflectionTextureBot->CreateFBO(1024, 1024);
 
 	gBuffer = new FBO();
-	gBuffer->CreateFBO(width, height);
+	gBuffer->CreateGBuffer(width, height);
 
+	screenOutput = new FBO();
+	screenOutput->CreateFBO(width, height);
+	
 	
 
 	test = new Texture("grass.jpg");
@@ -287,6 +297,9 @@ void Scene::InitializeScene()
     Shape* SpherePolygons = new Sphere(32);
     Shape* GroundPolygons = ground;
     Shape* SeaPolygons = new Plane(2000.0, 50);
+	
+	
+
 
     // Create all the models from which the scene is composed.  Each
     // is created with a polygon shape (possible NULL), a
@@ -461,6 +474,10 @@ void Scene::DrawScene()
 
 		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
+
+		//Start G Buffer 
+
+
 		gBufferShader->Use();
 		gBuffer->Bind();
 
@@ -535,6 +552,10 @@ void Scene::DrawScene()
 
 		*/
 
+		gBuffer->Unbind();
+		gBufferShader->Unuse();
+
+		//End G Buffer
 
 
 
@@ -549,46 +570,7 @@ void Scene::DrawScene()
 
 
 
-
-
-
-		shadowProgram->Use();
-		shadowTexture->Bind();
 		
-		CHECKERROR;
-
-
-		glViewport(0, 0, 1024, 1024);
-		glClearColor(0.5, 0.5, 0.5, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		CHECKERROR;
-		
-		int loc1, programID1;
-
-		programID1 = shadowProgram->programId;
-		loc1 = glGetUniformLocation(programID1, "ShadowProj");
-		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightProj.Pntr());
-		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldProj.Pntr());
-		CHECKERROR
-
-		loc1 = glGetUniformLocation(programID1, "ShadowView");
-		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
-		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
-
-		CHECKERROR;
-		// Compute any continuously animating objects
-
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
-		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
-			(*m1)->animTr = Rotate(2, atime);
-		
-		// Draw all objects
-		objectRootNoTeapot->Draw(shadowProgram, Identity1);
-		glDisable(GL_CULL_FACE);
-		
-		shadowTexture->Unbind();
-		shadowProgram->Unuse();
 		
 		
 		
@@ -739,6 +721,83 @@ int loc3, programId3;
 		
 //	return;
 	//	glBindTexture(GL_TEXTURE_2D, 0);
+
+		//Start Ambient Light G Buffer Pass
+
+		screenOutput->Bind();
+			gBufferAmbientLighting->Use();
+
+			glViewport(0, 0, width, height);
+			glClearColor(0.5, 0.5, 0.5, 1.0);
+			glClearDepth(1.0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			CHECKERROR;
+
+			//loc = gBufferAmbientLighting->programId;
+			programId = gBufferAmbientLighting->programId;
+
+			loc = glGetUniformLocation(programId, "ambient");
+			glUniform3fv(loc, 1, &(ambientLight[0]));
+
+
+			FSQ->Draw(gBufferAmbientLighting,Identity);   //Maybe need projection transform to orient FSQ properly?
+
+			gBufferAmbientLighting->Unuse();
+			screenOutput->Unbind();
+
+
+			//End Ambient Light G Buffer Pass
+
+
+
+			//Start Global (Shadow-casting) Light G Buffer Pass
+
+			
+			
+
+			shadowProgram->Use();
+			shadowTexture->Bind();
+
+			CHECKERROR;
+
+
+			glViewport(0, 0, 1024, 1024);
+			glClearColor(0.5, 0.5, 0.5, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			CHECKERROR;
+
+			int loc1, programID1;
+
+			programID1 = shadowProgram->programId;
+			loc1 = glGetUniformLocation(programID1, "ShadowProj");
+			glUniformMatrix4fv(loc1, 1, GL_TRUE, LightProj.Pntr());
+			//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldProj.Pntr());
+			CHECKERROR
+
+				loc1 = glGetUniformLocation(programID1, "ShadowView");
+			glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
+			//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
+
+			CHECKERROR;
+			// Compute any continuously animating objects
+
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
+			for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
+				(*m1)->animTr = Rotate(2, atime);
+
+			// Draw all objects
+			objectRootNoTeapot->Draw(shadowProgram, Identity1);
+			glDisable(GL_CULL_FACE);
+
+			shadowTexture->Unbind();
+			shadowProgram->Unuse();
+
+
+
+
+
+			//End Global (Shadow-casting) Light G Buffer Pass
 
 
 

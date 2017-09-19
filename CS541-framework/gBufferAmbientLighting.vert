@@ -5,25 +5,28 @@
 ////////////////////////////////////////////////////////////////////////
 #version 330
 
-uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr;
+//uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr;
 
 in vec4 vertex;
-in vec3 vertexNormal;
-in vec2 vertexTexture;
-in vec3 vertexTangent;
+//in vec3 vertexNormal;
+//in vec2 vertexTexture;
+//in vec3 vertexTangent;
 
-out vec3 normalVec, lightVec;
-out vec2 texCoord;
-uniform vec3 lightPos;
+//out vec3 normalVec, lightVec;
+//out vec2 texCoord;
+//uniform vec3 lightPos;
 
 void main()
 {      
-    gl_Position = WorldProj*WorldView*ModelTr*vertex;
+
+gl_Position =vertex;
+
+    //gl_Position = WorldProj*WorldView*ModelTr*vertex;
     
-    vec3 worldPos = (ModelTr*vertex).xyz;
+    //vec3 worldPos = (ModelTr*vertex).xyz;
 
-    normalVec = vertexNormal*mat3(NormalTr); 
-    lightVec = lightPos - worldPos;
+    //normalVec = vertexNormal*mat3(NormalTr); 
+    //lightVec = lightPos - worldPos;
 
-    texCoord = vertexTexture; 
+    //texCoord = vertexTexture; 
 }

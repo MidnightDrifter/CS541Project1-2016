@@ -78,6 +78,9 @@ public:
 	float back = 1000.f; //Back clipping plane for perspective transform
 	float toggleReflection = 1.f;  //float to toggle regular lighting vs. reflection-only in shaders
 
+	vec3 ambientLight = vec3(0.1f, 0.1f, 0.1f);  //Float to denote the amount of ambient light - to be used until Proj 3
+
+
     // All objects in the scene are children of this single root object.
     Object* objectRoot;
 	Object* objectRootNoTeapot;
@@ -87,11 +90,14 @@ public:
     ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot, *gBufferShader, *gBufferGlobalLighting, *gBufferAmbientLighting;
 
 	//FBOs
-	FBO* shadowTexture,* reflectionTextureTop,* reflectionTextureBot, *gBuffer;
+	FBO* shadowTexture,* reflectionTextureTop,* reflectionTextureBot, *gBuffer, *screenOutput;
 
 	//Textures - testin'
 	Texture* test;
 	Texture *bricksNormalTexture,* bricksTexture, *skydome;
+
+
+	Object* FSQ; //Full screen quad
 
     //void append(Object* m) { objects.push_back(m); }
 
