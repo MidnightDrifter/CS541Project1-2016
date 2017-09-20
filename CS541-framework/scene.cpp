@@ -771,6 +771,8 @@ int loc3, programId3;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			CHECKERROR;
 
+			glEnable(GL_DEPTH);
+
 			int loc1, programID1;
 
 			programID1 = shadowProgram->programId;
@@ -782,6 +784,39 @@ int loc3, programId3;
 				loc1 = glGetUniformLocation(programID1, "ShadowView");
 			glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
 			//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
+
+
+			//Start 'pass gBuffer to specified shader' block
+
+			glActiveTexture(GL_TEXTURE6);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
+			loc1 = glGetUniformLocation(programID1, "gBuffer0");
+			glUniform1i(loc1, 6);
+
+
+
+
+			glActiveTexture(GL_TEXTURE7);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
+			loc1 = glGetUniformLocation(programID1, "gBuffer1");
+			glUniform1i(loc1, 7);
+
+
+
+
+			glActiveTexture(GL_TEXTURE8);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
+			loc1 = glGetUniformLocation(programID1, "gBuffer2");
+			glUniform1i(loc1, 8);
+
+
+
+			glActiveTexture(GL_TEXTURE9);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
+			loc1 = glGetUniformLocation(programID1, "gBuffer3");
+			glUniform1i(loc1, 9);
+
+			//End 'pass gBuffer to specified shader' block
 
 			CHECKERROR;
 			// Compute any continuously animating objects
@@ -803,6 +838,9 @@ int loc3, programId3;
 			//Start Global (Shadow-casting) Light G Buffer Pass
 			screenOutput->Bind();
 			gBufferGlobalLighting->Use();
+
+			glDisable(GL_DEPTH);
+			glEnable(GL_BLEND);
 			
 			 programId = gBufferGlobalLighting->programId;
 		
@@ -827,6 +865,38 @@ int loc3, programId3;
 			glUniform1i(loc, 3);
 
 
+			//Start 'pass gBuffer to specified shader' block
+		
+			glActiveTexture(GL_TEXTURE6);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
+			loc1 = glGetUniformLocation(programId, "gBuffer0");
+			glUniform1i(loc, 6);
+
+
+
+
+			glActiveTexture(GL_TEXTURE7);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
+			loc1 = glGetUniformLocation(programId, "gBuffer1");
+			glUniform1i(loc, 7);
+
+
+
+
+			glActiveTexture(GL_TEXTURE8);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
+			loc1 = glGetUniformLocation(programId, "gBuffer2");
+			glUniform1i(loc, 8);
+
+
+
+			glActiveTexture(GL_TEXTURE9);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
+			loc1 = glGetUniformLocation(programId, "gBuffer3");
+			glUniform1i(loc, 9);
+
+			//End 'pass gBuffer to specified shader' block
+
 
 			gBufferGlobalLighting->Unuse();
 			screenOutput->Unbind();
@@ -850,6 +920,40 @@ int loc3, programId3;
 			loc = glGetUniformLocation(programId, "WorldInverse");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
 
+			//Start 'pass gBuffer to specified shader' block
+
+			glActiveTexture(GL_TEXTURE6);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
+			loc1 = glGetUniformLocation(programId, "gBuffer0");
+			glUniform1i(loc, 6);
+
+
+
+
+			glActiveTexture(GL_TEXTURE7);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
+			loc1 = glGetUniformLocation(programId, "gBuffer1");
+			glUniform1i(loc, 7);
+
+
+
+
+			glActiveTexture(GL_TEXTURE8);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
+			loc1 = glGetUniformLocation(programId, "gBuffer2");
+			glUniform1i(loc, 8);
+
+
+
+			glActiveTexture(GL_TEXTURE9);
+			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
+			loc1 = glGetUniformLocation(programId, "gBuffer3");
+			glUniform1i(loc, 9);
+
+			//End 'pass gBuffer to specified shader' block
+
+
+
 
 			gBufferLocalLighting->Unuse();
 			screenOutput->Unbind();
@@ -860,7 +964,7 @@ int loc3, programId3;
 
 
 
-
+			/*
     lightingProgram->Use();
 
 	glViewport(0, 0, width, height);
@@ -968,7 +1072,7 @@ int loc3, programId3;
     lightingProgram->Unuse();
 	
 //	glBindTexture(GL_TEXTURE_2D, 0);
-
+*/
 	
 	
 
