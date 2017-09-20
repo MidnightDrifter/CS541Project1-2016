@@ -43,6 +43,8 @@
     <None Include="gBufferAmbientLighting.vert" />
     <None Include="gBufferGlobalLighting.frag" />
     <None Include="gBufferGlobalLighting.vert" />
+    <None Include="gBufferLocalLighting.frag" />
+    <None Include="gBufferLocalLighting.vert" />
     <None Include="lighting-BRDF&amp;Texture Proj2.frag" />
     <None Include="lighting-BRDF&amp;Texture Proj2.vert" />
     <None Include="lighting.frag" />

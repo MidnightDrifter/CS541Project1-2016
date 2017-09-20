@@ -40,6 +40,9 @@
     <Filter Include="Shader Files\gBuffer\Ambient Lighting">
       <UniqueIdentifier>{e41cf54b-7dfd-4e42-aa48-377ea85056cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\gBuffer\Local Lighting">
+      <UniqueIdentifier>{7b652f6a-bca5-4acc-b5b4-749fed942c18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="framework.cpp">
@@ -159,6 +162,12 @@
     </None>
     <None Include="gBufferAmbientLighting.vert">
       <Filter>Shader Files\gBuffer\Ambient Lighting</Filter>
+    </None>
+    <None Include="gBufferLocalLighting.frag">
+      <Filter>Shader Files\gBuffer\Local Lighting</Filter>
+    </None>
+    <None Include="gBufferLocalLighting.vert">
+      <Filter>Shader Files\gBuffer\Local Lighting</Filter>
     </None>
   </ItemGroup>
 </Project>

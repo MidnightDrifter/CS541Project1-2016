@@ -209,21 +209,6 @@ void Scene::InitializeScene()
 
 	gBufferShader = new ShaderProgram();
 
-	gBufferShader->AddShader("reflectionShaderBot.vert", GL_VERTEX_SHADER);
-	gBufferShader->AddShader("reflectionShaderBot.frag", GL_FRAGMENT_SHADER);
-
-
-	glBindAttribLocation(gBufferShader->programId, 0, "vertex");
-	glBindAttribLocation(gBufferShader->programId, 1, "vertexNormal");
-	glBindAttribLocation(gBufferShader->programId, 2, "vertexTexture");
-	glBindAttribLocation(gBufferShader->programId, 3, "vertexTangent");
-
-	gBufferShader->LinkProgram();
-
-
-
-	gBufferShader = new ShaderProgram();
-
 	gBufferShader->AddShader("gBuffer.vert", GL_VERTEX_SHADER);
 	gBufferShader->AddShader("gBuffer.frag", GL_FRAGMENT_SHADER);
 
@@ -234,6 +219,21 @@ void Scene::InitializeScene()
 	glBindAttribLocation(gBufferShader->programId, 3, "vertexTangent");
 
 	gBufferShader->LinkProgram();
+
+
+
+	gBufferLocalLighting = new ShaderProgram();
+
+	gBufferLocalLighting->AddShader("gBufferLocalLighting.vert", GL_VERTEX_SHADER);
+	gBufferLocalLighting->AddShader("gBufferLocalLighting.frag", GL_FRAGMENT_SHADER);
+
+
+	glBindAttribLocation(gBufferLocalLighting->programId, 0, "vertex");
+	glBindAttribLocation(gBufferLocalLighting->programId, 1, "vertexNormal");
+	glBindAttribLocation(gBufferLocalLighting->programId, 2, "vertexTexture");
+	glBindAttribLocation(gBufferLocalLighting->programId, 3, "vertexTangent");
+
+	gBufferLocalLighting->LinkProgram();
 
 
 	gBufferGlobalLighting = new ShaderProgram();
@@ -578,14 +578,13 @@ void Scene::DrawScene()
 		
 
 		
-		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 		
 
 		
 		
 
 
-
+		/*
 		
 		reflectionProgramTop->Use();
 		reflectionTextureTop->Bind();
@@ -722,6 +721,10 @@ int loc3, programId3;
 //	return;
 	//	glBindTexture(GL_TEXTURE_2D, 0);
 
+	*/
+
+
+
 		//Start Ambient Light G Buffer Pass
 
 		screenOutput->Bind();
@@ -731,6 +734,7 @@ int loc3, programId3;
 			glClearColor(0.5, 0.5, 0.5, 1.0);
 			glClearDepth(1.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glDisable(GL_DEPTH);   //Disable depth test?
 			CHECKERROR;
 
 			//loc = gBufferAmbientLighting->programId;
@@ -750,10 +754,11 @@ int loc3, programId3;
 
 
 
-			//Start Global (Shadow-casting) Light G Buffer Pass
+			//Start Shadow Depth test pass
 
 			
-			
+			ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
+
 
 			shadowProgram->Use();
 			shadowTexture->Bind();
@@ -793,11 +798,66 @@ int loc3, programId3;
 			shadowTexture->Unbind();
 			shadowProgram->Unuse();
 
+			//End Shadow Depth test pass
 
+			//Start Global (Shadow-casting) Light G Buffer Pass
+			screenOutput->Bind();
+			gBufferGlobalLighting->Use();
+			
+			 programId = gBufferGlobalLighting->programId;
+		
+			loc = glGetUniformLocation(programId, "WorldProj");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
+			loc = glGetUniformLocation(programId, "WorldView");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
+			loc = glGetUniformLocation(programId, "WorldInverse");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
+			loc = glGetUniformLocation(programId, "lightPos");
+			glUniform3fv(loc, 1, &(lPos[0]));
+			loc = glGetUniformLocation(programId, "mode");
+			glUniform1i(loc, mode);
+
+			loc = glGetUniformLocation(programId, "ShadowMatrix");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
+
+
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
+			loc = glGetUniformLocation(programId, "shadowTexture");
+			glUniform1i(loc, 3);
+
+
+
+			gBufferGlobalLighting->Unuse();
+			screenOutput->Unbind();
 
 
 
 			//End Global (Shadow-casting) Light G Buffer Pass
+
+
+
+			//Start local lighting (small lights with pre-defined radii) pass
+			screenOutput->Bind();
+			gBufferLocalLighting->Use();
+
+			programId = gBufferLocalLighting->programId;
+
+			loc = glGetUniformLocation(programId, "WorldProj");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
+			loc = glGetUniformLocation(programId, "WorldView");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
+			loc = glGetUniformLocation(programId, "WorldInverse");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
+
+
+			gBufferLocalLighting->Unuse();
+			screenOutput->Unbind();
+
+
+
+			//End local lighting pass
+
 
 
 
@@ -809,10 +869,10 @@ int loc3, programId3;
 
 
 
-    int programId = lightingProgram->programId;
+     programId = lightingProgram->programId;
 
     // Setup the perspective and viewing matrices for normal viewing.
-    int loc;
+  
     loc = glGetUniformLocation(programId, "WorldProj");
     glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
     loc = glGetUniformLocation(programId, "WorldView");
