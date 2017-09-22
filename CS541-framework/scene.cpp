@@ -229,9 +229,9 @@ void Scene::InitializeScene()
 
 
 	glBindAttribLocation(gBufferLocalLighting->programId, 0, "vertex");
-	glBindAttribLocation(gBufferLocalLighting->programId, 1, "vertexNormal");
-	glBindAttribLocation(gBufferLocalLighting->programId, 2, "vertexTexture");
-	glBindAttribLocation(gBufferLocalLighting->programId, 3, "vertexTangent");
+//	glBindAttribLocation(gBufferLocalLighting->programId, 1, "vertexNormal");
+//	glBindAttribLocation(gBufferLocalLighting->programId, 2, "vertexTexture");
+//	glBindAttribLocation(gBufferLocalLighting->programId, 3, "vertexTangent");
 
 	gBufferLocalLighting->LinkProgram();
 
@@ -243,9 +243,9 @@ void Scene::InitializeScene()
 
 
 	glBindAttribLocation(gBufferGlobalLighting->programId, 0, "vertex");
-	glBindAttribLocation(gBufferGlobalLighting->programId, 1, "vertexNormal");
-	glBindAttribLocation(gBufferGlobalLighting->programId, 2, "vertexTexture");
-	glBindAttribLocation(gBufferGlobalLighting->programId, 3, "vertexTangent");
+//	glBindAttribLocation(gBufferGlobalLighting->programId, 1, "vertexNormal");
+//	glBindAttribLocation(gBufferGlobalLighting->programId, 2, "vertexTexture");
+//	glBindAttribLocation(gBufferGlobalLighting->programId, 3, "vertexTangent");
 
 	gBufferGlobalLighting->LinkProgram();
 
@@ -259,9 +259,9 @@ void Scene::InitializeScene()
 
 
 	glBindAttribLocation(gBufferAmbientLighting->programId, 0, "vertex");
-	glBindAttribLocation(gBufferAmbientLighting->programId, 1, "vertexNormal");
-	glBindAttribLocation(gBufferAmbientLighting->programId, 2, "vertexTexture");
-	glBindAttribLocation(gBufferAmbientLighting->programId, 3, "vertexTangent");
+//	glBindAttribLocation(gBufferAmbientLighting->programId, 1, "vertexNormal");
+//	glBindAttribLocation(gBufferAmbientLighting->programId, 2, "vertexTexture");
+//	glBindAttribLocation(gBufferAmbientLighting->programId, 3, "vertexTangent");
 
 	gBufferAmbientLighting->LinkProgram();
 
@@ -844,7 +844,8 @@ int loc3, programId3;
 			
 			 programId = gBufferGlobalLighting->programId;
 		
-			loc = glGetUniformLocation(programId, "WorldProj");
+			/*
+			 loc = glGetUniformLocation(programId, "WorldProj");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
 			loc = glGetUniformLocation(programId, "WorldView");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
@@ -854,7 +855,7 @@ int loc3, programId3;
 			glUniform3fv(loc, 1, &(lPos[0]));
 			loc = glGetUniformLocation(programId, "mode");
 			glUniform1i(loc, mode);
-
+			*/
 			loc = glGetUniformLocation(programId, "ShadowMatrix");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
 
@@ -896,7 +897,7 @@ int loc3, programId3;
 			glUniform1i(loc, 9);
 
 			//End 'pass gBuffer to specified shader' block
-
+			FSQ->Draw(gBufferGlobalLighting, Identity);
 
 			gBufferGlobalLighting->Unuse();
 			screenOutput->Unbind();
@@ -912,14 +913,14 @@ int loc3, programId3;
 			gBufferLocalLighting->Use();
 
 			programId = gBufferLocalLighting->programId;
-
+			/*
 			loc = glGetUniformLocation(programId, "WorldProj");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
 			loc = glGetUniformLocation(programId, "WorldView");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
 			loc = glGetUniformLocation(programId, "WorldInverse");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
-
+			*/
 			//Start 'pass gBuffer to specified shader' block
 
 			glActiveTexture(GL_TEXTURE6);
@@ -953,11 +954,12 @@ int loc3, programId3;
 			//End 'pass gBuffer to specified shader' block
 
 
-
+			FSQ->Draw(gBufferLocalLighting, Identity);
 
 			gBufferLocalLighting->Unuse();
 			screenOutput->Unbind();
 
+			
 
 
 			//End local lighting pass

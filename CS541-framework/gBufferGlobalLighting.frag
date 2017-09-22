@@ -16,14 +16,78 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 
-in vec3 normalVec, lightVec;
-in vec2 texCoord;
+//in vec3 normalVec, lightVec;
+//in vec2 texCoord;
 
-uniform int objectId;
-uniform vec3 diffuse;
+//uniform int objectId;
+//uniform vec3 diffuse;
+uniform vec3 lightPos;
+uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
+uniform sampler 2d gBuffer1;  //specular.xyz, shininess
+uniform sampler 2d gBuffer2;  //diffuse.xyz
+uniform sampler 2d gBuffer3;  //normalVec.xyz
+
+
+
+
+vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
+{
+
+	vec3 N = normalize(nVec);
+	vec3 L = normalize(lVec);
+	vec3 V = normalize(eVec);
+	vec3 H = normalize(L+V);
+	
+	float alpha = shiny;   //pow(8192, shiny);
+	//float LN = max(0.f, dot(L,N));
+	float LH = max(0.f, dot(L,H));
+	float NH = max(0.f,dot(N,H));
+
+	float gValue = 1 / (pow(LH,2)*4);   //Raised to power of 2, no need to care about negative vals -- maybe div. by 0 though
+	float dValue = ((2+alpha)/(PI*2))*(pow(NH,alpha));
+	vec3 fValue = spec + ((1-spec)*(pow((1-LH),5)));
+
+	return (dif/PI)+(gValue*dValue*fValue);
+	
+
+}
+
+vec3 BRDFSpec(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
+{
+	vec3 N = normalize(nVec);
+	vec3 L = normalize(lVec);
+	vec3 V = normalize(eVec);
+	vec3 H = normalize(L+V);
+	
+	float alpha = shiny;   //pow(8192, shiny);
+	//float LN = max(0.f, dot(L,N));
+	float LH = max(0.f, dot(L,H));
+	float NH = max(0.f,dot(N,H));
+
+	float gValue = 1 / (pow(LH,2)*4);   //Raised to power of 2, no need to care about negative vals -- maybe div. by 0 though
+	float dValue = ((2+alpha)/(PI*2))*(pow(NH,alpha));
+	vec3 fValue = spec + ((1-spec)*(pow((1-LH),5)));
+
+	return (gValue*dValue*fValue);
+}
+/*
+vec3 BRDF()
+{
+	return BRDF(normalVec, lightVec, eyeVec, shininess, specular, diffuse);
+}
+
+vec3 BRDFSpec()
+{
+	return BRDFSpec(normalVec, lightVec, eyeVec, shininess, specular, diffuse);
+}
+*/
+float random(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 
 void main()
-{
+{/*
     vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
 
@@ -35,4 +99,14 @@ void main()
             Kd *= 0.9; }
     
     gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
+	*/
+	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
+	//All textures default to 1k x 1k because I'm lazy
+	//Would need to pass texture height & width to shaders in the future if I ever change the size!
+	vec2 myPixelCoordinate = THINGY.xy/1024;  //I forget the call for this fug
+	vec3 worldPos = 
+	
+
+
+
 }
