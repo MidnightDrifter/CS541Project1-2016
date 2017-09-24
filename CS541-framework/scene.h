@@ -17,6 +17,7 @@
 #include "texture.h"
 #include "fbo.h"
 
+
 enum ObjectIds {
     nullId	= 0,
     skyId	= 1,
@@ -42,6 +43,7 @@ public:
     // user mouse/keyboard actions and used in DrawScene to create the
     // transformation matrices.
 
+	const float PI = 3.14159f;
     ProceduralGround* ground;
 
     // Light position parameters
@@ -89,7 +91,11 @@ public:
 	Object* localLights;
 	int numLocalLights = 250;
 	float localLightRadius = 1.5f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
-    // Shader programs
+   
+	vec3 lightColor = vec3(PI, PI, PI);
+	vec3 ambientColor =  vec3(0.2f*PI, PI*0.2f, PI* 0.2f);  //So much reorganizing!
+									
+	// Shader programs
     ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot, *gBufferShader, *gBufferGlobalLighting, *gBufferAmbientLighting, *gBufferLocalLighting;
 
 	//FBOs

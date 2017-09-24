@@ -15,14 +15,16 @@ const int     lPicId	= 7;
 const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
+const float EPSILON = 0.01;
 
-//in vec3 normalVec, lightVec;
+in vec3 normalVec, lightVec;
 //in vec2 texCoord;
 
 //uniform int objectId;
 //uniform vec3 diffuse;
-uniform mat4 WorldInverse;
-uniform vec3 lightPos;
+//uniform vec3 Light;  //Ii
+//uniform mat4 WorldInverse;
+//uniform vec3 lightPos;
 uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
 uniform sampler 2d gBuffer1;  //specular.xyz, shininess
 uniform sampler 2d gBuffer2;  //diffuse.xyz
@@ -102,10 +104,12 @@ void main()
     gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 	*/
 	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
+
 	//All textures default to 1k x 1k because I'm lazy
 	//Would need to pass texture height & width to shaders in the future if I ever change the size!
-	vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  //I forget the call for this fug
-	
+
+	vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  
+
 	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
 	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;
 	
@@ -116,7 +120,28 @@ void main()
 
 	vec3 normal = texture2D(gBuffer3,myPixelCoordinate).xyz;
 	
+	vec3 eyePos = (WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
 
+	vec3 L = lightPos - worldPos;
+
+
+	//SHADOW STUFF
+	if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
+{
+//Pixel depth = shadowCoord.w
+//Light depth = texture(shadowTexture,shadowIndex)
+	//outLight  = Ambient;	
+	//outLight = regularLighting*LN*(Ambient);
+	//outLight = LN*Ambient*(BRDF(normalVec, lightVec,eyeVec,shininess,zero,zero));
+	gl_FragColor.xyz = vec3(0,0,0);
+
+
+}
+
+else
+{
+	
+}
 
 
 }

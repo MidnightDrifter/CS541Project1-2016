@@ -16,7 +16,7 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 
-//in vec3 normalVec, lightVec;
+in vec3 normalVec, lightVec, eyeVec;
 //in vec2 texCoord;
 
 //uniform int objectId;
@@ -114,6 +114,6 @@ void main()
 
 	vec3 N = texture2D(gBuffer3,myPixelCoordinate).xyz;
 
-	vec3 L = 
+	
 
 }

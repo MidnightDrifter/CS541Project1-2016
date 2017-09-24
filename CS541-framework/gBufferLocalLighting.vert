@@ -12,21 +12,21 @@ in vec4 vertex;
 //in vec2 vertexTexture;
 //in vec3 vertexTangent;
 
-//out vec3 normalVec, lightVec;
+out vec3 normalVec, lightVec, eyeVec;
 //out vec2 texCoord;
 uniform vec3 lightPos;
 
 void main()
-{      gl_Position = vertex;
-   /*
+{     // gl_Position = vertex;
+   
    gl_Position = WorldProj*WorldView*ModelTr*vertex;
     
     vec3 worldPos = (ModelTr*vertex).xyz;
 
     normalVec = vertexNormal*mat3(NormalTr); 
     lightVec = lightPos - worldPos;
+		eyeVec = (WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
+   // texCoord = vertexTexture; 
 
-    texCoord = vertexTexture; 
-*/
 
 }

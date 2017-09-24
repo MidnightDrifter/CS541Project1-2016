@@ -891,7 +891,7 @@ int loc3, programId3;
 			glActiveTexture(GL_TEXTURE6);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
 			loc1 = glGetUniformLocation(programId, "gBuffer0");
-			glUniform1i(loc, 6);
+			glUniform1i(loc1, 6);
 
 
 
@@ -899,7 +899,7 @@ int loc3, programId3;
 			glActiveTexture(GL_TEXTURE7);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
 			loc1 = glGetUniformLocation(programId, "gBuffer1");
-			glUniform1i(loc, 7);
+			glUniform1i(loc1, 7);
 
 
 
@@ -907,14 +907,19 @@ int loc3, programId3;
 			glActiveTexture(GL_TEXTURE8);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
 			loc1 = glGetUniformLocation(programId, "gBuffer2");
-			glUniform1i(loc, 8);
+			glUniform1i(loc1, 8);
 
 
 
 			glActiveTexture(GL_TEXTURE9);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
-			loc1 = glGetUniformLocation(programId, "gBuffer3");
-			glUniform1i(loc, 9);
+			loc1 = glGetUniformLocation(programId , "gBuffer3");
+			glUniform1i(loc1, 9);
+
+			loc1 = glGetUniformLocation(programId, "Light");
+			glUniform3fv(loc1, 1, &(lightColor[0]));
+
+
 
 			//End 'pass gBuffer to specified shader' block
 			FSQ->Draw(gBufferGlobalLighting, Identity);
@@ -933,20 +938,20 @@ int loc3, programId3;
 			gBufferLocalLighting->Use();
 
 			programId = gBufferLocalLighting->programId;
-			/*
+			
 			loc = glGetUniformLocation(programId, "WorldProj");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
 			loc = glGetUniformLocation(programId, "WorldView");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
 			loc = glGetUniformLocation(programId, "WorldInverse");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
-			*/
+			
 			//Start 'pass gBuffer to specified shader' block
 
 			glActiveTexture(GL_TEXTURE6);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
 			loc1 = glGetUniformLocation(programId, "gBuffer0");
-			glUniform1i(loc, 6);
+			glUniform1i(loc1, 6);
 
 
 
@@ -954,7 +959,7 @@ int loc3, programId3;
 			glActiveTexture(GL_TEXTURE7);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
 			loc1 = glGetUniformLocation(programId, "gBuffer1");
-			glUniform1i(loc, 7);
+			glUniform1i(loc1, 7);
 
 
 
@@ -962,17 +967,23 @@ int loc3, programId3;
 			glActiveTexture(GL_TEXTURE8);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
 			loc1 = glGetUniformLocation(programId, "gBuffer2");
-			glUniform1i(loc, 8);
+			glUniform1i(loc1, 8);
+
 
 
 
 			glActiveTexture(GL_TEXTURE9);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
 			loc1 = glGetUniformLocation(programId, "gBuffer3");
-			glUniform1i(loc, 9);
+			glUniform1i(loc1, 9);
 
 			//End 'pass gBuffer to specified shader' block
+			//(GL_CULL_FACE);
+			//glCullFace(GL_FRONT);
 
+		//	localLights->Draw(gBufferLocalLighting, Identity);
+
+			//glDisable(GL_CULL_FACE);
 
 			FSQ->Draw(gBufferLocalLighting, Identity);
 
