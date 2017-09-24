@@ -26,4 +26,9 @@ void main()
    // lightVec = lightPos - worldPos;
 
   //  texCoord = vertexTexture; 
+
+
+
+
+
 }

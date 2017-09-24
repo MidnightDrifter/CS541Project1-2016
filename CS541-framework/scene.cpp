@@ -977,6 +977,15 @@ int loc3, programId3;
 			loc1 = glGetUniformLocation(programId, "gBuffer3");
 			glUniform1i(loc1, 9);
 
+			loc1 = glGetUniformLocation(programId, "radius");
+			glUniform1f(loc1, localLightRadius);
+
+			loc1 = glGetUniformLocation(programId, "radiusSquared");
+			glUniform1f(loc1, localLightRadius*localLightRadius);
+
+			loc1 = glGetUniformLocation(programId, "localLightBrightness");
+			glUniform3fv(loc1, 1, &localLightColor[0]);
+
 			//End 'pass gBuffer to specified shader' block
 			//(GL_CULL_FACE);
 			//glCullFace(GL_FRONT);

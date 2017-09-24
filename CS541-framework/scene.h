@@ -93,6 +93,7 @@ public:
 	float localLightRadius = 1.5f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
    
 	vec3 lightColor = vec3(PI, PI, PI);
+	vec3 localLightColor = lightColor / vec3(numLocalLights,numLocalLights,  numLocalLights);
 	vec3 ambientColor =  vec3(0.2f*PI, PI*0.2f, PI* 0.2f);  //So much reorganizing!
 									
 	// Shader programs

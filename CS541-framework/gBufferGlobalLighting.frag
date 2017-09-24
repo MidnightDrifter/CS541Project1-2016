@@ -22,7 +22,7 @@ in vec3 normalVec, lightVec;
 
 //uniform int objectId;
 //uniform vec3 diffuse;
-//uniform vec3 Light;  //Ii
+uniform vec3 Light;  //Ii
 //uniform mat4 WorldInverse;
 //uniform vec3 lightPos;
 uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
@@ -121,9 +121,10 @@ void main()
 	vec3 normal = texture2D(gBuffer3,myPixelCoordinate).xyz;
 	
 	vec3 eyePos = (WorldInverse * vec4(0.f, 0.f, 0.f, 1.f)).xyz-worldPos;
-
-	vec3 L = lightPos - worldPos;
-
+	vec3 V = normalize(eyePos-worldPos);
+	vec3 N = normalize(normal);
+	vec3 L = normalize(lightPos - worldPos);
+	float LN = max(dot(N,L),0.f);
 
 	//SHADOW STUFF
 	if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y <= 1 && shadowIndex.y >= 0  &&((shadowCoord.w - texture(shadowTexture,shadowIndex).w) > EPSILON))
@@ -140,7 +141,7 @@ void main()
 
 else
 {
-	
+	gl_FragColor.xyz = LN*Light*BRDF(N,L,V,shininess,specular, diffuse);
 }
 
 

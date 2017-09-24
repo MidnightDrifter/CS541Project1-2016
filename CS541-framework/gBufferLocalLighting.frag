@@ -27,8 +27,9 @@ uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
 uniform sampler 2d gBuffer1;  //specular.xyz, shininess
 uniform sampler 2d gBuffer2;  //diffuse.xyz
 uniform sampler 2d gBuffer3;  //normalVec.xyz
-
-
+uniform vec3 localLightBrightness;
+uniform float radius;
+//uniform float radiusSquared;
 
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
@@ -111,9 +112,12 @@ void main()
 	float shininess = texture2D(gBuffer1, myPixelCoordinate).w;
 
 	vec3 diffuse = texture2D(gBuffer2, myPixelCoordinate).xyz;
-
+	vec3 L = normalize(lightVec);
 	vec3 N = texture2D(gBuffer3,myPixelCoordinate).xyz;
+	float LN = max(dot(L,N),0.0f);
+	float radiusSquared = radius*radius;
 
-	
+	//if pixel out of light's range:  gl_FragColor.xyz = vec3(0,0,0);
+	//else gl_FragColor.xyz = LN* *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
 
 }
