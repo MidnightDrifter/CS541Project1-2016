@@ -21,6 +21,7 @@ const int     spheresId	= 10;
 
 //uniform int objectId;
 //uniform vec3 diffuse;
+uniform mat4 WorldInverse;
 uniform vec3 lightPos;
 uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
 uniform sampler 2d gBuffer1;  //specular.xyz, shininess
@@ -103,8 +104,17 @@ void main()
 	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
 	//All textures default to 1k x 1k because I'm lazy
 	//Would need to pass texture height & width to shaders in the future if I ever change the size!
-	vec2 myPixelCoordinate = THINGY.xy/1024;  //I forget the call for this fug
-	vec3 worldPos = 
+	vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  //I forget the call for this fug
+	
+	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
+	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;
+	
+	vec3 specular = texture2D(gBuffer1, myPixelCoordinate).xyz;
+	float shininess = texture2D(gBuffer1, myPixelCoordinate).w;
+
+	vec3 diffuse = texture2D(gBuffer2, myPixelCoordinate).xyz;
+
+	vec3 normal = texture2D(gBuffer3,myPixelCoordinate).xyz;
 	
 
 

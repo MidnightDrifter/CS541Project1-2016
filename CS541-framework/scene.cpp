@@ -743,6 +743,8 @@ int loc3, programId3;
 			loc = glGetUniformLocation(programId, "ambient");
 			glUniform3fv(loc, 1, &(ambientLight[0]));
 
+	
+
 
 			FSQ->Draw(gBufferAmbientLighting,Identity);   //Maybe need projection transform to orient FSQ properly?
 
@@ -784,6 +786,10 @@ int loc3, programId3;
 				loc1 = glGetUniformLocation(programID1, "ShadowView");
 			glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
 			//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
+
+
+			loc1 = glGetUniformLocation(programID1, "WorldInverse");
+			glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldInverse.Pntr());
 
 
 			//Start 'pass gBuffer to specified shader' block
@@ -864,6 +870,9 @@ int loc3, programId3;
 			glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
 			loc = glGetUniformLocation(programId, "shadowTexture");
 			glUniform1i(loc, 3);
+
+			loc = glGetUniformLocation(programId, "WorldInverse");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
 
 
 			//Start 'pass gBuffer to specified shader' block

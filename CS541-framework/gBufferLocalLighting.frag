@@ -21,6 +21,7 @@ const int     spheresId	= 10;
 
 //uniform int objectId;
 //uniform vec3 diffuse;
+uniform mat4 WorldInverse;
 uniform vec3 lightPos;
 uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
 uniform sampler 2d gBuffer1;  //specular.xyz, shininess
@@ -87,7 +88,7 @@ float random(vec2 co){
 
 
 void main()
-{
+{/*
     vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
 
@@ -99,4 +100,20 @@ void main()
             Kd *= 0.9; }
     
     gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
+*/
+
+	vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  //I forget the call for this fug
+	
+	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
+	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;
+	
+	vec3 specular = texture2D(gBuffer1, myPixelCoordinate).xyz;
+	float shininess = texture2D(gBuffer1, myPixelCoordinate).w;
+
+	vec3 diffuse = texture2D(gBuffer2, myPixelCoordinate).xyz;
+
+	vec3 N = texture2D(gBuffer3,myPixelCoordinate).xyz;
+
+	vec3 L = 
+
 }
