@@ -324,6 +324,16 @@ void Scene::InitializeScene()
     Object* sea = new Object(SeaPolygons, seaId,
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
 
+	Object* localLights = new Object(NULL, nullId);
+
+	for (int i = 0; i <= numLocalLights; i++)
+	{
+		//Start at ~ -10 x, increment up little by little in positive x towards +10
+		//Y is the up direction, right?  Or was it Z?
+		
+		localLights->add( new Object(new Sphere(localLightRadius),localLightsId, vec3(0,0,0), vec3(0,0,0), 1.f), Translate((-10) + (i*10.f / numLocalLights), 0.f, 5.f));
+
+	}
 
 
     // FIXME: This is where you could read in all the textures and
@@ -334,6 +344,7 @@ void Scene::InitializeScene()
     objectRoot->add(sky, Scale(500.0, 500.0, 500.0));
     objectRoot->add(ground);
     objectRoot->add(sea);
+
 
     // Two models have rudimentary animation (constant rotation on Z)
     animated.push_back(anim);

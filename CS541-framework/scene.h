@@ -29,6 +29,7 @@ enum ObjectIds {
     rPicId	= 8,
     teapotId	= 9,
     spheresId	= 10,
+	localLightsId=11,
 };
 
 class Shader;
@@ -85,7 +86,9 @@ public:
     Object* objectRoot;
 	Object* objectRootNoTeapot;
     std::vector<Object*> animated;
-
+	Object* localLights;
+	int numLocalLights = 250;
+	float localLightRadius = 1.5f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
     // Shader programs
     ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot, *gBufferShader, *gBufferGlobalLighting, *gBufferAmbientLighting, *gBufferLocalLighting;
 
