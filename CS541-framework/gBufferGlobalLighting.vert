@@ -6,7 +6,7 @@
 #version 330
 
 //uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr;
-uniform mat4 ShadowMatrix;
+uniform mat4 ShadowMatrix, ModelTr;
 in vec4 vertex;
 //in vec3 vertexNormal;
 //in vec2 vertexTexture;
@@ -14,10 +14,12 @@ in vec4 vertex;
 
 //out vec3 normalVec, lightVec;
 //out vec2 texCoord;
+out vec4 shadowCoord;
 uniform vec3 lightPos;
 
 void main()
 {      
+	//shadowCoord = ShadowMatrix
     gl_Position = vertex;
     
    // vec3 worldPos = (ModelTr*vertex).xyz;

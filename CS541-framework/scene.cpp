@@ -156,7 +156,8 @@ void Scene::InitializeScene()
     basePoint = ground->highPoint;
 
     // Create the lighting shader program from source code files.
-    lightingProgram = new ShaderProgram();
+  /*
+	lightingProgram = new ShaderProgram();
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.vert", GL_VERTEX_SHADER);
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.frag", GL_FRAGMENT_SHADER);
 	//lightingProgram->AddShader("lighting.vert", GL_VERTEX_SHADER);
@@ -168,7 +169,7 @@ void Scene::InitializeScene()
     glBindAttribLocation(lightingProgram->programId, 3, "vertexTangent");
     lightingProgram->LinkProgram();
 
-
+	*/
 	shadowProgram = new ShaderProgram();
 	shadowProgram->AddShader("shadowProj3.vert", GL_VERTEX_SHADER);
 	shadowProgram->AddShader("shadowProj3.frag", GL_FRAGMENT_SHADER);
@@ -178,7 +179,7 @@ void Scene::InitializeScene()
 	//glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
 	//glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
 	shadowProgram->LinkProgram();
-
+	/*
 	reflectionProgramTop = new ShaderProgram();
 
 	reflectionProgramTop->AddShader("reflectionShaderTop.vert", GL_VERTEX_SHADER);
@@ -206,7 +207,7 @@ void Scene::InitializeScene()
 
 	reflectionProgramBot->LinkProgram();
 
-
+	*/
 	gBufferShader = new ShaderProgram();
 
 	gBufferShader->AddShader("gBuffer.vert", GL_VERTEX_SHADER);
@@ -229,9 +230,9 @@ void Scene::InitializeScene()
 
 
 	glBindAttribLocation(gBufferLocalLighting->programId, 0, "vertex");
-//	glBindAttribLocation(gBufferLocalLighting->programId, 1, "vertexNormal");
-//	glBindAttribLocation(gBufferLocalLighting->programId, 2, "vertexTexture");
-//	glBindAttribLocation(gBufferLocalLighting->programId, 3, "vertexTangent");
+	glBindAttribLocation(gBufferLocalLighting->programId, 1, "vertexNormal");
+	glBindAttribLocation(gBufferLocalLighting->programId, 2, "vertexTexture");
+	glBindAttribLocation(gBufferLocalLighting->programId, 3, "vertexTangent");
 
 	gBufferLocalLighting->LinkProgram();
 
@@ -239,7 +240,7 @@ void Scene::InitializeScene()
 	gBufferGlobalLighting = new ShaderProgram();
 
 	gBufferGlobalLighting->AddShader("gBufferGlobalLighting.vert", GL_VERTEX_SHADER);
-	gBufferGlobalLighting->AddShader("gBufferGlobalLightingfrag", GL_FRAGMENT_SHADER);
+	gBufferGlobalLighting->AddShader("gBufferGlobalLighting.frag", GL_FRAGMENT_SHADER);
 
 
 	glBindAttribLocation(gBufferGlobalLighting->programId, 0, "vertex");
@@ -490,7 +491,7 @@ void Scene::DrawScene()
 
 
 		gBufferShader->Use();
-		gBuffer->Bind();
+	//	gBuffer->Bind();
 
 
 		glViewport(0, 0, width, height);
@@ -563,7 +564,7 @@ void Scene::DrawScene()
 
 		*/
 
-		gBuffer->Unbind();
+	//	gBuffer->Unbind();
 		gBufferShader->Unuse();
 
 		//End G Buffer
@@ -734,7 +735,7 @@ int loc3, programId3;
 
 	*/
 
-
+/*
 
 		//Start Ambient Light G Buffer Pass
 
@@ -764,11 +765,11 @@ int loc3, programId3;
 
 
 			//End Ambient Light G Buffer Pass
-
+			*/
 
 
 			//Start Shadow Depth test pass
-
+/*
 			
 			ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 
@@ -852,6 +853,11 @@ int loc3, programId3;
 
 			//End Shadow Depth test pass
 
+			*/
+
+/*
+
+
 			//Start Global (Shadow-casting) Light G Buffer Pass
 			screenOutput->Bind();
 			gBufferGlobalLighting->Use();
@@ -861,18 +867,7 @@ int loc3, programId3;
 			
 			 programId = gBufferGlobalLighting->programId;
 		
-			/*
-			 loc = glGetUniformLocation(programId, "WorldProj");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
-			loc = glGetUniformLocation(programId, "WorldView");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
-			loc = glGetUniformLocation(programId, "WorldInverse");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
-			loc = glGetUniformLocation(programId, "lightPos");
-			glUniform3fv(loc, 1, &(lPos[0]));
-			loc = glGetUniformLocation(programId, "mode");
-			glUniform1i(loc, mode);
-			*/
+
 			loc = glGetUniformLocation(programId, "ShadowMatrix");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
 
@@ -1003,6 +998,10 @@ int loc3, programId3;
 
 
 			//End local lighting pass
+
+			*/
+
+
 
 
 

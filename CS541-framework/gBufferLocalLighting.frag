@@ -15,7 +15,7 @@ const int     lPicId	= 7;
 const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
-
+const float PI = 3.1415926535897932384626433832795;
 in vec3 normalVec, lightVec, eyeVec;
 //in vec2 texCoord;
 
@@ -23,10 +23,10 @@ in vec3 normalVec, lightVec, eyeVec;
 //uniform vec3 diffuse;
 uniform mat4 WorldInverse;
 uniform vec3 lightPos;
-uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
-uniform sampler 2d gBuffer1;  //specular.xyz, shininess
-uniform sampler 2d gBuffer2;  //diffuse.xyz
-uniform sampler 2d gBuffer3;  //normalVec.xyz
+uniform sampler2D gBuffer0;  //WorldPos.xyz, worldPosDepth
+uniform sampler2D gBuffer1;  //specular.xyz, shininess
+uniform sampler2D gBuffer2;  //diffuse.xyz
+uniform sampler2D gBuffer3;  //normalVec.xyz
 uniform vec3 localLightBrightness;
 uniform float radius;
 //uniform float radiusSquared;

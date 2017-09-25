@@ -643,7 +643,8 @@ Ply::Ply(const char* name, const bool reverse)
     ply_set_read_cb(ply, "face", "vertex_indices", face_cb, this, 0);
 
     // Read the PLY file filling the arrays via the callbacks.
-    if (!ply_read(ply)) {printf("Failure in ply_read\n"); exit(-1); }
+    if (!ply_read(ply)) {printf("Failure in ply_read\n"); 
+	exit(-1); }
 
     ComputeSize();
     MakeVAO();

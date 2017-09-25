@@ -271,10 +271,13 @@ gl_FragColor.xyz = vec3(0.0, 1.0, 0.0);
    */
    vec3 N = normalize(normalVec);
    float worldPosDepth =0.f;  //Need to get the result of the depth test somehow--check shadow thingy probably
-   gl_FragData[0] =  vec4(worldPos.xyz, worldPosDepth);
-    gl_FragData[1] = vec4(specular.xyz, shininess);
-	 gl_FragData[2] = vec4(diffuse.xyz, 0.f)
-	  gl_FragData[3] = vec4(N.xyz,0.f);
+  // gl_FragData[0] =  vec4(worldPos.xyz, worldPosDepth);
+ //   gl_FragData[1] = vec4(specular.xyz, shininess);
+//	 gl_FragData[2] = vec4(diffuse.xyz, 0.f);
+//	  gl_FragData[3] = vec4(N.xyz,0.f);
+
+
+	  gl_FragColor.xyz = worldPos.xyz;
 
 
 	  //Toss in some kind of keyboard toggle to shift between outputs?

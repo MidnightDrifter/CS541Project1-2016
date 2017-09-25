@@ -16,19 +16,19 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 const float EPSILON = 0.01;
-
+const float PI = 3.1415926535897932384626433832795;
 in vec3 normalVec, lightVec;
 //in vec2 texCoord;
-
+//in vec4 shadowCoord;
 //uniform int objectId;
 //uniform vec3 diffuse;
 uniform vec3 Light;  //Ii
 //uniform mat4 WorldInverse;
 //uniform vec3 lightPos;
-uniform sampler 2d gBuffer0;  //WorldPos.xyz, worldPosDepth
-uniform sampler 2d gBuffer1;  //specular.xyz, shininess
-uniform sampler 2d gBuffer2;  //diffuse.xyz
-uniform sampler 2d gBuffer3;  //normalVec.xyz
+uniform sampler2D gBuffer0;  //WorldPos.xyz, worldPosDepth
+uniform sampler2D gBuffer1;  //specular.xyz, shininess
+uniform sampler2D gBuffer2;  //diffuse.xyz
+uniform sampler2D gBuffer3;  //normalVec.xyz
 
 
 
@@ -103,6 +103,9 @@ void main()
     
     gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 	*/
+
+	vec4 shadowCoord = ShadowMatrix*gl_FragCoord;
+
 	vec2 shadowIndex = (shadowCoord.xy) / (shadowCoord.w);
 
 	//All textures default to 1k x 1k because I'm lazy
