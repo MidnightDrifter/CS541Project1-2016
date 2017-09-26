@@ -366,7 +366,7 @@ void Scene::InitializeScene()
 	// Two models have rudimentary animation (constant rotation on Z)
 	//animated.push_back(anim);
 
-	//objectRootNoTeapot->add(podium, Translate(0, 0, 0));
+	objectRootNoTeapot->add(podium, Translate(0, 0, 0));
 	objectRootNoTeapot->add(anim, Translate(0, 0, 0));
 
 
