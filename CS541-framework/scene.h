@@ -81,7 +81,7 @@ public:
 	float ry = 0.2f;  //Y-slope for perspective transform
 	float rx = 0;  //X-slope for  perspective transform
 	float front = 0.1f;  //Front clipping plane for perspective transform
-	float back = 1000.f; //Back clipping plane for perspective transform
+	float back = 3000.f; //Back clipping plane for perspective transform
 	float toggleReflection = 1.f;  //float to toggle regular lighting vs. reflection-only in shaders
 
 	vec3 ambientLight = vec3(0.1f, 0.1f, 0.1f);  //Float to denote the amount of ambient light - to be used until Proj 3

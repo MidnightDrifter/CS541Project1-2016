@@ -193,9 +193,11 @@ else if(objectId == skyId)
 
 vec3 D = -1*V;
 
-vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x), acos(D.z)/PI);
+vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x), -acos(D.z)/PI);  //Flip the acos to flip the skydome
 
 vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
+
+//skyColor = vec3(1.f,0.f,0.f);
 
 outLight = skyColor; //  Check this  ???
 
