@@ -193,7 +193,7 @@ else if(objectId == skyId)
 
 vec3 D = V;
 
-vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x)/(2*PI), acos(D.z)/PI);
+vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x)/(2*PI), -acos(D.z)/PI);  //Flip this to flip skysphere
 
 vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
 
