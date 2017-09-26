@@ -125,7 +125,7 @@ void Scene::InitializeScene()
 	curTime = prevTime;
 
 
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     CHECKERROR;
 
     // FIXME: This is a good place for initializing the transformation
@@ -134,13 +134,6 @@ void Scene::InitializeScene()
 
     objectRoot = new Object(NULL, nullId);
 	objectRootNoTeapot = new Object(NULL, nullId);
-	FSQ = new Object(NULL, nullId);
-
-	FSQ->add(new Object(new Quad(1),-1,ambientLight,ambientLight,1.f), Scale(10.f,10.f,10.f));
-
-
-
-
     // Set the initial f position parammeters
     lightSpin = 98.0;
     lightTilt = -80.0;
@@ -156,8 +149,7 @@ void Scene::InitializeScene()
     basePoint = ground->highPoint;
 
     // Create the lighting shader program from source code files.
-  /*
-	lightingProgram = new ShaderProgram();
+    lightingProgram = new ShaderProgram();
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.vert", GL_VERTEX_SHADER);
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.frag", GL_FRAGMENT_SHADER);
 	//lightingProgram->AddShader("lighting.vert", GL_VERTEX_SHADER);
@@ -169,7 +161,7 @@ void Scene::InitializeScene()
     glBindAttribLocation(lightingProgram->programId, 3, "vertexTangent");
     lightingProgram->LinkProgram();
 
-	*/
+
 	shadowProgram = new ShaderProgram();
 	shadowProgram->AddShader("shadowProj3.vert", GL_VERTEX_SHADER);
 	shadowProgram->AddShader("shadowProj3.frag", GL_FRAGMENT_SHADER);
@@ -179,7 +171,7 @@ void Scene::InitializeScene()
 	//glBindAttribLocation(shadowProgram->programId, 2, "vertexTexture");
 	//glBindAttribLocation(shadowProgram->programId, 3, "vertexTangent");
 	shadowProgram->LinkProgram();
-	/*
+
 	reflectionProgramTop = new ShaderProgram();
 
 	reflectionProgramTop->AddShader("reflectionShaderTop.vert", GL_VERTEX_SHADER);
@@ -207,67 +199,6 @@ void Scene::InitializeScene()
 
 	reflectionProgramBot->LinkProgram();
 
-	*/
-	gBufferShader = new ShaderProgram();
-
-	gBufferShader->AddShader("gBuffer.vert", GL_VERTEX_SHADER);
-	gBufferShader->AddShader("gBuffer.frag", GL_FRAGMENT_SHADER);
-
-
-	glBindAttribLocation(gBufferShader->programId, 0, "vertex");
-	glBindAttribLocation(gBufferShader->programId, 1, "vertexNormal");
-	glBindAttribLocation(gBufferShader->programId, 2, "vertexTexture");
-	glBindAttribLocation(gBufferShader->programId, 3, "vertexTangent");
-
-	gBufferShader->LinkProgram();
-
-
-
-	gBufferLocalLighting = new ShaderProgram();
-
-	gBufferLocalLighting->AddShader("gBufferLocalLighting.vert", GL_VERTEX_SHADER);
-	gBufferLocalLighting->AddShader("gBufferLocalLighting.frag", GL_FRAGMENT_SHADER);
-
-
-	glBindAttribLocation(gBufferLocalLighting->programId, 0, "vertex");
-	glBindAttribLocation(gBufferLocalLighting->programId, 1, "vertexNormal");
-	glBindAttribLocation(gBufferLocalLighting->programId, 2, "vertexTexture");
-	glBindAttribLocation(gBufferLocalLighting->programId, 3, "vertexTangent");
-
-	gBufferLocalLighting->LinkProgram();
-
-
-	gBufferGlobalLighting = new ShaderProgram();
-
-	gBufferGlobalLighting->AddShader("gBufferGlobalLighting.vert", GL_VERTEX_SHADER);
-	gBufferGlobalLighting->AddShader("gBufferGlobalLighting.frag", GL_FRAGMENT_SHADER);
-
-
-	glBindAttribLocation(gBufferGlobalLighting->programId, 0, "vertex");
-//	glBindAttribLocation(gBufferGlobalLighting->programId, 1, "vertexNormal");
-//	glBindAttribLocation(gBufferGlobalLighting->programId, 2, "vertexTexture");
-//	glBindAttribLocation(gBufferGlobalLighting->programId, 3, "vertexTangent");
-
-	gBufferGlobalLighting->LinkProgram();
-
-
-
-
-	gBufferAmbientLighting = new ShaderProgram();
-
-	gBufferAmbientLighting->AddShader("gBufferAmbientLighting.vert", GL_VERTEX_SHADER);
-	gBufferAmbientLighting->AddShader("gBufferAmbientLighting.frag", GL_FRAGMENT_SHADER);
-
-
-	glBindAttribLocation(gBufferAmbientLighting->programId, 0, "vertex");
-//	glBindAttribLocation(gBufferAmbientLighting->programId, 1, "vertexNormal");
-//	glBindAttribLocation(gBufferAmbientLighting->programId, 2, "vertexTexture");
-//	glBindAttribLocation(gBufferAmbientLighting->programId, 3, "vertexTangent");
-
-	gBufferAmbientLighting->LinkProgram();
-
-
-
 	CHECKERROR;
 	shadowTexture = new FBO();
 	shadowTexture->CreateFBO(1024, 1024);
@@ -279,12 +210,6 @@ void Scene::InitializeScene()
 	reflectionTextureBot = new FBO();
 	reflectionTextureBot->CreateFBO(1024, 1024);
 
-	gBuffer = new FBO();
-	gBuffer->CreateGBuffer(width, height);
-
-	screenOutput = new FBO();
-	screenOutput->CreateFBO(width, height);
-	
 	
 
 	test = new Texture("grass.jpg");
@@ -298,9 +223,6 @@ void Scene::InitializeScene()
     Shape* SpherePolygons = new Sphere(32);
     Shape* GroundPolygons = ground;
     Shape* SeaPolygons = new Plane(2000.0, 50);
-	
-	
-
 
     // Create all the models from which the scene is composed.  Each
     // is created with a polygon shape (possible NULL), a
@@ -325,27 +247,14 @@ void Scene::InitializeScene()
     Object* sea = new Object(SeaPolygons, seaId,
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
 
-	Object* localLights = new Object(NULL, nullId);
-
-	for (int i = 0; i <= numLocalLights; i++)
-	{
-		//Start at ~ -10 x, increment up little by little in positive x towards +10
-		//Y is the up direction, right?  Or was it Z?
-		
-		localLights->add( new Object(new Sphere(localLightRadius),localLightsId, vec3(0,0,0), vec3(0,0,0), 1.f), Translate((-10) + (i*10.f / numLocalLights), 0.f, 5.f));
-
-	}
-
-
     // FIXME: This is where you could read in all the textures and
     // associate them with the various objects just created above
     // here.
 
     // Scene is composed of sky, ground, sea, and ... models
-    objectRoot->add(sky, Scale(500.0, 500.0, 500.0));
+    objectRoot->add(sky, Scale(2000.0, 2000.0, 2000.0));
     objectRoot->add(ground);
     objectRoot->add(sea);
-
 
     // Two models have rudimentary animation (constant rotation on Z)
     animated.push_back(anim);
@@ -359,7 +268,7 @@ void Scene::InitializeScene()
 
 	//Add every object EXCEPT the teapot to another object, draw that for reflection passes
 	// Scene is composed of sky, ground, sea, and ... models
-	objectRootNoTeapot->add(sky, Scale(500.0, 500.0, 500.0));
+	objectRootNoTeapot->add(sky, Scale(2000.0, 2000.0, 2000.0));
 	objectRootNoTeapot->add(ground);
 	objectRootNoTeapot->add(sea);
 
@@ -468,7 +377,7 @@ void Scene::DrawScene()
 
 
 
-		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		LightView = LookAt(lPos[0], lPos[1], lPos[2], 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
 		
 		LightProj = Perspective((30.f/lightDist),(30.f/lightDist),0.1f, 1000.f);		//scene is approx [-40,40]x [-20,20]y -- might have that reversed though
 		//Using the predefined lightDist of 1 million
@@ -487,102 +396,50 @@ void Scene::DrawScene()
 		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
 
-		//Start G Buffer 
+		
 
 
-		gBufferShader->Use();
-	//	gBuffer->Bind();
 
 
-		glViewport(0, 0, width, height);
+
+
+		shadowProgram->Use();
+		shadowTexture->Bind();
+		
+		CHECKERROR;
+
+
+		glViewport(0, 0, 1024, 1024);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-		int programId = gBufferShader->programId;
-
-		// Setup the perspective and viewing matrices for normal viewing.
-		int loc;
-		loc = glGetUniformLocation(programId, "WorldProj");
-		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
-		loc = glGetUniformLocation(programId, "WorldView");
-		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
-		loc = glGetUniformLocation(programId, "WorldInverse");
-		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
-		loc = glGetUniformLocation(programId, "lightPos");
-		glUniform3fv(loc, 1, &(lPos[0]));
-		loc = glGetUniformLocation(programId, "mode");
-		glUniform1i(loc, mode);
-
-		for (std::vector<Object*>::iterator m = animated.begin(); m<animated.end(); m++)
-			(*m)->animTr = Rotate(2, atime);
-
-
-		/*
-		loc = glGetUniformLocation(programId, "ShadowMatrix");
-		glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
-
-
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
-		loc = glGetUniformLocation(programId, "shadowTexture");
-		glUniform1i(loc, 3);
-
-
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, reflectionTextureTop->texture);
-		loc = glGetUniformLocation(programId, "reflectionTextureTop");
-		glUniform1i(loc, 2);
-		//CHECKERROR;
-
-
+		CHECKERROR;
 		
-		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, reflectionTextureBot->texture);
-		loc = glGetUniformLocation(programId, "reflectionTextureBot");
-		glUniform1i(loc, 4);
-		//CHECKERROR;
+		int loc1, programID1;
 
-		loc = glGetUniformLocation(programId, "tog");
-		glUniform1f(loc, toggleReflection);
+		programID1 = shadowProgram->programId;
+		loc1 = glGetUniformLocation(programID1, "ShadowProj");
+		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightProj.Pntr());
+		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldProj.Pntr());
+		CHECKERROR
 
+		loc1 = glGetUniformLocation(programID1, "ShadowView");
+		glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
+		//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
 
-		skydome->Bind(5);
-		loc = glGetUniformLocation(programId, "skydomeTexture");
-		glUniform1i(loc, 5);
+		CHECKERROR;
+		// Compute any continuously animating objects
 
-		bricksTexture->Bind(6);
-		loc = glGetUniformLocation(programId, "bricksTexture");
-		glUniform1i(loc, 6);
-
-		bricksNormalTexture->Bind(7);
-		loc = glGetUniformLocation(programId, "normalMap");
-		glUniform1i(loc, 7);
-
-
-
-		*/
-
-	//	gBuffer->Unbind();
-		gBufferShader->Unuse();
-
-		//End G Buffer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
+			(*m1)->animTr = Rotate(2, atime);
 		
+		// Draw all objects
+		objectRootNoTeapot->Draw(shadowProgram, Identity1);
+		glDisable(GL_CULL_FACE);
+		
+		shadowTexture->Unbind();
+		shadowProgram->Unuse();
 		
 		
 		
@@ -590,13 +447,14 @@ void Scene::DrawScene()
 		
 
 		
+		ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 		
 
 		
 		
 
 
-		/*
+
 		
 		reflectionProgramTop->Use();
 		reflectionTextureTop->Bind();
@@ -733,279 +591,8 @@ int loc3, programId3;
 //	return;
 	//	glBindTexture(GL_TEXTURE_2D, 0);
 
-	*/
 
-/*
 
-		//Start Ambient Light G Buffer Pass
-
-		screenOutput->Bind();
-			gBufferAmbientLighting->Use();
-
-			glViewport(0, 0, width, height);
-			glClearColor(0.5, 0.5, 0.5, 1.0);
-			glClearDepth(1.0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glDisable(GL_DEPTH);   //Disable depth test?
-			CHECKERROR;
-
-			//loc = gBufferAmbientLighting->programId;
-			programId = gBufferAmbientLighting->programId;
-
-			loc = glGetUniformLocation(programId, "ambient");
-			glUniform3fv(loc, 1, &(ambientLight[0]));
-
-	
-
-
-			FSQ->Draw(gBufferAmbientLighting,Identity);   //Maybe need projection transform to orient FSQ properly?
-
-			gBufferAmbientLighting->Unuse();
-			screenOutput->Unbind();
-
-
-			//End Ambient Light G Buffer Pass
-			*/
-
-
-			//Start Shadow Depth test pass
-/*
-			
-			ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
-
-
-			shadowProgram->Use();
-			shadowTexture->Bind();
-
-			CHECKERROR;
-
-
-			glViewport(0, 0, 1024, 1024);
-			glClearColor(0.5, 0.5, 0.5, 1.0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			CHECKERROR;
-
-			glEnable(GL_DEPTH);
-
-			int loc1, programID1;
-
-			programID1 = shadowProgram->programId;
-			loc1 = glGetUniformLocation(programID1, "ShadowProj");
-			glUniformMatrix4fv(loc1, 1, GL_TRUE, LightProj.Pntr());
-			//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldProj.Pntr());
-			CHECKERROR
-
-				loc1 = glGetUniformLocation(programID1, "ShadowView");
-			glUniformMatrix4fv(loc1, 1, GL_TRUE, LightView.Pntr());
-			//glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldView.Pntr());
-
-
-			loc1 = glGetUniformLocation(programID1, "WorldInverse");
-			glUniformMatrix4fv(loc1, 1, GL_TRUE, WorldInverse.Pntr());
-
-
-			//Start 'pass gBuffer to specified shader' block
-
-			glActiveTexture(GL_TEXTURE6);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
-			loc1 = glGetUniformLocation(programID1, "gBuffer0");
-			glUniform1i(loc1, 6);
-
-
-
-
-			glActiveTexture(GL_TEXTURE7);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
-			loc1 = glGetUniformLocation(programID1, "gBuffer1");
-			glUniform1i(loc1, 7);
-
-
-
-
-			glActiveTexture(GL_TEXTURE8);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
-			loc1 = glGetUniformLocation(programID1, "gBuffer2");
-			glUniform1i(loc1, 8);
-
-
-
-			glActiveTexture(GL_TEXTURE9);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
-			loc1 = glGetUniformLocation(programID1, "gBuffer3");
-			glUniform1i(loc1, 9);
-
-			//End 'pass gBuffer to specified shader' block
-
-			CHECKERROR;
-			// Compute any continuously animating objects
-
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
-			for (std::vector<Object*>::iterator m1 = animated.begin(); m1<animated.end(); m1++)
-				(*m1)->animTr = Rotate(2, atime);
-
-			// Draw all objects
-			objectRootNoTeapot->Draw(shadowProgram, Identity1);
-			glDisable(GL_CULL_FACE);
-
-			shadowTexture->Unbind();
-			shadowProgram->Unuse();
-
-			//End Shadow Depth test pass
-
-			*/
-
-/*
-
-
-			//Start Global (Shadow-casting) Light G Buffer Pass
-			screenOutput->Bind();
-			gBufferGlobalLighting->Use();
-
-			glDisable(GL_DEPTH);
-			glEnable(GL_BLEND);
-			
-			 programId = gBufferGlobalLighting->programId;
-		
-
-			loc = glGetUniformLocation(programId, "ShadowMatrix");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
-
-
-			glActiveTexture(GL_TEXTURE3);
-			glBindTexture(GL_TEXTURE_2D, shadowTexture->texture);
-			loc = glGetUniformLocation(programId, "shadowTexture");
-			glUniform1i(loc, 3);
-
-			loc = glGetUniformLocation(programId, "WorldInverse");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
-
-
-			//Start 'pass gBuffer to specified shader' block
-		
-			glActiveTexture(GL_TEXTURE6);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
-			loc1 = glGetUniformLocation(programId, "gBuffer0");
-			glUniform1i(loc1, 6);
-
-
-
-
-			glActiveTexture(GL_TEXTURE7);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
-			loc1 = glGetUniformLocation(programId, "gBuffer1");
-			glUniform1i(loc1, 7);
-
-
-
-
-			glActiveTexture(GL_TEXTURE8);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
-			loc1 = glGetUniformLocation(programId, "gBuffer2");
-			glUniform1i(loc1, 8);
-
-
-
-			glActiveTexture(GL_TEXTURE9);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
-			loc1 = glGetUniformLocation(programId , "gBuffer3");
-			glUniform1i(loc1, 9);
-
-			loc1 = glGetUniformLocation(programId, "Light");
-			glUniform3fv(loc1, 1, &(lightColor[0]));
-
-
-
-			//End 'pass gBuffer to specified shader' block
-			FSQ->Draw(gBufferGlobalLighting, Identity);
-
-			gBufferGlobalLighting->Unuse();
-			screenOutput->Unbind();
-
-
-
-			//End Global (Shadow-casting) Light G Buffer Pass
-
-
-
-			//Start local lighting (small lights with pre-defined radii) pass
-			screenOutput->Bind();
-			gBufferLocalLighting->Use();
-
-			programId = gBufferLocalLighting->programId;
-			
-			loc = glGetUniformLocation(programId, "WorldProj");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
-			loc = glGetUniformLocation(programId, "WorldView");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
-			loc = glGetUniformLocation(programId, "WorldInverse");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
-			
-			//Start 'pass gBuffer to specified shader' block
-
-			glActiveTexture(GL_TEXTURE6);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
-			loc1 = glGetUniformLocation(programId, "gBuffer0");
-			glUniform1i(loc1, 6);
-
-
-
-
-			glActiveTexture(GL_TEXTURE7);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[1]);
-			loc1 = glGetUniformLocation(programId, "gBuffer1");
-			glUniform1i(loc1, 7);
-
-
-
-
-			glActiveTexture(GL_TEXTURE8);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[2]);
-			loc1 = glGetUniformLocation(programId, "gBuffer2");
-			glUniform1i(loc1, 8);
-
-
-
-
-			glActiveTexture(GL_TEXTURE9);
-			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[3]);
-			loc1 = glGetUniformLocation(programId, "gBuffer3");
-			glUniform1i(loc1, 9);
-
-			loc1 = glGetUniformLocation(programId, "radius");
-			glUniform1f(loc1, localLightRadius);
-
-			loc1 = glGetUniformLocation(programId, "radiusSquared");
-			glUniform1f(loc1, localLightRadius*localLightRadius);
-
-			loc1 = glGetUniformLocation(programId, "localLightBrightness");
-			glUniform3fv(loc1, 1, &localLightColor[0]);
-
-			//End 'pass gBuffer to specified shader' block
-			//(GL_CULL_FACE);
-			//glCullFace(GL_FRONT);
-
-		//	localLights->Draw(gBufferLocalLighting, Identity);
-
-			//glDisable(GL_CULL_FACE);
-
-			FSQ->Draw(gBufferLocalLighting, Identity);
-
-			gBufferLocalLighting->Unuse();
-			screenOutput->Unbind();
-
-			
-
-
-			//End local lighting pass
-
-			*/
-
-
-
-
-
-			/*
     lightingProgram->Use();
 
 	glViewport(0, 0, width, height);
@@ -1014,10 +601,10 @@ int loc3, programId3;
 
 
 
-     programId = lightingProgram->programId;
+    int programId = lightingProgram->programId;
 
     // Setup the perspective and viewing matrices for normal viewing.
-  
+    int loc;
     loc = glGetUniformLocation(programId, "WorldProj");
     glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
     loc = glGetUniformLocation(programId, "WorldView");
@@ -1113,7 +700,7 @@ int loc3, programId3;
     lightingProgram->Unuse();
 	
 //	glBindTexture(GL_TEXTURE_2D, 0);
-*/
+
 	
 	
 
