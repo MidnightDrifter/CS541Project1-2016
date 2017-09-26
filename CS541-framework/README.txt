@@ -9,5 +9,4 @@ Proj 3 - No special features.  Light distance set to 200.  I do recommend moving
 
 Proj 4 = Toggle reflection with the 'R' key
 
-Proj 5 - Bricks texture applied to the podium, doesn't show up on teapot since I don't draw the podium during the reflection step, sky/clouds texture used as skybox. 
-		 Podium w/ normal map reflected, though it looks as if the camrea is a bit above where the teapot actually is--it helped keep the reflection map looking nice.
+Proj 5 - Bricks texture applied to the podium, doesn't show up on teapot since I don't draw the podium during the reflection step, sky/clouds texture used as skybox
