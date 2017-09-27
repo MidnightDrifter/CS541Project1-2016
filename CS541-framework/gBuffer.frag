@@ -19,10 +19,11 @@ const float PI = 3.1415926535897932384626433832795;
 const float EPSILON = 0.01;
 
 
-in vec3 normalVec, lightVec, eyeVec, worldPos;
+in vec3 normalVec, lightVec, eyeVec;
 in vec4 shadowCoord;
 in vec2 texCoord;
 in vec4 tangent;
+in vec4 worldPos;
 
 uniform int objectId;
 uniform vec3 diffuse; // Kd
@@ -30,6 +31,7 @@ uniform vec3 specular; // Ks
 uniform float shininess; // alpha exponent
 uniform vec3 Light; // Ii
 uniform vec3 Ambient; // Ia
+//uniform mat4 WorldInverse;
 //uniform float tog;
 //uniform sampler2D shadowTexture;  //shadowmap
 //uniform sampler2D reflectionTextureTop; //top reflection
@@ -277,8 +279,23 @@ gl_FragColor.xyz = vec3(0.0, 1.0, 0.0);
 //	  gl_FragData[3] = vec4(N.xyz,0.f);
 
 
-	  gl_FragColor.xyz = worldPos.xyz;
+//gl_FragColor.xyz = worldPos.xyz;
+//gl_FragColor.xyz = specular.xyz;
+//gl_FragColor.xyz = diffuse.xyz;
+gl_FragColor.xyz = N.xyz;
 
+
+/*
+if(N.x ==1 && N.y == 1 && N.z ==1)
+{
+gl_FragColor.xyz = vec3(1.f,0.f,0.f);
+}
+
+else
+	{//  gl_FragColor.xyz = N;
+	gl_FragColor.xyz = vec3(0.f,1.f,0.f);
+	}
+	*/
 
 	  //Toss in some kind of keyboard toggle to shift between outputs?
 	  //gl_FragColor = gl_FragData[];

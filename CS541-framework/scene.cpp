@@ -156,7 +156,7 @@ void Scene::InitializeScene()
     basePoint = ground->highPoint;
 
     // Create the lighting shader program from source code files.
-  /*
+  
 	lightingProgram = new ShaderProgram();
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.vert", GL_VERTEX_SHADER);
 	lightingProgram->AddShader("lighting-BRDF&Texture Proj2.frag", GL_FRAGMENT_SHADER);
@@ -169,7 +169,7 @@ void Scene::InitializeScene()
     glBindAttribLocation(lightingProgram->programId, 3, "vertexTangent");
     lightingProgram->LinkProgram();
 
-	*/
+	
 	shadowProgram = new ShaderProgram();
 	shadowProgram->AddShader("shadowProj3.vert", GL_VERTEX_SHADER);
 	shadowProgram->AddShader("shadowProj3.frag", GL_FRAGMENT_SHADER);
@@ -486,39 +486,51 @@ void Scene::DrawScene()
 
 		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
-
+		
 		//Start G Buffer 
 
-
+		
 		gBufferShader->Use();
-		gBuffer->Bind();
-
+	//	gBuffer->Bind();
 
 		glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		CHECKERROR;
 
 
 		int programId = gBufferShader->programId;
-
+		
 		// Setup the perspective and viewing matrices for normal viewing.
 		int loc;
 		loc = glGetUniformLocation(programId, "WorldProj");
 		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldProj.Pntr());
+
+
+		
 		loc = glGetUniformLocation(programId, "WorldView");
 		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldView.Pntr());
 		loc = glGetUniformLocation(programId, "WorldInverse");
 		glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
 		loc = glGetUniformLocation(programId, "lightPos");
 		glUniform3fv(loc, 1, &(lPos[0]));
-		loc = glGetUniformLocation(programId, "mode");
-		glUniform1i(loc, mode);
+		//loc = glGetUniformLocation(programId, "mode");
+		//glUniform1i(loc, mode);
+		CHECKERROR;
+
+
+
+		
+		objectRoot->Draw(gBufferShader, Identity);
 
 		for (std::vector<Object*>::iterator m = animated.begin(); m<animated.end(); m++)
 			(*m)->animTr = Rotate(2, atime);
 
-
+		CHECKERROR;
+		
+		
+		
+		
 		/*
 		loc = glGetUniformLocation(programId, "ShadowMatrix");
 		glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
@@ -568,7 +580,7 @@ void Scene::DrawScene()
 		gBufferShader->Unuse();
 
 		//End G Buffer
-
+		CHECKERROR;
 
 
 
@@ -914,6 +926,8 @@ int loc3, programId3;
 			loc1 = glGetUniformLocation(programId, "Light");
 			glUniform3fv(loc1, 1, &(lightColor[0]));
 
+			loc1 = glGetUniformLocation(programId, "lightPos");
+			glUniform3fv(lic1,1,&(lightPos[0]));
 
 
 			//End 'pass gBuffer to specified shader' block
@@ -1002,10 +1016,10 @@ int loc3, programId3;
 			*/
 
 
+/*
 
-
-
-			/*
+int programId, loc;
+			
     lightingProgram->Use();
 
 	glViewport(0, 0, width, height);
@@ -1026,8 +1040,8 @@ int loc3, programId3;
     glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
     loc = glGetUniformLocation(programId, "lightPos");
     glUniform3fv(loc, 1, &(lPos[0]));  
-    loc = glGetUniformLocation(programId, "mode");
-    glUniform1i(loc, mode);  
+    //loc = glGetUniformLocation(programId, "mode");
+    //glUniform1i(loc, mode);  
 	
 	loc = glGetUniformLocation(programId, "ShadowMatrix");
 	glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());

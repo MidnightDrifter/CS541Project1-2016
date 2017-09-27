@@ -191,11 +191,15 @@ else if(objectId == skyId)
 {
 
 
-vec3 D = V;
+vec3 D = -1*V;
+//vec3 D = V;
+vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x), -acos(D.z)/PI);  //Flip the acos to flip the skydome
 
-vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x)/(2*PI), acos(D.z)/PI);
 
+vec2 skyTexCoord= vec2(0.5f - atan(D.y,D.x)/(2*PI), -acos(D.z)/PI);  //Flip this to flip skysphere
 vec3 skyColor = texture(skydomeTexture,skyTexCoord).xyz;
+
+//skyColor = vec3(1.f,0.f,0.f);
 
 outLight = skyColor; //  Check this  ???
 
@@ -218,9 +222,6 @@ if(shadowCoord.w >0 && shadowIndex.x <= 1 && shadowIndex.x >= 0 && shadowIndex.y
 
 
 gl_FragColor.xyz = outLight;
-
-//gl_FragColor.xyz = texture2D(skydomeTexture,texCoord).xyz;
-
 return;
 int t = textureSize(reflectionTextureTop,0).x;
 int a = textureSize(reflectionTextureTop,0).y;
