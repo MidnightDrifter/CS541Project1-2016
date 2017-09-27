@@ -53,7 +53,8 @@ public:
     int mode; // Extra mode indicator hooked up to number keys and sent to shader
     
     // Viewport
-    int width, height;
+   // int width, height;
+	int width = 1024, height = 1024;
 	float speed = 10.0f;
 	bool isToggled = false;
 	

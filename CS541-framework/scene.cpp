@@ -491,7 +491,7 @@ void Scene::DrawScene()
 
 
 		gBufferShader->Use();
-	//	gBuffer->Bind();
+		gBuffer->Bind();
 
 
 		glViewport(0, 0, width, height);
@@ -564,7 +564,7 @@ void Scene::DrawScene()
 
 		*/
 
-	//	gBuffer->Unbind();
+		gBuffer->Unbind();
 		gBufferShader->Unuse();
 
 		//End G Buffer
