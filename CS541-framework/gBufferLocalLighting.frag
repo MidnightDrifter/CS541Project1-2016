@@ -32,7 +32,8 @@ uniform float radius;
 uniform vec3 ObjectCenter;
 //uniform float radiusSquared;
 
-
+uniform int width;
+uniform int height;
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)
 {
 
@@ -104,7 +105,7 @@ void main()
     gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 */
 
-	vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  //I forget the call for this fug
+	vec2 myPixelCoordinate = vec2(gl_FragCoord.x/width, gl_FragCoord.y/height);  //I forget the call for this fug
 	
 	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
 	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;

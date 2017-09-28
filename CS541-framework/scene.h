@@ -82,7 +82,7 @@ public:
 	float back = 3000.f; //Back clipping plane for perspective transform
 	float toggleReflection = 1.f;  //float to toggle regular lighting vs. reflection-only in shaders
 
-	vec3 ambientLight = vec3(0.1f, 0.1f, 0.1f);  //Float to denote the amount of ambient light - to be used until Proj 3
+	vec3 ambientLight = vec3(0.3f, 0.3f, 0.3f);  //Float to denote the amount of ambient light - to be used until Proj 3
 
 
     // All objects in the scene are children of this single root object.

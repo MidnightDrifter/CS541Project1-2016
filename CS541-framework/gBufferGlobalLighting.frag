@@ -32,6 +32,9 @@ uniform sampler2D gBuffer2;  //diffuse.xyz
 uniform sampler2D gBuffer3;  //normalVec.xyz
 uniform sampler2D shadowTexture;
 
+uniform int width;
+uniform int height;
+
 //uniform mat4 ShadowMatrix, WorldInverse;
 //uniform sampler2D shadowTexture;
 //uniform vec3 lightPos;
@@ -112,8 +115,8 @@ void main()
 
 	//All textures default to 1k x 1k because I'm lazy
 	//Would need to pass texture height & width to shaders in the future if I ever change the size!
-
-	vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  
+	
+	vec2 myPixelCoordinate = vec2(gl_FragCoord.x/ width, gl_FragCoord.y/height);  
 
 	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
 	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;

@@ -15,7 +15,7 @@ in vec4 vertex;
 //out vec3 normalVec, lightVec;
 //out vec2 texCoord;
 //uniform vec3 lightPos;
-out vec4 pos;
+//out vec4 pos;
 void main()
 {     //  pos = ShadowProj*ShadowView*ModelTr*vertex;
   //  gl_Position = pos;
@@ -27,6 +27,6 @@ void main()
 
     //texCoord = vertexTexture; 
 
-gl_Position = vertex;
-
+//gl_Position = vertex;
+gl_Position = ModelTr*vertex;
 }

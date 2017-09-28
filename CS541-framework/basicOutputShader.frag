@@ -24,6 +24,10 @@ const int     spheresId	= 10;
 
 //in vec4 pos;
 
+uniform int width;
+uniform int height;
+
+
 uniform sampler2D screenOutputTexture;
 
 void main()
@@ -54,10 +58,18 @@ void main()
 //	gl_FragColor.xyz = vec3(1.0,0.0,0.0);
 
 
-vec2 myPixelCoordinate = gl_FragCoord.xy/1024;  
+vec2 myPixelCoordinate = vec2(gl_FragCoord.x/width, gl_FragCoord.y/height);  
+
+vec3 test = texture2D(screenOutputTexture, myPixelCoordinate.xy).xyz;
+
+//if(test.x ==0 && test.y == test.x && test.z == test.y) {gl_FragColor.xyz = vec3(0.f,1.f,0.f);}
 
 gl_FragColor = texture2D(screenOutputTexture, myPixelCoordinate.xy);
-
+/*
+else{
+gl_FragColor.xyz = vec3(1.f,0.f,0.f);
+}
+*/
 
 
 }
