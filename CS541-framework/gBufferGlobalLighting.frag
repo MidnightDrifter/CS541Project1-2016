@@ -32,9 +32,9 @@ uniform sampler2D gBuffer2;  //diffuse.xyz
 uniform sampler2D gBuffer3;  //normalVec.xyz
 uniform sampler2D shadowTexture;
 
-uniform mat4 ShadowMatrix, WorldInverse;
-uniform sampler2D shadowTexture;
-uniform vec3 lightPos;
+//uniform mat4 ShadowMatrix, WorldInverse;
+//uniform sampler2D shadowTexture;
+//uniform vec3 lightPos;
 
 
 vec3 BRDF(vec3 nVec, vec3 lVec, vec3 eVec, float shiny, vec3 spec, vec3 dif)

@@ -42,6 +42,8 @@ class Object
     void Draw(ShaderProgram* program, MAT4& objectTr);
 
     void add(Object* m, MAT4 tr=MAT4()) { instances.push_back(std::make_pair(m,tr)); }
+
+	void DrawLights(ShaderProgram* program, MAT4& objectTr);
 };
 
 #endif

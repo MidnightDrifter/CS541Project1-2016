@@ -29,6 +29,7 @@ uniform sampler2D gBuffer2;  //diffuse.xyz
 uniform sampler2D gBuffer3;  //normalVec.xyz
 uniform vec3 localLightBrightness;
 uniform float radius;
+uniform vec3 ObjectCenter;
 //uniform float radiusSquared;
 
 
@@ -119,5 +120,19 @@ void main()
 
 	//if pixel out of light's range:  gl_FragColor.xyz = vec3(0,0,0);
 	//else gl_FragColor.xyz = LN* *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
+
+	vec3 lightDistance = worldPos-ObjectCenter;
+
+	if(dot(lightDistance,lightDistance) > radius*radius)
+	{
+	
+	gl_FragColor.xyz=vec3(0,0,0);
+
+	}
+
+	else
+	{
+	gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
+	}
 
 }

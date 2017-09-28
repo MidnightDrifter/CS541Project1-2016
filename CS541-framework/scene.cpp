@@ -265,6 +265,21 @@ void Scene::InitializeScene()
 //	glBindAttribLocation(gBufferAmbientLighting->programId, 3, "vertexTangent");
 
 	gBufferAmbientLighting->LinkProgram();
+	
+
+
+	basicOutputShader = new ShaderProgram();
+
+	basicOutputShader->AddShader("basicOutputShader.vert", GL_VERTEX_SHADER);
+	basicOutputShader->AddShader("basicOutputShader.frag", GL_FRAGMENT_SHADER);
+	glBindAttribLocation(basicOutputShader->programId, 0, "vertex");
+
+
+
+	basicOutputShader->LinkProgram();
+
+
+
 
 
 
@@ -324,15 +339,15 @@ void Scene::InitializeScene()
 
     Object* sea = new Object(SeaPolygons, seaId,
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
-
-	Object* localLights = new Object(NULL, nullId);
+ localLights = new Object(NULL, nullId);
 
 	for (int i = 0; i <= numLocalLights; i++)
 	{
 		//Start at ~ -10 x, increment up little by little in positive x towards +10
 		//Y is the up direction, right?  Or was it Z?
-		
-		localLights->add( new Object(new Sphere(localLightRadius),localLightsId, vec3(0,0,0), vec3(0,0,0), 1.f), Translate((-10) + (i*10.f / numLocalLights), 0.f, 5.f));
+	//	Shape* s = new Sphere(localLightRadius);
+		Object* lightSphere = new Object(SpherePolygons, localLightsId, vec3(0, 0, 0), vec3(0, 0, 0), 1.f);
+		localLights->add( lightSphere, Translate((-10) + (i*10.f / numLocalLights), 0.f, 5.f));
 
 	}
 
@@ -747,7 +762,7 @@ int loc3, programId3;
 
 	*/
 
-/*
+
 
 		//Start Ambient Light G Buffer Pass
 
@@ -758,7 +773,7 @@ int loc3, programId3;
 			glClearColor(0.5, 0.5, 0.5, 1.0);
 			glClearDepth(1.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glDisable(GL_DEPTH);   //Disable depth test?
+			glDisable(GL_DEPTH_TEST);   //Disable depth test?
 			CHECKERROR;
 
 			//loc = gBufferAmbientLighting->programId;
@@ -777,11 +792,11 @@ int loc3, programId3;
 
 
 			//End Ambient Light G Buffer Pass
-			*/
+			
 
 
 			//Start Shadow Depth test pass
-/*
+
 			
 			ShadowMatrix = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5) * LightProj * LightView;
 
@@ -797,7 +812,7 @@ int loc3, programId3;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			CHECKERROR;
 
-			glEnable(GL_DEPTH);
+			glEnable(GL_DEPTH_TEST);
 
 			int loc1, programID1;
 
@@ -865,18 +880,19 @@ int loc3, programId3;
 
 			//End Shadow Depth test pass
 
-			*/
+			
 
-/*
+
 
 
 			//Start Global (Shadow-casting) Light G Buffer Pass
 			screenOutput->Bind();
 			gBufferGlobalLighting->Use();
 
-			glDisable(GL_DEPTH);
+			glDisable(GL_DEPTH_TEST);
+			CHECKERROR;
 			glEnable(GL_BLEND);
-			
+			CHECKERROR;
 			 programId = gBufferGlobalLighting->programId;
 		
 
@@ -927,8 +943,10 @@ int loc3, programId3;
 			glUniform3fv(loc1, 1, &(lightColor[0]));
 
 			loc1 = glGetUniformLocation(programId, "lightPos");
-			glUniform3fv(lic1,1,&(lightPos[0]));
+			glUniform3fv(loc1,1,&(lPos[0]));
 
+
+		
 
 			//End 'pass gBuffer to specified shader' block
 			FSQ->Draw(gBufferGlobalLighting, Identity);
@@ -955,7 +973,14 @@ int loc3, programId3;
 			loc = glGetUniformLocation(programId, "WorldInverse");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, WorldInverse.Pntr());
 			
+			loc = glGetUniformLocation(programId, "radius");
+			glUniform1f(loc, localLightRadius);
+
+			
 			//Start 'pass gBuffer to specified shader' block
+
+
+
 
 			glActiveTexture(GL_TEXTURE6);
 			glBindTexture(GL_TEXTURE_2D, gBuffer->renderTargets[0]);
@@ -996,14 +1021,14 @@ int loc3, programId3;
 			glUniform3fv(loc1, 1, &localLightColor[0]);
 
 			//End 'pass gBuffer to specified shader' block
-			//(GL_CULL_FACE);
-			//glCullFace(GL_FRONT);
+			(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
 
-		//	localLights->Draw(gBufferLocalLighting, Identity);
+			localLights->DrawLights(gBufferLocalLighting, Identity);
 
-			//glDisable(GL_CULL_FACE);
+			glDisable(GL_CULL_FACE);
 
-			FSQ->Draw(gBufferLocalLighting, Identity);
+			//FSQ->Draw(gBufferLocalLighting, Identity);
 
 			gBufferLocalLighting->Unuse();
 			screenOutput->Unbind();
@@ -1013,7 +1038,7 @@ int loc3, programId3;
 
 			//End local lighting pass
 
-			*/
+			
 
 
 /*
@@ -1129,6 +1154,21 @@ int programId, loc;
 //	glBindTexture(GL_TEXTURE_2D, 0);
 */
 	
+
+
+basicOutputShader->Use();
+CHECKERROR;
+
+
+glActiveTexture(GL_TEXTURE11);
+glBindTexture(GL_TEXTURE_2D, screenOutput->texture);
+loc = glGetUniformLocation(basicOutputShader->programId, "screenOutputTexture");
+glUniform1i(loc, 11);
+
+
+basicOutputShader->Unuse();
+
+
 	
 
 	prevTime = curTime;

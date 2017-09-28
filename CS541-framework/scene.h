@@ -98,7 +98,7 @@ public:
 	vec3 ambientColor =  vec3(0.2f*PI, PI*0.2f, PI* 0.2f);  //So much reorganizing!
 									
 	// Shader programs
-    ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot, *gBufferShader, *gBufferGlobalLighting, *gBufferAmbientLighting, *gBufferLocalLighting;
+    ShaderProgram* lightingProgram, *shadowProgram, *reflectionProgramTop, *reflectionProgramBot, *gBufferShader, *gBufferGlobalLighting, *gBufferAmbientLighting, *gBufferLocalLighting, *basicOutputShader;
 
 	//FBOs
 	FBO* shadowTexture,* reflectionTextureTop,* reflectionTextureBot, *gBuffer, *screenOutput;

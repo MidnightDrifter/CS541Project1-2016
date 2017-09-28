@@ -81,10 +81,34 @@ void Object::Draw(ShaderProgram* program, MAT4& objectTr)
     glUniformMatrix4fv(loc, 1, GL_TRUE, texTr.Pntr());
 
     // Draw this object's triangle
-    if (shape) shape->DrawVAO();
-
+	if (shape) {
+		shape->DrawVAO();
+		loc = glGetUniformLocation(program->programId, "ObjectCenter");
+		glUniform3fv(loc, 1, &(shape->center[0]));
+	}
     // Recursively draw each sub-objects, each with its own transformation.
     for (int i=0;  i<instances.size();  i++) {
         MAT4 itr = objectTr*instances[i].second*animTr;
         instances[i].first->Draw(program, itr); }
+}
+
+
+void Object::DrawLights(ShaderProgram* program, MAT4& objectTr)
+{
+	vec3 lightColor(PI, PI, PI);
+	vec3 ambientColor(0.2f*PI, PI*0.2f, PI* 0.2f);
+
+	int loc;
+
+	// Draw this object's triangle
+	if (NULL != shape) {
+		shape->DrawVAO();
+		loc = glGetUniformLocation(program->programId, "ObjectCenter");
+		glUniform3fv(loc, 1, &(shape->center[0]));
+	}
+	// Recursively draw each sub-objects, each with its own transformation.
+	for (int i = 0; i<instances.size(); i++) {
+		MAT4 itr = objectTr*instances[i].second*animTr;
+		instances[i].first->DrawLights(program, itr);
+	}
 }
