@@ -105,6 +105,7 @@ void Object::DrawLights(ShaderProgram* program, MAT4& objectTr)
 		shape->DrawVAO();
 		loc = glGetUniformLocation(program->programId, "ObjectCenter");
 		glUniform3fv(loc, 1, &(shape->center[0]));
+	//	printf("Center is:  (%f, %f, %f)\n", shape->center[0], shape->center[1], shape->center[2]);
 	}
 	// Recursively draw each sub-objects, each with its own transformation.
 	for (int i = 0; i<instances.size(); i++) {

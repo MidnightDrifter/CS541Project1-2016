@@ -146,5 +146,11 @@ public:
     static int texture_cb(p_ply_argument argument);
     static int face_cb(p_ply_argument argument);
 };
+/*
+class FSQ : public Shape
+{
+	Shape::Pnt = { vec4(1,1,0,0), vec4(1,-1,0,0), vec4(-1,1,0,0), vec4(-1,-1,0,0) };
+};
+*/
 
 #endif

@@ -136,7 +136,7 @@ void Scene::InitializeScene()
 	objectRootNoTeapot = new Object(NULL, nullId);
 	FSQ = new Object(NULL, nullId);
 
-	FSQ->add(new Object(new Quad(1),-1,ambientLight,ambientLight,1.f), Scale(10.f,10.f,10.f));
+	FSQ->add(new Object(new Quad(1),-1,ambientLight,ambientLight,1.f), Scale(100.f,100.f,100.f));
 
 
 
@@ -344,13 +344,15 @@ void Scene::InitializeScene()
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
  localLights = new Object(NULL, nullId);
 
+ 
+
 	for (int i = 0; i <= numLocalLights; i++)
 	{
 		//Start at ~ -10 x, increment up little by little in positive x towards +10
 		//Y is the up direction, right?  Or was it Z?
 	//	Shape* s = new Sphere(localLightRadius);
-		Object* lightSphere = new Object(SpherePolygons, localLightsId, vec3(0, 0, 0), vec3(0, 0, 0), 1.f);
-		localLights->add( lightSphere, Translate((-5) + (i*5.f / numLocalLights), 1.f, 1.f));
+		Object* lightSphere = new Object(SpherePolygons, localLightsId, vec3(0, 0, 0), vec3(0, 0, 0), 120.f);
+		localLights->add( lightSphere, Translate(1.f, 1.f, 1.f)*Scale(localLightRadius, localLightRadius,localLightRadius));
 
 	}
 
@@ -511,6 +513,7 @@ void Scene::DrawScene()
 		gBufferShader->Use();
 		gBuffer->Bind();
 
+		glEnable(GL_DEPTH_TEST);
 		glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -637,7 +640,6 @@ void Scene::DrawScene()
 		glClearColor(0.5, 0.5, 0.5, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CHECKERROR;
-		
 		int loc2, programId2;
 		programId2 = reflectionProgramTop->programId;
 		CHECKERROR;
@@ -828,6 +830,7 @@ int loc3, programId3;
 
 			//End 'pass gBuffer to specified shader' block	
 
+		
 
 			FSQ->Draw(gBufferAmbientLighting,Identity);   //Maybe need projection transform to orient FSQ properly?
 
@@ -927,15 +930,15 @@ int loc3, programId3;
 			
 
 
-			
+			/*
 
 			//Start Global (Shadow-casting) Light G Buffer Pass
-	/*		
+			
 			
 	//		screenOutput->Bind();
 			gBufferGlobalLighting->Use();
 
-			glDisable(GL_DEPTH_TEST);
+		//	glDisable(GL_DEPTH_TEST);
 			CHECKERROR;
 			glEnable(GL_BLEND);
 			CHECKERROR;
@@ -1016,13 +1019,19 @@ int loc3, programId3;
 
 			//End Global (Shadow-casting) Light G Buffer Pass
 
-		*/	
+			
+			*/
+
+
+
 
 			
 			//Start local lighting (small lights with pre-defined radii) pass
 	//		screenOutput->Bind();
-			gBufferLocalLighting->Use();
 
+
+			gBufferLocalLighting->Use();
+		//	glDisable(GL_DEPTH_TEST);
 			CHECKERROR;
 
 			programId = gBufferLocalLighting->programId;
@@ -1093,14 +1102,16 @@ int loc3, programId3;
 			//		CHECKERROR;
 
 			//End 'pass gBuffer to specified shader' block
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
+		
+		//	
+		//	glEnable(GL_CULL_FACE);
+		//	glCullFace(GL_FRONT);
 
 			localLights->DrawLights(gBufferLocalLighting, Identity);
 
-			glDisable(GL_CULL_FACE);
+		//	glDisable(GL_CULL_FACE);
 			CHECKERROR;
-			//FSQ->Draw(gBufferLocalLighting, Identity);
+		//	FSQ->Draw(gBufferLocalLighting, Identity);
 
 			gBufferLocalLighting->Unuse();
 	//		screenOutput->Unbind();

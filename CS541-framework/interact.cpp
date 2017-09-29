@@ -35,6 +35,15 @@ void ReshapeWindow(int w, int h)
     scene.height = h;
 
 	scene.rx = scene.ry * (w * 1.f / h);
+
+//NEW:  re-make G-Buffer with new width & height
+	if (scene.gBuffer)
+	{
+		delete scene.gBuffer;
+		scene.gBuffer = new FBO();
+		scene.gBuffer->CreateGBuffer(w, h);
+	}
+
     // Force a redraw
     glutPostRedisplay();
 }

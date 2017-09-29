@@ -17,6 +17,7 @@ const int     teapotId	= 9;
 const int     spheresId	= 10;
 const float PI = 3.1415926535897932384626433832795;
 in vec3 normalVec, lightVec, eyeVec;
+in vec4 pos;
 //in vec2 texCoord;
 
 //uniform int objectId;
@@ -29,8 +30,11 @@ uniform sampler2D gBuffer2;  //diffuse.xyz
 uniform sampler2D gBuffer3;  //normalVec.xyz
 uniform vec3 localLightBrightness;
 uniform float radius;
-uniform vec3 ObjectCenter;
-//uniform float radiusSquared;
+//uniform vec3 ObjectCenter;
+uniform float radiusSquared;
+
+
+in vec4 center;
 
 uniform int width;
 uniform int height;
@@ -91,23 +95,11 @@ float random(vec2 co){
 
 
 void main()
-{/*
-    vec3 N = normalize(normalVec);
-    vec3 L = normalize(lightVec);
-
-    vec3 Kd = diffuse;   
-    
-    if (objectId==groundId || objectId==seaId) {
-        ivec2 uv = ivec2(floor(200.0*texCoord));
-        if ((uv[0]+uv[1])%2==0)
-            Kd *= 0.9; }
-    
-    gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
-*/
+{
 
 	vec2 myPixelCoordinate = vec2(gl_FragCoord.x/width, gl_FragCoord.y/height);  //I forget the call for this fug
 	
-	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
+	vec4 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyzw;
 	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;
 	
 	vec3 specular = texture2D(gBuffer1, myPixelCoordinate).xyz;
@@ -121,19 +113,24 @@ void main()
 
 	//if pixel out of light's range:  gl_FragColor.xyz = vec3(0,0,0);
 	//else gl_FragColor.xyz = LN* *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
+	
+	vec3 lightDistance = pos.xyz-center.xyz;
 
-	vec3 lightDistance = worldPos-ObjectCenter;
+	
 
-	if(dot(lightDistance,lightDistance) > radius*radius)
+
+	 if(dot(lightDistance,lightDistance) <= radiusSquared)
 	{
 	
-	gl_FragColor.xyz=vec3(0,0,0);
+	gl_FragColor.xyz=vec3(1,0,0);
 
 	}
 
 	else
 	{
-	gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
+	//gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
+	gl_FragColor.xyz = vec3(0,0,1);
+	
 	}
 
 }

@@ -150,7 +150,8 @@ void FBO::CreateGBuffer(const int w, const int h)
 
 
 
-
+	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	glDrawBuffers(4, DrawBuffers);
 
 	// Check for completeness/correctness
 	int status = (int)glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);

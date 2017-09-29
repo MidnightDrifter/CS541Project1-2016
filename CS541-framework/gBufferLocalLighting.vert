@@ -13,15 +13,18 @@ in vec2 vertexTexture;
 in vec3 vertexTangent;
 
 out vec3 normalVec, lightVec, eyeVec;
+out vec4 pos, center;
 //out vec2 texCoord;
 uniform vec3 lightPos;
-
+uniform vec4 ObjectCenter;
 void main()
 {     // gl_Position = vertex;
    
    gl_Position = WorldProj*WorldView*ModelTr*vertex;
-    
+    pos = gl_Position;
     vec3 worldPos = (ModelTr*vertex).xyz;
+
+	center = ModelTr*ObjectCenter;
 
     normalVec = vertexNormal*mat3(NormalTr); 
     lightVec = lightPos - worldPos;

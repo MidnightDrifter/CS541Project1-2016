@@ -61,9 +61,9 @@ void main()
 	//float LN = max(dot(L,N),0.0f);
 
 
-  //gl_FragColor.xyz = ambient;
+  gl_FragColor.xyz = ambient;
 
 
 
-  gl_FragColor.xyz = worldPos;
+ // gl_FragColor.xyz = N;
 }

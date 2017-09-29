@@ -273,11 +273,19 @@ gl_FragColor.xyz = vec3(0.0, 1.0, 0.0);
    */
    vec3 N = normalize(normalVec);
    float worldPosDepth =0.f;  //Need to get the result of the depth test somehow--check shadow thingy probably
-   gl_FragData[0] =  vec4(worldPos.xyz, worldPosDepth);
-    gl_FragData[1] = vec4(specular.xyz, shininess);
-	 gl_FragData[2] = vec4(diffuse.xyz, 0.f);
-	  gl_FragData[3] = vec4(N.xyz,0.f);
 
+    vec3 Kd = diffuse;   
+    
+    if (objectId==groundId || objectId==seaId) {
+        ivec2 uv = ivec2(floor(200.0*texCoord));
+        if ((uv[0]+uv[1])%2==0)
+            Kd *= 0.9; }
+
+   gl_FragData[0] =  worldPos;  //vec4(worldPos.xyz, worldPosDepth);
+    gl_FragData[1] = vec4(specular.xyz, shininess);
+	 gl_FragData[2] = vec4(Kd.xyz, 0.f);
+	  gl_FragData[3] = vec4(N.xyz,0.f);
+	  
 
 //gl_FragColor.xyz = worldPos.xyz;
 //gl_FragColor.xyz = specular.xyz;

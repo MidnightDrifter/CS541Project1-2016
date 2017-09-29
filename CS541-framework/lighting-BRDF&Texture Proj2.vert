@@ -5,6 +5,10 @@
 ////////////////////////////////////////////////////////////////////////
 #version 330
 
+//for FSQ
+const vec2 quadVertices[4] = { vec2(-1.0, -1.0), vec2(1.0, -1.0), vec2(-1.0, 1.0), vec2(1.0, 1.0) };
+//  To draw FSQ, just:    
+//gl_Position = vec4(quadVertices[gl_VertexID], 0.0, 1.0);
 uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr, ShadowMatrix;
 
 in vec4 vertex;
@@ -24,6 +28,9 @@ void main()
 {      
     gl_Position = WorldProj*WorldView*ModelTr*vertex;
     
+
+
+
     vec3 worldPos = (ModelTr*vertex).xyz;
 	tangent = ModelTr * vec4(vertexTangent.xyz,0);
     normalVec = (vertexNormal*mat3(NormalTr)); 

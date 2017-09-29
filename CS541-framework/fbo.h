@@ -15,6 +15,11 @@ public:
     unsigned int texture;
 	unsigned int renderTargets[4];  //ONLY FOR USE WITH G BUFFER!!!!!
     int width, height;  // Size of the texture.
+	
+
+	//GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	//glDrawBuffers(GBUFFER_NUM_TEXTURES, DrawBuffers);
+
 
     void CreateFBO(const int w, const int h);
 	void CreateGBuffer(const int w, const int h);
