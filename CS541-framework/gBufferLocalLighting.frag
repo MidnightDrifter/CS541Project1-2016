@@ -32,6 +32,7 @@ uniform vec3 localLightBrightness;
 uniform float radius;
 //uniform vec3 ObjectCenter;
 uniform float radiusSquared;
+uniform vec4 ObjectCenter;
 
 
 in vec4 center;
@@ -114,22 +115,22 @@ void main()
 	//if pixel out of light's range:  gl_FragColor.xyz = vec3(0,0,0);
 	//else gl_FragColor.xyz = LN* *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
 	
-	vec3 lightDistance = pos.xyz-center.xyz;
-
+	//vec3 lightDistance = pos.xyz-center.xyz;
+	vec3 lightDistance = worldPos.xyz - ObjectCenter.xyz;
 	
 
 
 	 if(dot(lightDistance,lightDistance) <= radiusSquared)
 	{
 	
-	gl_FragColor.xyz=vec3(1,0,0);
+	gl_FragColor.xyz=vec3(0.5,0,0);
 
 	}
 
 	else
 	{
 	//gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
-	gl_FragColor.xyz = vec3(0,0,1);
+	gl_FragColor.xyz = vec3(0,0,0.5);
 	
 	}
 

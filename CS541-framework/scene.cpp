@@ -774,14 +774,15 @@ int loc3, programId3;
 		//screenOutput->Bind();
 			gBufferAmbientLighting->Use();
 
-			glViewport(0, 0, width, height);
-			glClearColor(0.5, 0.5, 0.5, 1.0);
-			glClearDepth(1.0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//glViewport(0, 0, width, height);
+			//glClearColor(0.5, 0.5, 0.5, 1.0);
+			//glClearDepth(1.0);
+			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);   //Disable depth test?
+
 			CHECKERROR;
 
-			//loc = gBufferAmbientLighting->programId;
+			
 			programId = gBufferAmbientLighting->programId;
 
 			loc = glGetUniformLocation(programId, "ambient");
@@ -1029,9 +1030,10 @@ int loc3, programId3;
 			//Start local lighting (small lights with pre-defined radii) pass
 	//		screenOutput->Bind();
 
-
+			
 			gBufferLocalLighting->Use();
-		//	glDisable(GL_DEPTH_TEST);
+			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
 			CHECKERROR;
 
 			programId = gBufferLocalLighting->programId;
@@ -1099,7 +1101,7 @@ int loc3, programId3;
 
 			loc1 = glGetUniformLocation(programId, "height");
 			glUniform1i(loc1, height);
-			//		CHECKERROR;
+ 				CHECKERROR;
 
 			//End 'pass gBuffer to specified shader' block
 		
@@ -1112,7 +1114,7 @@ int loc3, programId3;
 		//	glDisable(GL_CULL_FACE);
 			CHECKERROR;
 		//	FSQ->Draw(gBufferLocalLighting, Identity);
-
+			CHECKERROR;
 			gBufferLocalLighting->Unuse();
 	//		screenOutput->Unbind();
 
