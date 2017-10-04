@@ -91,7 +91,7 @@ public:
     std::vector<Object*> animated;
 	Object* localLights;
 	int numLocalLights = 250;
-	float localLightRadius = 12.5f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
+	float localLightRadius = 15.f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
    
 	vec3 lightColor = vec3(PI, PI, PI);
 	vec3 localLightColor = vec3(PI/2 , PI/8 ,PI/8  ); /// vec3(numLocalLights, numLocalLights, numLocalLights);
