@@ -47,7 +47,7 @@ void main()
   //  gl_FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 
 
-//  	vec2 myPixelCoordinate = vec2(gl_FragCoord.x/width, gl_FragCoord.y/height);  //I forget the call for this fug
+ //	vec2 myPixelCoordinate = vec2(gl_FragCoord.x/width, gl_FragCoord.y/height);  //I forget the call for this fug
 	
 //	vec3 worldPos = texture2D(gBuffer0,myPixelCoordinate).xyz;
 //	float  worldPosDepth = texture2D(gBuffer0,myPixelCoordinate).w;
@@ -57,10 +57,16 @@ void main()
 
 //	vec3 diffuse = texture2D(gBuffer2, myPixelCoordinate).xyz;
 	//vec3 L = normalize(lightVec);
-//	vec3 N = normalize(texture2D(gBuffer3,myPixelCoordinate).xyz);
+	//vec3 N = normalize(texture2D(gBuffer3,myPixelCoordinate).xyz);
 	//float LN = max(dot(L,N),0.0f);
 
 
+
+
+//	gl_FragColor.xyz = N;
+//	gl_FragColor.xyz = diffuse;
+//	gl_FragColor.xyz = specular;
+//  gl_FragColor.xyz = worldPos.xyz;
   gl_FragColor.xyz = ambient;
 
 

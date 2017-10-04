@@ -346,7 +346,7 @@ void Scene::InitializeScene()
                              vec3(0.3, 0.3, 1.0), vec3(1.0, 1.0, 1.0), 120);
  localLights = new Object(NULL, nullId);
 
- 
+ /*
 
 	for (int i = 0; i <= numLocalLights; i++)
 	{
@@ -357,6 +357,12 @@ void Scene::InitializeScene()
 		localLights->add( lightSphere, Translate(-50 + (100.f * i/numLocalLights), 3.f, 3.f)*Scale(localLightRadius, localLightRadius,localLightRadius));
 
 	}
+
+	*/
+
+ Object* lightSphere = new Object(SpherePolygons, localLightsId, vec3(0, 0, 0), vec3(0, 0, 0), 1.f);
+ localLights->add(lightSphere, Scale(localLightRadius, localLightRadius, localLightRadius));
+ //Just one local light for sanity check
 
 
     // FIXME: This is where you could read in all the textures and
@@ -399,7 +405,8 @@ void Scene::InitializeScene()
 
 	//Blend settings??
 	glBlendFunc(GL_ONE, GL_ONE);
-	glBlendEquation(GL_ADD);
+	CHECKERROR
+	//glBlendEquation(GL_FUNC_ADD);
 
 
     CHECKERROR;
@@ -524,6 +531,7 @@ void Scene::DrawScene()
 		gBufferShader->Use();
 		gBuffer->Bind();
 
+		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glViewport(0, 0, width, height);
 		glClearColor(0.5, 0.5, 0.5, 1.0);
@@ -561,9 +569,9 @@ void Scene::DrawScene()
 		CHECKERROR;
 		
 		
-		
-		
 		/*
+		
+		
 		loc = glGetUniformLocation(programId, "ShadowMatrix");
 		glUniformMatrix4fv(loc, 1, GL_TRUE, ShadowMatrix.Pntr());
 
@@ -573,7 +581,7 @@ void Scene::DrawScene()
 		loc = glGetUniformLocation(programId, "shadowTexture");
 		glUniform1i(loc, 3);
 
-
+		
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, reflectionTextureTop->texture);
 		loc = glGetUniformLocation(programId, "reflectionTextureTop");
@@ -590,7 +598,7 @@ void Scene::DrawScene()
 
 		loc = glGetUniformLocation(programId, "tog");
 		glUniform1f(loc, toggleReflection);
-
+		*/
 
 		skydome->Bind(5);
 		loc = glGetUniformLocation(programId, "skydomeTexture");
@@ -605,7 +613,7 @@ void Scene::DrawScene()
 		glUniform1i(loc, 7);
 
 
-		*/
+		
 		
 
 		gBuffer->Unbind();
@@ -949,7 +957,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 			
-
+			
 			//Start Global (Shadow-casting) Light G Buffer Pass
 			
 			
@@ -1055,7 +1063,10 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//	glViewport(0, 0, width, height);
 		//	glClearColor(0.5, 0.5, 0.5, 1.0);
 		//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 			
+
+
 			gBufferLocalLighting->Use();
 			glDisable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);
@@ -1132,7 +1143,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		//	
 			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
+			glCullFace(GL_BACK);
 
 			localLights->DrawLights(gBufferLocalLighting, Identity);
 
@@ -1148,7 +1159,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			//End local lighting pass
 			
-			
+			glDisable(GL_BLEND);
 
 
 /*

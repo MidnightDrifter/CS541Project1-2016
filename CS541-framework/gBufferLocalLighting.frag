@@ -16,6 +16,10 @@ const int     rPicId	= 8;
 const int     teapotId	= 9;
 const int     spheresId	= 10;
 const float PI = 3.1415926535897932384626433832795;
+
+const float EPSILON = 0.01;
+
+
 in vec3 normalVec, lightVec, eyeVec;
 in vec4 pos;
 //in vec2 texCoord;
@@ -117,21 +121,26 @@ void main()
 	
 	//vec3 lightDistance = pos.xyz-center.xyz;
 	//vec3 lightDistance = worldPos.xyz - ObjectCenter.xyz;
-	vec3 lightDistance = worldPos.xyz - center.xyz;
+	vec3 lightDistance = center.xyz - worldPos.xyz;  //worldPos.xyz - center.xyz;
+	gl_FragColor.a = 0.5;
+
+	vec3 lD = normalize(lightDistance);
+	//vec3 EV = normalize()
+	LN = max(dot(lD,N),0.f);
 
 
-	 if(dot(lightDistance,lightDistance) >= radiusSquared)
+	 if(radiusSquared -dot(lightDistance,lightDistance) <= EPSILON)
 	{
 	
 //	gl_FragColor.xyz=vec3(0.5,0,0);
-//gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
-	gl_FragColor.xyz = vec3(0,0,0);
+gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lD,eyeVec,shininess,specular,diffuse );
+	//gl_FragColor.xyz = vec3(0,1,0);
 	}
 
 	else
 	{
-	gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
-	//gl_FragColor.xyz = vec3(0,0,0);
+	//gl_FragColor.xyz = LN* localLightBrightness *BRDF(N,lightVec,eyeVec,shininess,specular,diffuse );
+	gl_FragColor.xyz = vec3(0,0,0);
 	
 	}
 
