@@ -82,7 +82,7 @@ public:
 	float back = 3000.f; //Back clipping plane for perspective transform
 	float toggleReflection = 1.f;  //float to toggle regular lighting vs. reflection-only in shaders
 
-	vec3 ambientLight = vec3(0.4f*PI, PI*0.2f, PI* 0.2f);  //Float to denote the amount of ambient light - to be used until Proj 3
+	vec3 ambientLight = vec3(0.2f*PI, PI*0.2f, PI* 0.2f);  //Float to denote the amount of ambient light - to be used until Proj 3
 		
 
     // All objects in the scene are children of this single root object.
@@ -91,10 +91,10 @@ public:
     std::vector<Object*> animated;
 	Object* localLights;
 	int numLocalLights = 250;
-	float localLightRadius = 50.f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
+	float localLightRadius = 2.f;  //Likely assume that, for each light, their sphere of influence is approx. their radius or some multiple of it
    
 	vec3 lightColor = vec3(PI, PI, PI);
-	vec3 localLightColor = vec3(1,1,1);// / vec3(numLocalLights, numLocalLights, numLocalLights);
+	vec3 localLightColor = vec3(PI , PI , PI ); /// vec3(numLocalLights, numLocalLights, numLocalLights);
 	  //So much reorganizing!
 									
 	// Shader programs

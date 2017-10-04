@@ -131,7 +131,9 @@ void Scene::InitializeScene()
     // FIXME: This is a good place for initializing the transformation
     // values.
 
-
+//	glBlendFunc(GL_ONE, GL_ONE);
+//	glBlendEquation(GL_FUNC_ADD);
+	//glDisable(GL_BLEND);
     objectRoot = new Object(NULL, nullId);
 	objectRootNoTeapot = new Object(NULL, nullId);
 	FSQ = new Object(NULL, nullId);
@@ -352,7 +354,7 @@ void Scene::InitializeScene()
 		//Y is the up direction, right?  Or was it Z?
 	//	Shape* s = new Sphere(localLightRadius);
 		Object* lightSphere = new Object(SpherePolygons, localLightsId, vec3(0, 0, 0), vec3(0, 0, 0), 120.f);
-		localLights->add( lightSphere, Translate(1.f, 1.f, 1.f)*Scale(localLightRadius, localLightRadius,localLightRadius));
+		localLights->add( lightSphere, Translate(-50 + (100.f * i/numLocalLights), 3.f, 3.f)*Scale(localLightRadius, localLightRadius,localLightRadius));
 
 	}
 
@@ -392,6 +394,13 @@ void Scene::InitializeScene()
 
     // Schedule first timed animation call
     glutTimerFunc(30, animate, 1);
+
+
+
+	//Blend settings??
+	glBlendFunc(GL_ONE, GL_ONE);
+	glBlendEquation(GL_ADD);
+
 
     CHECKERROR;
 }
@@ -506,7 +515,9 @@ void Scene::DrawScene()
 
 		ShadowMatrix = Scale(0.5, 0.5, 0.5) * Translate(0.5, 0.5, 0.5) * LightProj * LightView;
 
-		
+		glViewport(0, 0, width, height);
+		glClearColor(0.5, 0.5, 0.5, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//Start G Buffer 
 		
 		
@@ -772,8 +783,14 @@ int loc3, programId3;
 		//Start Ambient Light G Buffer Pass
 
 		//screenOutput->Bind();
-			gBufferAmbientLighting->Use();
+glViewport(0, 0, width, height);
+glClearColor(0.5, 0.5, 0.5, 1.0);
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+
+			gBufferAmbientLighting->Use();
+			glDisable(GL_BLEND);
 			//glViewport(0, 0, width, height);
 			//glClearColor(0.5, 0.5, 0.5, 1.0);
 			//glClearDepth(1.0);
@@ -859,7 +876,7 @@ int loc3, programId3;
 			glClearColor(0.5, 0.5, 0.5, 1.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			CHECKERROR;
-
+			glDisable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
 
 			int loc1, programID1;
@@ -931,15 +948,21 @@ int loc3, programId3;
 			
 
 
-			/*
+			
 
 			//Start Global (Shadow-casting) Light G Buffer Pass
 			
 			
 	//		screenOutput->Bind();
+
+		//	glViewport(0, 0, width, height);
+		//	glClearColor(0.5, 0.5, 0.5, 1.0);
+		//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 			gBufferGlobalLighting->Use();
 
-		//	glDisable(GL_DEPTH_TEST);
+			glDisable(GL_DEPTH_TEST);
 			CHECKERROR;
 			glEnable(GL_BLEND);
 			CHECKERROR;
@@ -1020,8 +1043,8 @@ int loc3, programId3;
 
 			//End Global (Shadow-casting) Light G Buffer Pass
 
+		
 			
-			*/
 
 
 
@@ -1029,7 +1052,9 @@ int loc3, programId3;
 			
 			//Start local lighting (small lights with pre-defined radii) pass
 	//		screenOutput->Bind();
-
+		//	glViewport(0, 0, width, height);
+		//	glClearColor(0.5, 0.5, 0.5, 1.0);
+		//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			gBufferLocalLighting->Use();
 			glDisable(GL_DEPTH_TEST);
@@ -1051,7 +1076,7 @@ int loc3, programId3;
 			
 			//Start 'pass gBuffer to specified shader' block
 
-
+			
 
 
 			glActiveTexture(GL_TEXTURE6);
@@ -1106,12 +1131,12 @@ int loc3, programId3;
 			//End 'pass gBuffer to specified shader' block
 		
 		//	
-		//	glEnable(GL_CULL_FACE);
-		//	glCullFace(GL_FRONT);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
 
 			localLights->DrawLights(gBufferLocalLighting, Identity);
 
-		//	glDisable(GL_CULL_FACE);
+			glDisable(GL_CULL_FACE);
 			CHECKERROR;
 		//	FSQ->Draw(gBufferLocalLighting, Identity);
 			CHECKERROR;

@@ -16,7 +16,7 @@ out vec3 normalVec, lightVec, eyeVec;
 out vec4 pos, center;
 //out vec2 texCoord;
 uniform vec3 lightPos;
-uniform vec4 ObjectCenter;
+uniform vec3 ObjectCenter;
 void main()
 {     // gl_Position = vertex;
    
@@ -24,7 +24,7 @@ void main()
     pos = gl_Position;
     vec3 worldPos = (ModelTr*vertex).xyz;
 
-	center = ModelTr*ObjectCenter;
+	center = ModelTr*vec4(ObjectCenter,1);
 
     normalVec = vertexNormal*mat3(NormalTr); 
     lightVec = lightPos - worldPos;

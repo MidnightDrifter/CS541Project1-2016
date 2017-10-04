@@ -136,7 +136,7 @@ void Object::DrawLights(ShaderProgram* program, MAT4& objectTr)
 		CHECKERROR;
 		loc = glGetUniformLocation(program->programId, "ObjectCenter");
 		CHECKERROR;
-		glUniform4fv(loc, 1, &(zeroes[0]));
+		glUniform3fv(loc, 1, &(shape->center[0]));
 		CHECKERROR;
 		
 		//	printf("Center is:  (%f, %f, %f)\n", shape->center[0], shape->center[1], shape->center[2]);
